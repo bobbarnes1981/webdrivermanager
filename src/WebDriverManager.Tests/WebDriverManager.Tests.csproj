@@ -51,8 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InternetExplorerTest.cs" />
-    <Compile Include="ChromeTest.cs" />
+    <Compile Include="Diagnostic\EdgeTest.cs" />
+    <Compile Include="Diagnostic\OperaTest.cs" />
+    <Compile Include="Diagnostic\FirefoxTest.cs" />
+    <Compile Include="Diagnostic\InternetExplorerTest.cs" />
+    <Compile Include="Diagnostic\ChromeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

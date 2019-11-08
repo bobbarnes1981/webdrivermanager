@@ -1,17 +1,17 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Opera;
 
-namespace WebDriverManager.Tests
+namespace WebDriverManager.Tests.Diagnostic
 {
-    class InternetExplorerTest
+    class OperaTest
     {
         private IWebDriver driver;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            WebDriverManager.iedriver().setup();
+            WebDriverManager.operadriver().setup();
 
             //1. It checks the version of the browser installed in your machine(e.g.Chrome, Firefox).
             //2. It checks the version of the driver(e.g.chromedriver, geckodriver).If unknown, it uses the latest version of the driver.
@@ -22,7 +22,7 @@ namespace WebDriverManager.Tests
         [SetUp]
         public void SetUp()
         {
-            driver = new InternetExplorerDriver();
+            driver = new OperaDriver();
         }
 
         [TearDown]

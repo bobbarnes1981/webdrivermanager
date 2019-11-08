@@ -2,7 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace WebDriverManager.Tests
+namespace WebDriverManager.Tests.Diagnostic
 {
     class ChromeTest
     {
