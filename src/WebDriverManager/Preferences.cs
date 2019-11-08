@@ -15,6 +15,7 @@
  *
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace WebDriverManager
@@ -63,7 +64,7 @@ namespace WebDriverManager
             if (getValueFromPreferences(key) == null)
             {
                 prefs[key] = value;
-                long expirationTime = (long)(Date.UnixTime() + System.TimeSpan.FromSeconds(config.getTtl()).TotalMilliseconds);
+                long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.getTtl()).TotalMilliseconds);
                 prefs[getExpirationKey(key)] = expirationTime.ToString();
                 if (log.IsDebugEnabled())
                 {
@@ -94,7 +95,7 @@ namespace WebDriverManager
 
         private bool checkValidity(string key, string value, long expirationTime)
         {
-            long now = Date.UnixTime();
+            long now = DateTime.UtcNow.UnixTime();
             bool isValid = value != null && expirationTime != 0 && expirationTime > now;
             if (!isValid)
             {
@@ -107,7 +108,7 @@ namespace WebDriverManager
 
         private string formatTime(long time)
         {
-            return Date.FormatUnixTime(time, dateFormat);
+            return time.FormatUnixTime(dateFormat);
         }
 
         private string getExpirationKey(string key)

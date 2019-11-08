@@ -116,9 +116,11 @@ namespace WebDriverManager
             string version = null;
             try
             {
-                throw new System.NotImplementedException();
-                //Stream response = httpClient.execute(httpClient.createHttpGet(new System.Uri(url))).getEntity().getContent();
-                //version = IOUtils.toString(response, defaultCharset());
+                Stream response = httpClient.executeHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
+                using (StreamReader reader = new StreamReader(response))
+                {
+                    version = reader.ReadToEnd();
+                }
             }
             catch (System.Exception e)
             {

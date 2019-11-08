@@ -1,8 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+ * (C) Copyright 2019 Robert barnes
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+using Serilog;
 
 namespace WebDriverManager
 {
@@ -18,33 +31,36 @@ namespace WebDriverManager
     }
     public class Logger : ILogger
     {
+        private Serilog.ILogger logger;
+
+        private Logger()
+        {
+            logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+        }
+
         public static ILogger GetLogger()
         {
             return new Logger();
         }
-        private void internalWrite(string level, string format, params object[] parameters)
-        {
-            System.Diagnostics.Debug.WriteLine(string.Format("[{0}] {1}", level, string.Format(format, parameters)));
-        }
         public void Trace(string format, params object[] parameters)
         {
-            internalWrite("Trace", format, parameters);
+            logger.Verbose(format, parameters);
         }
         public void Warn(string format, params object[] parameters)
         {
-            internalWrite("Warn", format, parameters);
+            logger.Warning(format, parameters);
         }
         public void Debug(string format, params object[] parameters)
         {
-            internalWrite("Debug", format, parameters);
+            logger.Debug(format, parameters);
         }
         public void Info(string format, params object[] parameters)
         {
-            internalWrite("Info", format, parameters);
+            logger.Information(format, parameters);
         }
         public void Error(string format, params object[] parameters)
         {
-            internalWrite("Error", format, parameters);
+            logger.Error(format, parameters);
         }
         public bool IsDebugEnabled()
         {

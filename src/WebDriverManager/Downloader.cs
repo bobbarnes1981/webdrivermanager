@@ -84,9 +84,9 @@ namespace WebDriverManager
             string folder = zip.SubstringJava(0, iLast).Replace(".zip", "")
                     .Replace(".tar.bz2", "").Replace(".tar.gz", "")
                     .Replace(".msi", "").Replace(".exe", "")
-                    .Replace("_", Files.Separator);
+                    .Replace('_', Path.DirectorySeparatorChar);
             string path = config.isAvoidOutputTree() ? getTargetPath() + zip
-                    : getTargetPath() + folder + Files.Separator + version + zip;
+                    : getTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
             string target = WebDriverManager.getInstance(driverManagerType).preDownload(path, version);
 
             log.Trace("Target file for System.Uri {0} version {1} = {2}", url, version, target);
@@ -247,27 +247,30 @@ namespace WebDriverManager
                     log.Trace("Unzipping {0} (size: {1} KB, compressed size: {2} KB)", name, size, compressedSize);
 
                     // TODO: handle more than one file
-                    FileInfo file = new FileInfo(Path.Combine(compressedFile.Directory.FullName, name));
-                    if (!file.Exists || config.isOverride())
+                    if (name.EndsWith("/"))
                     {
-                    //    if (name.EndsWith("/"))
-                    //    {
-                    //        file.Create();
-                    //        continue;
-                    //    }
-
-                    //    DirectoryInfo parent = file.Parent;
-                    //    if (parent != null)
-                    //    {
-                    //        parent.Create();
-                    //    }
-
-                        zipEntry.ExtractToFile(file.FullName);
-                        setFileExecutable(file);
+                        DirectoryInfo dir = new DirectoryInfo(Path.Combine(compressedFile.Directory.FullName, name));
+                        if (!dir.Exists || config.isOverride())
+                        {
+                            dir.Create();
+                        }
+                        else
+                        {
+                            log.Debug("{0} already exists", dir);
+                        }
                     }
                     else
                     {
-                        log.Debug("{0} already exists", file);
+                        FileInfo file = new FileInfo(Path.Combine(compressedFile.Directory.FullName, name));
+                        if (!file.Exists || config.isOverride())
+                        {
+                            zipEntry.ExtractToFile(file.FullName);
+                            setFileExecutable(file);
+                        }
+                        else
+                        {
+                            log.Debug("{0} already exists", file);
+                        }
                     }
                 }
             }
@@ -306,7 +309,7 @@ namespace WebDriverManager
             //            && target.exists()) {
             //        setFileExecutable(target);
             //    }
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException("extract gzip not implemented");
         }
         /// <summary>
         /// 
@@ -319,7 +322,7 @@ namespace WebDriverManager
             //Archiver archiver = createArchiver(TAR, GZIP);
             //archiver.extract(archive, archive.getParentFile());
             //log.trace("unTarGz {}", archive);
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException("extract tar.gz not implemented");
         }
 
         /// <summary>
@@ -332,7 +335,7 @@ namespace WebDriverManager
             //Archiver archiver = createArchiver(TAR, BZIP2);
             //archiver.extract(archive, archive.getParentFile());
             //log.trace("Unbzip2 {}", archive);
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException("extract bzip2 not implemented");
         }
 
         /// <summary>
@@ -358,7 +361,7 @@ namespace WebDriverManager
             //        }
 
             //        deleteFolder(tmpMsi.getParentFile());
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException("extract msi not implemented");
         }
 
         protected void setFileExecutable(FileInfo file)
@@ -405,7 +408,7 @@ namespace WebDriverManager
             log.Trace("Deleting folder {0}", folder);
             try
             {
-                folder.Delete();
+                folder.Delete(true);
             }
             catch (IOException e)
             {

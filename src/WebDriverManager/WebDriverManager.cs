@@ -16,10 +16,14 @@
  */
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Xml;
 using WebDriverManager.GitHubApi;
 
@@ -657,7 +661,7 @@ namespace WebDriverManager
             if (version.Equals(PRE_INSTALLED))
             {
                 string systemRoot = System.Environment.GetEnvironmentVariable("SystemRoot");
-                FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(systemRoot, "System32" + Files.Separator + "MicrosoftWebDriver.exe"));
+                FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(systemRoot, "System32" + Path.DirectorySeparatorChar + "MicrosoftWebDriver.exe"));
                 if (microsoftWebDriverFile.Exists)
                 {
                     downloadedVersion = PRE_INSTALLED;
@@ -1217,21 +1221,17 @@ namespace WebDriverManager
         /// <param name="driverUrl"></param>
         /// <exception cref="IOException"/>
         /// <returns></returns>
-        protected Stream openGitHubConnection(System.Uri driverUrl)
+        protected Stream openGitHubConnection(Uri driverUrl)
         {
-            //HttpGet get = httpClient.createHttpGet(driverUrl);
+            string gitHubTokenName = Config().getGitHubTokenName();
+            string gitHubTokenSecret = Config().getGitHubTokenSecret();
+            AuthenticationHeaderValue authHeader = null;
+            if (!string.IsNullOrEmpty(gitHubTokenName) && !string.IsNullOrEmpty(gitHubTokenSecret))
+            {
+                authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(gitHubTokenName + ":" + gitHubTokenSecret)));
+            }
 
-            //string gitHubTokenName = Config().getGitHubTokenName();
-            //string gitHubTokenSecret = Config().getGitHubTokenSecret();
-            //if (!string.IsNullOrEmpty(gitHubTokenName) && !string.IsNullOrEmpty(gitHubTokenSecret))
-            //{
-            //    string userpass = gitHubTokenName + ":" + gitHubTokenSecret;
-            //    string basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-            //    get.AddHeader("Authorization", basicAuth);
-            //}
-
-            //return httpClient.execute(get).getEntity().getContent();
-            throw new System.NotImplementedException();
+            return httpClient.executeHttpGet(driverUrl, authHeader).Content.ReadAsStreamAsync().Result;
         }
 
         /// <summary>
@@ -1239,10 +1239,10 @@ namespace WebDriverManager
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        protected List<System.Uri> getDriversFromGitHub()
+        protected List<Uri> getDriversFromGitHub()
         {
-            List<System.Uri> urls;
-            System.Uri driverUrl = GetDriverUrl();
+            List<Uri> urls;
+            Uri driverUrl = GetDriverUrl();
             log.Info("Reading {0} to seek {1}", driverUrl, GetDriverName());
 
             System.Uri mirrorUrl = GetMirrorUrl();
@@ -1312,7 +1312,7 @@ namespace WebDriverManager
         {
 
             string browserBinaryPath = Config().getBinaryPath();
-            if (OsHelper.IsWindows())
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 foreach (string programFilesEnv in programFilesEnvs)
                 {
@@ -1323,7 +1323,7 @@ namespace WebDriverManager
                     }
                 }
             }
-            else if (OsHelper.IsLinux() || OsHelper.IsMac())
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 string browserPath = getPosixBrowserPath(linuxBrowserName, macBrowserName, browserBinaryPath);
                 string browserVersionOutput = Shell.runAndWait(browserPath, versionFlag);
@@ -1343,7 +1343,7 @@ namespace WebDriverManager
             }
             else
             {
-                return OsHelper.IsLinux() ? linuxBrowserName : macBrowserName;
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? linuxBrowserName : macBrowserName;
             }
         }
 
@@ -1360,7 +1360,7 @@ namespace WebDriverManager
         {
             string systemRoot = System.Environment.GetEnvironmentVariable("SystemRoot");
             DirectoryInfo system32 = new DirectoryInfo(Path.Combine(systemRoot, "System32", "wbem"));
-            if (OsHelper.IsWindows() && system32.Exists)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && system32.Exists)
             {
                 return system32;
             }

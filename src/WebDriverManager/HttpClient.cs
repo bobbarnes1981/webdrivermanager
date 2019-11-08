@@ -15,8 +15,11 @@
  *
  */
 
-using System.Collections;
+using Microsoft.Win32.SafeHandles;
+using System;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -32,6 +35,9 @@ namespace WebDriverManager
     public class HttpClient : System.IDisposable
     {
         ILogger log = Logger.GetLogger();
+
+        bool disposed = false;
+        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
         Config config;
         System.Net.Http.HttpClient closeableHttpClient;
@@ -97,8 +103,12 @@ namespace WebDriverManager
             return null;
         }
 
-        public System.Net.Http.HttpResponseMessage executeHttpGet(System.Uri url)
+        public System.Net.Http.HttpResponseMessage executeHttpGet(System.Uri url, AuthenticationHeaderValue authHeader = null)
         {
+            if (authHeader != null)
+            {
+                closeableHttpClient.DefaultRequestHeaders.Authorization = authHeader;
+            }
             Task<System.Net.Http.HttpResponseMessage> responseTask = closeableHttpClient.GetAsync(url);
             responseTask.Wait(System.TimeSpan.FromSeconds(config.getTimeout()).Milliseconds);
             System.Net.Http.HttpResponseMessage response = responseTask.Result;
@@ -175,7 +185,24 @@ namespace WebDriverManager
 
         public void Dispose()
         {
-            closeableHttpClient.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                handle.Dispose();
+                closeableHttpClient.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }

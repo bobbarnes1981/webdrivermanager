@@ -38,6 +38,12 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Console, Version=3.1.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Console.3.1.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -53,6 +59,9 @@
   <ItemGroup>
     <Compile Include="Architecture.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FakeJavalin\Context.cs" />
+    <Compile Include="FakeJavalin\Javalin.cs" />
+    <Compile Include="FakeJavalin\Response.cs" />
     <Compile Include="GitHubApi\Asset.cs" />
     <Compile Include="ChromeDriverManager.cs" />
     <Compile Include="Config.cs" />
@@ -64,11 +73,11 @@
     <Compile Include="GitHubApi\Release.cs" />
     <Compile Include="GitHubApi\User.cs" />
     <Compile Include="HttpClient.cs" />
+    <Compile Include="IllegalStateException.cs" />
     <Compile Include="InternetExplorerDriverManager.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OperaDriverManager.cs" />
     <Compile Include="OperatingSystem.cs" />
-    <Compile Include="OsHelper.cs" />
     <Compile Include="PhantomJsDriverManager.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="ProcessBuilder.cs" />
@@ -76,7 +85,6 @@
     <Compile Include="SeleniumServerStandaloneManager.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Shell.cs" />
-    <Compile Include="TEMP_CLASSES.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UrlFilter.cs" />
     <Compile Include="VersionComparator.cs" />

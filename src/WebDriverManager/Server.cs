@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using WebDriverManager.FakeJavalin;
 
 namespace WebDriverManager
 {
@@ -117,7 +118,7 @@ namespace WebDriverManager
                     string configKey = "wdm." + entry.Key;
                     string configValue = entry.Value[0];
                     log.Trace("\t{0} = {1}", configKey, configValue);
-                    SYSTEM.SetProperty(configKey, configValue);
+                    System.Environment.SetEnvironmentVariable(configKey, configValue);
                 }
             }
 
@@ -138,7 +139,7 @@ namespace WebDriverManager
             // Clear configuration
             foreach (string key in queryParamMap.Keys)
             {
-                SYSTEM.ClearProperty("wdm." + key);
+                System.Environment.SetEnvironmentVariable("wdm." + key, null);
             }
         }
     }

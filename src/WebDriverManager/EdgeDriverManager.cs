@@ -19,6 +19,7 @@ using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace WebDriverManager
 {
@@ -185,7 +186,7 @@ namespace WebDriverManager
                 {
                     target = target.SubstringJava(0, iVersion)
                             + Config().getArchitecture().ToString().ToLower()
-                            + Files.Separator + target.SubstringJava(iVersion);
+                            + Path.DirectorySeparatorChar + target.SubstringJava(iVersion);
                 }
             }
             log.Trace("Pre-download in EdgeDriver -- target={0}, version={1}", target,
@@ -211,7 +212,7 @@ namespace WebDriverManager
 
         protected override string GetBrowserVersion()
         {
-            if (OsHelper.IsWindows())
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 string[] programFilesEnvs = { getProgramFilesEnv() };
                 string msedgeVersion = getDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", "", "", "--version", GetDriverManagerType().ToString());

@@ -47,7 +47,7 @@ namespace WebDriverManager
 
         public static string runAndWaitArray(DirectoryInfo folder, string[] command)
         {
-            string commandStr = Arrays.ToString(command);
+            string commandStr = command.ToStringJava();
             log.Debug("Running command on the shell: {0}", commandStr);
             string result = runAndWaitNoLog(folder, command);
             log.Debug("Result: {0}", result);

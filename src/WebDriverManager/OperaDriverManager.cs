@@ -123,7 +123,7 @@ namespace WebDriverManager
                 } while (!isOperaDriver);
                 log.Info("Operadriver binary: {0}", operadriver);
 
-                target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.FullName));
+                target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
                 log.Trace("Operadriver target: {0}", target);
 
                 downloader.RenameFile(operadriver, target);

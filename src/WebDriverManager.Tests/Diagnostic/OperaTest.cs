@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Opera;
+using System.IO;
 
 namespace WebDriverManager.Tests.Diagnostic
 {
@@ -22,7 +23,11 @@ namespace WebDriverManager.Tests.Diagnostic
         [SetUp]
         public void SetUp()
         {
-            driver = new OperaDriver();
+            OperaOptions options = new OperaOptions()
+            {
+                BinaryLocation = Path.Combine(System.Environment.ExpandEnvironmentVariables("%LocalAppData%"), @"Programs\Opera\64.0.3417.92\opera.exe")
+            };
+            driver = new OperaDriver(options);
         }
 
         [TearDown]

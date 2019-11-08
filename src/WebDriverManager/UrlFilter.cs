@@ -117,7 +117,7 @@ namespace WebDriverManager
         {
             if (log.IsTraceEnabled())
             {
-                log.Trace("System.Uris before filtering by ignored versions ({0}): {1}", Arrays.ToString(ignoredVersions), list);
+                log.Trace("System.Uris before filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), list);
             }
             List<System.Uri> outList = new List<System.Uri>(list);
 
@@ -135,7 +135,7 @@ namespace WebDriverManager
 
             if (log.IsTraceEnabled())
             {
-                log.Trace("System.Uris after filtering by ignored versions ({0}): {1}", Arrays.ToString(ignoredVersions), outList);
+                log.Trace("System.Uris after filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), outList);
             }
             return outList;
         }
@@ -149,16 +149,16 @@ namespace WebDriverManager
         {
             string outString = "";
             string key = "UBUNTU_CODENAME";
-            DirectoryInfo dir = new DirectoryInfo(Files.Separator + "etc");
+            DirectoryInfo dir = new DirectoryInfo(Path.DirectorySeparatorChar + "etc");
             FileInfo[] fileList = new FileInfo[0];
             if (dir.Exists)
             {
                 fileList = dir.GetFiles("*-release");
             }
-            FileInfo fileVersion = new FileInfo(Path.Combine(Files.Separator + "proc", "version"));
+            FileInfo fileVersion = new FileInfo(Path.Combine(Path.DirectorySeparatorChar + "proc", "version"));
             if (fileVersion.Exists)
             {
-                fileList = Arrays.CopyOf(fileList, fileList.Length + 1);
+                fileList = fileList.CopyOf(fileList.Length + 1);
                 fileList[fileList.Length - 1] = fileVersion;
             }
             foreach (FileInfo f in fileList)

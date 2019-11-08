@@ -15,25 +15,29 @@
  *
  */
 
-using Newtonsoft.Json;
+using System;
 
-namespace WebDriverManager.GitHubApi
+namespace WebDriverManager.FakeJavalin
 {
-    public class Asset
+    public delegate void Handler(Context context);
+
+    class Javalin
     {
-        // url
-        // id
-        // node_id
-        // name
-        // label
-        // uploader (user)
-        // content_type
-        // state
-        // size
-        // download_count
-        // created_at
-        // updated_at
-        [JsonProperty("browser_download_url")]
-        public string BrowserDownloadUrl { get; set; }
+        private int port;
+
+        public static Javalin Create()
+        {
+            return new Javalin();
+        }
+        public Javalin Start(int port)
+        {
+            this.port = port;
+
+            return this;
+        }
+        public void Get(string route, Handler handler)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

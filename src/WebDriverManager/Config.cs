@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -216,15 +217,15 @@ namespace WebDriverManager
 
         private static string defaultOsName()
         {
-            if (OsHelper.IsWindows())
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return "WIN";
             }
-            else if (OsHelper.IsLinux())
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 return "LINUX";
             }
-            else if (OsHelper.IsMac())
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return "MAC";
             }
@@ -234,20 +235,20 @@ namespace WebDriverManager
 
         private static string defaultArchitecture()
         {
-            // TODO: use System.Runtime.InteropServices.RuntimeInformation.OSArchitecture?
-            string arch = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-            if (arch == "x86")
+            //RuntimeInformation.OSArchitecture ?
+            System.Runtime.InteropServices.Architecture arch = RuntimeInformation.ProcessArchitecture;
+            if (arch == System.Runtime.InteropServices.Architecture.X86)
                 return "X32";
-            if (arch == "x64")
+            if (arch == System.Runtime.InteropServices.Architecture.X64)
                 return "X64";
-            throw new Exception();
+            throw new Exception(string.Format("Unhandled architecture {0}", arch));
         }
 
         public bool isExecutable(FileInfo file)
         {
             return resolve(os).ToLower().Equals("win")
                     ? file.Extension.Equals(".exe")
-                    : throw new NotImplementedException();
+                    : throw new NotImplementedException("Detection of executable files on non-windows is not implemented");
         }
 
         // Getters and setters
@@ -273,20 +274,19 @@ namespace WebDriverManager
                 path = resolved;
                 if (path.Contains(HOME))
                 {
-                    if (OsHelper.IsWindows())
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         path = path.Replace(HOME, Environment.ExpandEnvironmentVariables("%userprofile%"));
                     }
                     else
                     {
                         //path = path.Replace(HOME, getSystemProperty("user.home"));
-                        throw new NotImplementedException();
+                        throw new NotImplementedException(string.Format("Replacement of home ({0}) on non-windows is not implemented", HOME));
                     }
                 }
                 if (path.Equals("."))
                 {
-                    throw new NotImplementedException();
-                    //path = Paths.get("").toAbsolutePath().tostring();
+                    path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                 }
             }
             return path;
@@ -446,9 +446,8 @@ namespace WebDriverManager
 
         public Config setArchitecture(Architecture value)
         {
-            throw new NotImplementedException();
-            //this.architecture.SetValue(value.name());
-            //return this;
+            this.architecture.SetValue(value.ToString());
+            return this;
         }
 
         public string getOs()

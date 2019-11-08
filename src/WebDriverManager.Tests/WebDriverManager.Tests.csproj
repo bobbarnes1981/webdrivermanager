@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\wdm-test.properties" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebDriverManager\WebDriverManager.csproj">

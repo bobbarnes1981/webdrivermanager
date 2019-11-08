@@ -15,25 +15,15 @@
  *
  */
 
-using Newtonsoft.Json;
+using System;
 
-namespace WebDriverManager.GitHubApi
+namespace WebDriverManager.FakeJavalin
 {
-    public class Asset
+    public class Response
     {
-        // url
-        // id
-        // node_id
-        // name
-        // label
-        // uploader (user)
-        // content_type
-        // state
-        // size
-        // download_count
-        // created_at
-        // updated_at
-        [JsonProperty("browser_download_url")]
-        public string BrowserDownloadUrl { get; set; }
+        public void SetHeader(string name, string value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

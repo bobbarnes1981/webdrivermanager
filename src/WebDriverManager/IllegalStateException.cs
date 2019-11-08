@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2017 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2019 Robert barnes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,34 +20,24 @@ using System.Runtime.Serialization;
 
 namespace WebDriverManager
 {
-    /**
-     * Custom exception for WebDriverManager.
-     *
-     * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.7.2
-     */
     [Serializable]
-    public class WebDriverManagerException : Exception
+    public class IllegalStateException : Exception
     {
-
-        private static long serialVersionUID = 635198548542132913L;
-
-        public WebDriverManagerException(string message)
+        public IllegalStateException(string message)
             : base(message)
         {
         }
 
-        public WebDriverManagerException(Exception cause)
-            : base(string.Empty, cause)
-        {
-        }
-
-        public WebDriverManagerException(string message, Exception innerException)
+        public IllegalStateException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected WebDriverManagerException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        public IllegalStateException()
+        {
+        }
+
+        protected IllegalStateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
             throw new NotImplementedException();
         }
