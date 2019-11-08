@@ -46,7 +46,7 @@ namespace WebDriverManager
             }
         }
 
-        private static DateTime unixEpoch = new DateTime(1970, 1, 1);
+        private readonly static DateTime unixEpoch = new DateTime(1970, 1, 1);
         
         public static long UnixTime(this DateTime dateTime)
         {

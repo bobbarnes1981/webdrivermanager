@@ -22,7 +22,7 @@ namespace WebDriverManager
 {
     public class Properties
     {
-        private Dictionary<string, string> dict;
+        private readonly Dictionary<string, string> dict;
 
         public Properties()
         {

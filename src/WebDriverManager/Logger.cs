@@ -31,7 +31,7 @@ namespace WebDriverManager
     }
     public class Logger : ILogger
     {
-        private Serilog.ILogger logger;
+        private readonly Serilog.ILogger logger;
 
         private Logger()
         {

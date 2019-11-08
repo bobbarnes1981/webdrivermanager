@@ -30,15 +30,15 @@ namespace WebDriverManager
     public class Preferences
     {
 
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        static string TTL = "-ttl";
+        private const string TTL = "-ttl";
 
         //java.util.prefs.Preferences prefs = userNodeForPackage(WebDriverManager.class);
-        Dictionary<string, string> prefs = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> prefs = new Dictionary<string, string>();
 
-        string dateFormat = "yyyy-MM-dd HH:mm:ss";
-        Config config;
+        private readonly string dateFormat = "yyyy-MM-dd HH:mm:ss";
+        private readonly Config config;
 
         public Preferences(Config config)
         {
@@ -86,10 +86,9 @@ namespace WebDriverManager
                 log.Info("Clearing WebDriverManager preferences");
                 prefs.Clear();
             }
-            //catch (BackingStoreException e)
-            catch (System.Exception e)
+            catch (Exception e)
             {
-                log.Warn("Exception clearing preferences", e);
+                log.Warn("Exception clearing preferences ({0})", e);
             }
         }
 
@@ -111,7 +110,7 @@ namespace WebDriverManager
             return time.FormatUnixTime(dateFormat);
         }
 
-        private string getExpirationKey(string key)
+        private static string getExpirationKey(string key)
         {
             return key + TTL;
         }

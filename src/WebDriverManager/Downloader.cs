@@ -30,11 +30,11 @@ namespace WebDriverManager
      */
     public class Downloader
     {
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        DriverManagerType driverManagerType;
-        HttpClient httpClient;
-        Config config;
+        private readonly DriverManagerType driverManagerType;
+        private readonly HttpClient httpClient;
+        private readonly Config config;
 
         public Downloader(DriverManagerType driverManagerType)
         {

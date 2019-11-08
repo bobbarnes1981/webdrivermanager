@@ -30,71 +30,71 @@ namespace WebDriverManager
      */
     public class Config
     {
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        static string HOME = "~";
+        private const string HOME = "~";
 
-        ConfigKey<string> properties = new ConfigKey<string>("wdm.properties", "webdrivermanager.properties");
+        private readonly ConfigKey<string> properties = new ConfigKey<string>("wdm.properties", "webdrivermanager.properties");
 
-        ConfigKey<string> targetPath = new ConfigKey<string>("wdm.targetPath");
-        ConfigKey<bool> forceCache = new ConfigKey<bool>("wdm.forceCache");
-        ConfigKey<bool> over_ride = new ConfigKey<bool>("wdm.override");
-        ConfigKey<bool> useMirror = new ConfigKey<bool>("wdm.useMirror");
-        ConfigKey<bool> useBetaVersions = new ConfigKey<bool>("wdm.useBetaVersions");
-        ConfigKey<bool> avoidExport = new ConfigKey<bool>("wdm.avoidExport");
-        ConfigKey<bool> avoidOutputTree = new ConfigKey<bool>("wdm.avoidOutputTree");
-        ConfigKey<bool> avoidAutoVersion = new ConfigKey<bool>("wdm.avoidAutoVersion");
-        ConfigKey<bool> avoidAutoReset = new ConfigKey<bool>("wdm.avoidAutoReset");
-        ConfigKey<bool> avoidPreferences = new ConfigKey<bool>("wdm.avoidPreferences");
-        ConfigKey<int> timeout = new ConfigKey<int>("wdm.timeout");
-        ConfigKey<bool> versionsPropertiesOnlineFirst = new ConfigKey<bool>("wdm.versionsPropertiesOnlineFirst");
-        ConfigKey<Uri> versionsPropertiesUrl = new ConfigKey<Uri>("wdm.versionsPropertiesUrl");
+        private readonly ConfigKey<string> targetPath = new ConfigKey<string>("wdm.targetPath");
+        private readonly ConfigKey<bool> forceCache = new ConfigKey<bool>("wdm.forceCache");
+        private readonly ConfigKey<bool> over_ride = new ConfigKey<bool>("wdm.override");
+        private readonly ConfigKey<bool> useMirror = new ConfigKey<bool>("wdm.useMirror");
+        private readonly ConfigKey<bool> useBetaVersions = new ConfigKey<bool>("wdm.useBetaVersions");
+        private readonly ConfigKey<bool> avoidExport = new ConfigKey<bool>("wdm.avoidExport");
+        private readonly ConfigKey<bool> avoidOutputTree = new ConfigKey<bool>("wdm.avoidOutputTree");
+        private readonly ConfigKey<bool> avoidAutoVersion = new ConfigKey<bool>("wdm.avoidAutoVersion");
+        private readonly ConfigKey<bool> avoidAutoReset = new ConfigKey<bool>("wdm.avoidAutoReset");
+        private readonly ConfigKey<bool> avoidPreferences = new ConfigKey<bool>("wdm.avoidPreferences");
+        private readonly ConfigKey<int> timeout = new ConfigKey<int>("wdm.timeout");
+        private readonly ConfigKey<bool> versionsPropertiesOnlineFirst = new ConfigKey<bool>("wdm.versionsPropertiesOnlineFirst");
+        private readonly ConfigKey<Uri> versionsPropertiesUrl = new ConfigKey<Uri>("wdm.versionsPropertiesUrl");
 
-        ConfigKey<string> architecture = new ConfigKey<string>("wdm.architecture", defaultArchitecture());
-        ConfigKey<string> os = new ConfigKey<string>("wdm.os", defaultOsName());
-        ConfigKey<string> proxy = new ConfigKey<string>("wdm.proxy");
-        ConfigKey<string> proxyUser = new ConfigKey<string>("wdm.proxyUser");
-        ConfigKey<string> proxyPass = new ConfigKey<string>("wdm.proxyPass");
-        ConfigKey<string> ignoreVersions = new ConfigKey<string>("wdm.ignoreVersions");
-        ConfigKey<string> gitHubTokenName = new ConfigKey<string>("wdm.gitHubTokenName");
-        ConfigKey<string> gitHubTokenSecret = new ConfigKey<string>("wdm.gitHubTokenSecret");
-        ConfigKey<string> localRepositoryUser = new ConfigKey<string>("wdm.localRepositoryUser");
-        ConfigKey<string> localRepositoryPassword = new ConfigKey<string>("wdm.localRepositoryPassword");
+        private readonly ConfigKey<string> architecture = new ConfigKey<string>("wdm.architecture", defaultArchitecture());
+        private readonly ConfigKey<string> os = new ConfigKey<string>("wdm.os", defaultOsName());
+        private readonly ConfigKey<string> proxy = new ConfigKey<string>("wdm.proxy");
+        private readonly ConfigKey<string> proxyUser = new ConfigKey<string>("wdm.proxyUser");
+        private readonly ConfigKey<string> proxyPass = new ConfigKey<string>("wdm.proxyPass");
+        private readonly ConfigKey<string> ignoreVersions = new ConfigKey<string>("wdm.ignoreVersions");
+        private readonly ConfigKey<string> gitHubTokenName = new ConfigKey<string>("wdm.gitHubTokenName");
+        private readonly ConfigKey<string> gitHubTokenSecret = new ConfigKey<string>("wdm.gitHubTokenSecret");
+        private readonly ConfigKey<string> localRepositoryUser = new ConfigKey<string>("wdm.localRepositoryUser");
+        private readonly ConfigKey<string> localRepositoryPassword = new ConfigKey<string>("wdm.localRepositoryPassword");
 
-        ConfigKey<string> chromeDriverVersion = new ConfigKey<string>("wdm.chromeDriverVersion");
-        ConfigKey<string> chromeDriverExport = new ConfigKey<string>("wdm.chromeDriverExport");
-        ConfigKey<Uri> chromeDriverUrl = new ConfigKey<Uri>("wdm.chromeDriverUrl");
-        ConfigKey<Uri> chromeDriverMirrorUrl = new ConfigKey<Uri>("wdm.chromeDriverMirrorUrl");
+        private readonly ConfigKey<string> chromeDriverVersion = new ConfigKey<string>("wdm.chromeDriverVersion");
+        private readonly ConfigKey<string> chromeDriverExport = new ConfigKey<string>("wdm.chromeDriverExport");
+        private readonly ConfigKey<Uri> chromeDriverUrl = new ConfigKey<Uri>("wdm.chromeDriverUrl");
+        private readonly ConfigKey<Uri> chromeDriverMirrorUrl = new ConfigKey<Uri>("wdm.chromeDriverMirrorUrl");
 
-        ConfigKey<string> edgeDriverVersion = new ConfigKey<string>("wdm.edgeDriverVersion");
-        ConfigKey<string> edgeDriverExport = new ConfigKey<string>("wdm.edgeDriverExport");
-        ConfigKey<Uri> edgeDriverUrl = new ConfigKey<Uri>("wdm.edgeDriverUrl");
+        private readonly ConfigKey<string> edgeDriverVersion = new ConfigKey<string>("wdm.edgeDriverVersion");
+        private readonly ConfigKey<string> edgeDriverExport = new ConfigKey<string>("wdm.edgeDriverExport");
+        private readonly ConfigKey<Uri> edgeDriverUrl = new ConfigKey<Uri>("wdm.edgeDriverUrl");
 
-        ConfigKey<string> firefoxDriverVersion = new ConfigKey<string>("wdm.geckoDriverVersion");
-        ConfigKey<string> firefoxDriverExport = new ConfigKey<string>("wdm.geckoDriverExport");
-        ConfigKey<Uri> firefoxDriverUrl = new ConfigKey<Uri>("wdm.geckoDriverUrl");
-        ConfigKey<Uri> firefoxDriverMirrorUrl = new ConfigKey<Uri>("wdm.geckoDriverMirrorUrl");
+        private readonly ConfigKey<string> firefoxDriverVersion = new ConfigKey<string>("wdm.geckoDriverVersion");
+        private readonly ConfigKey<string> firefoxDriverExport = new ConfigKey<string>("wdm.geckoDriverExport");
+        private readonly ConfigKey<Uri> firefoxDriverUrl = new ConfigKey<Uri>("wdm.geckoDriverUrl");
+        private readonly ConfigKey<Uri> firefoxDriverMirrorUrl = new ConfigKey<Uri>("wdm.geckoDriverMirrorUrl");
 
-        ConfigKey<string> internetExplorerDriverVersion = new ConfigKey<string>("wdm.internetExplorerDriverVersion");
-        ConfigKey<string> internetExplorerDriverExport = new ConfigKey<string>("wdm.internetExplorerDriverExport");
-        ConfigKey<Uri> internetExplorerDriverUrl = new ConfigKey<Uri>("wdm.internetExplorerDriverUrl");
+        private readonly ConfigKey<string> internetExplorerDriverVersion = new ConfigKey<string>("wdm.internetExplorerDriverVersion");
+        private readonly ConfigKey<string> internetExplorerDriverExport = new ConfigKey<string>("wdm.internetExplorerDriverExport");
+        private readonly ConfigKey<Uri> internetExplorerDriverUrl = new ConfigKey<Uri>("wdm.internetExplorerDriverUrl");
 
-        ConfigKey<string> operaDriverVersion = new ConfigKey<string>("wdm.operaDriverVersion");
-        ConfigKey<string> operaDriverExport = new ConfigKey<string>("wdm.operaDriverExport");
-        ConfigKey<Uri> operaDriverUrl = new ConfigKey<Uri>("wdm.operaDriverUrl");
-        ConfigKey<Uri> operaDriverMirrorUrl = new ConfigKey<Uri>("wdm.operaDriverMirrorUrl");
+        private readonly ConfigKey<string> operaDriverVersion = new ConfigKey<string>("wdm.operaDriverVersion");
+        private readonly ConfigKey<string> operaDriverExport = new ConfigKey<string>("wdm.operaDriverExport");
+        private readonly ConfigKey<Uri> operaDriverUrl = new ConfigKey<Uri>("wdm.operaDriverUrl");
+        private readonly ConfigKey<Uri> operaDriverMirrorUrl = new ConfigKey<Uri>("wdm.operaDriverMirrorUrl");
 
-        ConfigKey<string> phantomjsDriverVersion = new ConfigKey<string>("wdm.phantomjsDriverVersion");
-        ConfigKey<string> phantomjsDriverExport = new ConfigKey<string>("wdm.phantomjsDriverExport");
-        ConfigKey<Uri> phantomjsDriverUrl = new ConfigKey<Uri>("wdm.phantomjsDriverUrl");
-        ConfigKey<Uri> phantomjsDriverMirrorUrl = new ConfigKey<Uri>("wdm.phantomjsDriverMirrorUrl");
+        private readonly ConfigKey<string> phantomjsDriverVersion = new ConfigKey<string>("wdm.phantomjsDriverVersion");
+        private readonly ConfigKey<string> phantomjsDriverExport = new ConfigKey<string>("wdm.phantomjsDriverExport");
+        private readonly ConfigKey<Uri> phantomjsDriverUrl = new ConfigKey<Uri>("wdm.phantomjsDriverUrl");
+        private readonly ConfigKey<Uri> phantomjsDriverMirrorUrl = new ConfigKey<Uri>("wdm.phantomjsDriverMirrorUrl");
 
-        ConfigKey<string> seleniumServerStandaloneVersion = new ConfigKey<string>("wdm.seleniumServerStandaloneVersion");
-        ConfigKey<Uri> seleniumServerStandaloneUrl = new ConfigKey<Uri>("wdm.seleniumServerStandaloneUrl");
+        private readonly ConfigKey<string> seleniumServerStandaloneVersion = new ConfigKey<string>("wdm.seleniumServerStandaloneVersion");
+        private readonly ConfigKey<Uri> seleniumServerStandaloneUrl = new ConfigKey<Uri>("wdm.seleniumServerStandaloneUrl");
 
-        ConfigKey<int> serverPort = new ConfigKey<int>("wdm.serverPort");
-        ConfigKey<string> binaryPath = new ConfigKey<string>("wdm.binaryPath");
-        ConfigKey<int> ttl = new ConfigKey<int>("wdm.ttl");
+        private readonly ConfigKey<int> serverPort = new ConfigKey<int>("wdm.serverPort");
+        private readonly ConfigKey<string> binaryPath = new ConfigKey<string>("wdm.binaryPath");
+        private readonly ConfigKey<int> ttl = new ConfigKey<int>("wdm.ttl");
 
         private T resolve<T>(ConfigKey<T> configKey)
         {
@@ -110,8 +110,7 @@ namespace WebDriverManager
             strValue = Environment.GetEnvironmentVariable(name.ToUpper().Replace(".", "_"));
             if (strValue == null)
             {
-                // TODO: implement this?
-                //strValue = getSystemProperty(name);
+                strValue = Environment.GetEnvironmentVariable(name);
             }
             if (strValue == null && value != null)
             {
@@ -126,7 +125,7 @@ namespace WebDriverManager
 
         private object parse<T>(string strValue)
         {
-            object output = null;
+            object output;
             if (typeof(T).Equals(typeof(string)))
             {
                 output = strValue;
@@ -143,7 +142,7 @@ namespace WebDriverManager
             {
                 try
                 {
-                    output = new System.Uri(strValue);
+                    output = new Uri(strValue);
                 }
                 catch (Exception e)
                 {
@@ -190,7 +189,7 @@ namespace WebDriverManager
                 Stream inputStream = File.OpenRead(properties);
                 props.Load(inputStream);
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 log.Trace("Property {0} not found in {1}", key, properties);
             }
@@ -205,9 +204,9 @@ namespace WebDriverManager
                 {
                     try
                     {
-                        field.GetType().GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(this, new object[] { });
+                        field.GetType().GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(this, Array.Empty<object>());
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         log.Warn("Exception resetting {0}", field.Name);
                     }
@@ -497,7 +496,7 @@ namespace WebDriverManager
         public string[] getIgnoreVersions()
         {
             string ignored = resolve(ignoreVersions);
-            string[] output = { };
+            string[] output = Array.Empty<string>();
             if (!string.IsNullOrEmpty(ignored))
             {
                 output = ignored.Split(',');

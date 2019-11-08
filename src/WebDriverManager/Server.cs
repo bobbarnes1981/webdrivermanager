@@ -31,7 +31,7 @@ namespace WebDriverManager
     public class Server
     {
 
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
         public Server(int port)
         {
@@ -133,7 +133,10 @@ namespace WebDriverManager
 
             // Response
             ctx.Res.SetHeader("Content-Disposition", "attachment; filename=\"" + binaryName + "\"");
-            ctx.Result(File.OpenRead(binary.FullName));
+            using (FileStream stream = File.OpenRead(binary.FullName))
+            {
+                ctx.Result(stream);
+            }
             log.Info("Server response: {0} {1} ({2} bytes)", binaryName, binaryVersion, binaryLength);
 
             // Clear configuration

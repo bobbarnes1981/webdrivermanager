@@ -23,7 +23,6 @@ namespace WebDriverManager.FakeJavalin
 {
     public class Context
     {
-        private Response res;
         public string Method()
         {
             throw new NotImplementedException();
@@ -40,7 +39,7 @@ namespace WebDriverManager.FakeJavalin
         {
             get
             {
-                return res;
+                throw new NotImplementedException();
             }
         }
         public void Result(Stream stream)

@@ -29,8 +29,9 @@ namespace WebDriverManager
     [Serializable]
     public class WebDriverManagerException : Exception
     {
-
-        private static long serialVersionUID = 635198548542132913L;
+        public WebDriverManagerException()
+        {
+        }
 
         public WebDriverManagerException(string message)
             : base(message)

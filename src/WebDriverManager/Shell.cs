@@ -26,14 +26,9 @@ namespace WebDriverManager
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.0.0
      */
-    public class Shell
+    public static class Shell
     {
-        static ILogger log = Logger.GetLogger();
-
-        private Shell()
-        {
-            throw new IllegalStateException("Utility class");
-        }
+        private readonly static ILogger log = Logger.GetLogger();
 
         public static string runAndWait(params string[] command)
         {
@@ -59,9 +54,11 @@ namespace WebDriverManager
             string output = "";
             try
             {
-                Process process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start();
-                output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
+                using (Process process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start())
+                {
+                    output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+                }
             }
             catch (IOException e)
             {

@@ -15,8 +15,6 @@
  *
  */
 
-using System;
-
 namespace WebDriverManager
 {
 
@@ -28,17 +26,14 @@ namespace WebDriverManager
      */
     public class ConfigKey<T>
     {
-        string name;
-        T value;
-        T defaultValue;
-
-        public ConfigKey()
-        {
-        }
+        private readonly string name;
+        private T value;
+        private readonly T defaultValue;
 
         public ConfigKey(string name)
         {
             this.name = name;
+            this.defaultValue = default;
         }
 
         public ConfigKey(string name, T value)
@@ -67,6 +62,5 @@ namespace WebDriverManager
         {
             this.value = value;
         }
-
     }
 }

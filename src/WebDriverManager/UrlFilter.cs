@@ -15,6 +15,7 @@
  *
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -28,20 +29,20 @@ namespace WebDriverManager
      */
     public class UrlFilter
     {
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        public List<System.Uri> filterByOs(List<System.Uri> list, string osName)
+        public List<Uri> filterByOs(List<Uri> list, string osName)
         {
             log.Trace("System.Uris before filtering by OS ({0}): {1}", osName, list);
-            List<System.Uri> outList = new List<System.Uri>();
+            List<Uri> outList = new List<Uri>();
 
-            foreach (System.Uri url in list)
+            foreach (Uri url in list)
             {
                 foreach (OperatingSystem os in System.Enum.GetValues(typeof(OperatingSystem)))
                 {
                     if (((osName.Contains(os.ToString())
                             && url.GetFile().ToUpper().Contains(os.ToString()))
-                            || (osName.Equals("mac", System.StringComparison.InvariantCultureIgnoreCase)
+                            || (osName.Equals("mac", StringComparison.InvariantCultureIgnoreCase)
                                     && url.GetFile().ToLower().Contains("osx")))
                             && !outList.Contains(url))
                     {
@@ -145,12 +146,12 @@ namespace WebDriverManager
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        private string getDistroName()
+        private static string getDistroName()
         {
             string outString = "";
             string key = "UBUNTU_CODENAME";
             DirectoryInfo dir = new DirectoryInfo(Path.DirectorySeparatorChar + "etc");
-            FileInfo[] fileList = new FileInfo[0];
+            FileInfo[] fileList = Array.Empty<FileInfo>();
             if (dir.Exists)
             {
                 fileList = dir.GetFiles("*-release");

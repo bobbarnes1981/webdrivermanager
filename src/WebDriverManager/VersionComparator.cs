@@ -29,12 +29,12 @@ namespace WebDriverManager
      */
     public class VersionComparator : IComparer<string>
     {
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
         public int Compare(string v1, string v2)
         {
-            string[] v1split = v1.Split(new string[] { "\\." }, StringSplitOptions.None);
-            string[] v2split = v2.Split(new string[] { "\\." }, StringSplitOptions.None);
+            string[] v1split = v1.Split(new string[] { "." }, StringSplitOptions.None);
+            string[] v2split = v2.Split(new string[] { "." }, StringSplitOptions.None);
             int length = Math.Max(v1split.Length, v2split.Length);
             for (int i = 0; i < length; i++)
             {

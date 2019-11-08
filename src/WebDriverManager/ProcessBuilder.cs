@@ -23,7 +23,7 @@ namespace WebDriverManager
 {
     class ProcessBuilder
     {
-        private string[] command;
+        private readonly string[] command;
 
         private DirectoryInfo directory;
 

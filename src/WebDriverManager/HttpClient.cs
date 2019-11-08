@@ -34,13 +34,13 @@ namespace WebDriverManager
      */
     public class HttpClient : System.IDisposable
     {
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        bool disposed = false;
-        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+        private bool disposed = false;
+        private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-        Config config;
-        System.Net.Http.HttpClient closeableHttpClient;
+        private readonly Config config;
+        private readonly System.Net.Http.HttpClient closeableHttpClient;
 
         public HttpClient(Config config)
         {
@@ -89,7 +89,7 @@ namespace WebDriverManager
             closeableHttpClient = new System.Net.Http.HttpClient(handler);
         }
 
-        public IWebProxy createProxy(string proxy)
+        public static IWebProxy createProxy(string proxy)
         {
             System.Uri url = determineProxyUrl(proxy);
             if (url != null)
@@ -123,7 +123,7 @@ namespace WebDriverManager
             return response;
         }
 
-        private System.Uri determineProxyUrl(string proxy)
+        private static Uri determineProxyUrl(string proxy)
         {
             string proxyFromEnvCaps = System.Environment.GetEnvironmentVariable("HTTPS_PROXY");
             string proxyFromEnv = string.IsNullOrEmpty(proxyFromEnvCaps) ? System.Environment.GetEnvironmentVariable("https_proxy") : proxyFromEnvCaps;
@@ -131,14 +131,15 @@ namespace WebDriverManager
             if (!string.IsNullOrEmpty(proxyInput))
             {
                 Regex rx = new Regex("^http[s]?://.*$");
-                new System.Uri(rx.IsMatch(proxyInput) ? proxyInput : "http://" + proxyInput);
+                new Uri(rx.IsMatch(proxyInput) ? proxyInput : "http://" + proxyInput);
             }
+
             return null;
         }
 
         private ICredentials createBasicCredentialsProvider(string proxy, string proxyUser, string proxyPass, IWebProxy proxyHost)
         {
-            System.Uri proxyUrl = determineProxyUrl(proxy);
+            Uri proxyUrl = determineProxyUrl(proxy);
             if (proxyUrl == null)
             {
                 return null;
@@ -154,14 +155,14 @@ namespace WebDriverManager
                 username = st[0];
                 password = st[1];
             }
-            string envProxyUser = System.Environment.GetEnvironmentVariable("HTTPS_PROXY_USER");
-            string envProxyPass = System.Environment.GetEnvironmentVariable("HTTPS_PROXY_PASS");
-            username = (envProxyUser != null) ? envProxyUser : username;
-            password = (envProxyPass != null) ? envProxyPass : password;
+            string envProxyUser = Environment.GetEnvironmentVariable("HTTPS_PROXY_USER");
+            string envProxyPass = Environment.GetEnvironmentVariable("HTTPS_PROXY_PASS");
+            username = envProxyUser ?? username;
+            password = envProxyPass ?? password;
 
             // apply option value
-            username = (proxyUser != null) ? proxyUser : username;
-            password = (proxyPass != null) ? proxyPass : password;
+            username = proxyUser ?? username;
+            password = proxyPass ?? password;
 
             if (username == null)
             {
