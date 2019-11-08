@@ -88,8 +88,8 @@ namespace WebDriverManager
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
 
-                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes("ul.driver-downloads li.driver-download > a");
-                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes("ul.driver-downloads li.driver-download p.driver-download__meta");
+                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/a");
+                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/p[contains(@class, 'driver-download__meta')]");
 
                 log.Trace("[Original] Download links:\n{0}", downloadLink);
                 log.Trace("[Original] Version paragraphs:\n{0}", versionParagraph);
@@ -130,7 +130,11 @@ namespace WebDriverManager
                         {
                             childIndex = 1;
                         }
-                        urlList.Add(new System.Uri(paragraph.ChildNodes[childIndex].Attributes["href"].Value));
+                        if (paragraph.ChildNodes[childIndex].Name == "a")
+                        {
+                            urlList.Add(new System.Uri(paragraph.ChildNodes[childIndex].Attributes["href"].Value));
+
+                        }
                     }
                     else
                     {
@@ -166,10 +170,8 @@ namespace WebDriverManager
         {
             log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
             List<System.Uri> outList = new List<System.Uri>();
-            var iterator = listVersions.GetEnumerator();
-            versionToDownload = iterator.Current;
-            //outList.Add(iterator.Current);
-            throw new System.NotImplementedException();
+            versionToDownload = listVersions.First();
+            outList.Add(list.First());
             log.Info("Latest version of Edge driver is {0}", versionToDownload);
             return outList;
         }
@@ -212,24 +214,21 @@ namespace WebDriverManager
             if (OsHelper.IsWindows())
             {
                 string[] programFilesEnvs = { getProgramFilesEnv() };
-                string msedgeVersion = getDefaultBrowserVersion(
-                        programFilesEnvs,
-                        "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe",
-                        "", "", "--version", GetDriverManagerType().ToString());
+                string msedgeVersion = getDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", "", "", "--version", GetDriverManagerType().ToString());
                 string browserVersionOutput;
                 if (msedgeVersion != null)
                 {
                     browserVersionOutput = msedgeVersion;
                     log.Debug("Edge Dev (based on Chromium) version {0} found", browserVersionOutput);
+                    return browserVersionOutput;
                 }
                 else
                 {
-                    browserVersionOutput = Shell.runAndWait("powershell",
-                            "get-appxpackage Microsoft.MicrosoftEdge");
-                }
-                if (!string.IsNullOrEmpty(browserVersionOutput))
-                {
-                    return Shell.getVersionFromPowerShellOutput(browserVersionOutput);
+                    browserVersionOutput = Shell.runAndWait("powershell", "get-appxpackage Microsoft.MicrosoftEdge");
+                    if (!string.IsNullOrEmpty(browserVersionOutput))
+                    {
+                        return Shell.getVersionFromPowerShellOutput(browserVersionOutput);
+                    }
                 }
             }
             return null;
