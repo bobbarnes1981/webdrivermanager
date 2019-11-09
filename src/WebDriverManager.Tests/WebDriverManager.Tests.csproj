@@ -60,10 +60,47 @@
     <Compile Include="Diagnostic\ChromeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\CacheTest.cs" />
+    <Compile Include="Test\ChromeLatestTest.cs" />
+    <Compile Include="Test\ChromeTest.cs" />
+    <Compile Include="Test\ChromeVersionTest.cs" />
+    <Compile Include="Test\CustomTargetTest.cs" />
+    <Compile Include="Test\EdgeMsiTest.cs" />
+    <Compile Include="Test\EdgePreInstalledTest.cs" />
+    <Compile Include="Test\EdgeReadVersionTest.cs" />
+    <Compile Include="Test\EdgeTest.cs" />
+    <Compile Include="Test\EdgeVersionTest.cs" />
+    <Compile Include="Test\FirefoxTest.cs" />
+    <Compile Include="Test\FirefoxVersionTest.cs" />
+    <Compile Include="Test\ForceDownloadTest.cs" />
+    <Compile Include="Test\ForceError403Test.cs" />
+    <Compile Include="Test\ForceOsTest.cs" />
+    <Compile Include="Test\HtmlUnitTest.cs" />
+    <Compile Include="Test\IExplorerTest.cs" />
+    <Compile Include="Test\IExplorerVersionTest.cs" />
+    <Compile Include="Test\IgnoredVersionTest.cs" />
+    <Compile Include="Test\InteractiveTest.cs" />
+    <Compile Include="Test\MockProxyTest.cs" />
+    <Compile Include="Test\OperaTest.cs" />
+    <Compile Include="Test\OperaVersionTest.cs" />
+    <Compile Include="Test\OtherWebDriverTest.cs" />
+    <Compile Include="Test\PhantomJsBetaTest.cs" />
+    <Compile Include="Test\PhantomJsFIlterTest.cs" />
+    <Compile Include="Test\PhantomJsTest.cs" />
+    <Compile Include="Test\PhantomJsVersionTest.cs" />
+    <Compile Include="Test\PreferencesTest.cs" />
+    <Compile Include="Test\PropertiesTest.cs" />
+    <Compile Include="Test\SeleniumServerStandaloneTest.cs" />
+    <Compile Include="Test\ServerTest.cs" />
+    <Compile Include="Test\ShellTest.cs" />
+    <Compile Include="Test\TaoBaoTest.cs" />
+    <Compile Include="Test\TargetTest.cs" />
+    <Compile Include="Test\VersionsTest.cs" />
+    <Compile Include="Test\WebDriverTest.cs" />
+    <Compile Include="Test\WrongVersionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Resources\webdrivermanager.properties">
+    <Content Include="Resources\wdm-test.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -203,9 +203,9 @@ namespace WebDriverManager
             }
         }
 
-        public static WebDriverManager getInstance<T>()
+        public static WebDriverManager getInstance(Type driverType)
         {
-            switch (typeof(T).Name)
+            switch (driverType.Name)
             {
                 case "org.openqa.selenium.chrome.ChromeDriver":
                     return chromedriver();
