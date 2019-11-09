@@ -55,14 +55,14 @@ namespace WebDriverManager
             return outList;
         }
 
-        public List<System.Uri> filterByArch(List<System.Uri> list, Architecture arch, bool forcedArch)
+        public List<System.Uri> filterByArch(List<Uri> list, Architecture arch, bool forcedArch)
         {
             log.Trace("System.Uris before filtering by architecture ({0}): {1}", arch, list);
             List<System.Uri> outList = new List<System.Uri>(list);
 
             if ((forcedArch || outList.Count > 1) && arch != null)
             {
-                foreach (System.Uri url in list)
+                foreach (Uri url in list)
                 {
                     if (!url.GetFile().Contains("x86")
                             && !url.GetFile().Contains("64")
@@ -72,7 +72,7 @@ namespace WebDriverManager
                         continue;
                     }
 
-                    if (!url.GetFile().Contains(arch.ToString()))
+                    if (!url.GetFile().Contains(arch.GetString()))
                     {
                         outList.Remove(url);
                     }

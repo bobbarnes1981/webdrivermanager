@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace WebDriverManager
@@ -68,6 +69,18 @@ namespace WebDriverManager
             T[] newArray = new T[newLength];
             Array.Copy(source, 0, newArray, 0, source.Length);
             return newArray;
+        }
+
+        private static Dictionary<Architecture, string> architectureStrings = new Dictionary<Architecture, string>
+        {
+            { Architecture.DEFAULT, "DEFAULT" },
+            { Architecture.X32, "32" },
+            { Architecture.X64, "64" },
+        };
+
+        public static string GetString(this Architecture architecture)
+        {
+            return architectureStrings[architecture];
         }
     }
 }

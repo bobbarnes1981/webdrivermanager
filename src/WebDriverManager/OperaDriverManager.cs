@@ -98,46 +98,47 @@ namespace WebDriverManager
         {
             log.Trace("Post processing for Opera: {0}", archive);
 
-            DirectoryInfo extractFolder = getFolderFilter(archive.Directory)[0];
-            //if (!extractFolder.isFile())
-            //{
-            FileInfo target;
-            try
+            DirectoryInfo[] folders = getFolderFilter(archive.Directory);
+            if (folders.Length > 0)
             {
-                log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
-                FileInfo[] listFiles = extractFolder.GetFiles();
-                int i = 0;
-                FileInfo operadriver;
-                bool isOperaDriver;
-                do
+                DirectoryInfo extractFolder = getFolderFilter(archive.Directory)[0];
+                FileInfo target;
+                try
                 {
-                    if (i >= listFiles.Length)
+                    log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
+                    FileInfo[] listFiles = extractFolder.GetFiles();
+                    int i = 0;
+                    FileInfo operadriver;
+                    bool isOperaDriver;
+                    do
                     {
-                        throw new WebDriverManagerException(
-                                "Driver binary for Opera not found in zip file");
-                    }
-                    operadriver = listFiles[i];
-                    isOperaDriver = Config().isExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
-                    i++;
-                    log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
-                } while (!isOperaDriver);
-                log.Info("Operadriver binary: {0}", operadriver);
+                        if (i >= listFiles.Length)
+                        {
+                            throw new WebDriverManagerException(
+                                    "Driver binary for Opera not found in zip file");
+                        }
+                        operadriver = listFiles[i];
+                        isOperaDriver = Config().isExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
+                        i++;
+                        log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
+                    } while (!isOperaDriver);
+                    log.Info("Operadriver binary: {0}", operadriver);
 
-                target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
-                log.Trace("Operadriver target: {0}", target);
+                    target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
+                    log.Trace("Operadriver target: {0}", target);
 
-                downloader.RenameFile(operadriver, target);
+                    downloader.RenameFile(operadriver, target);
+                }
+                finally
+                {
+                    downloader.deleteFolder(extractFolder);
+                }
+                return target;
             }
-            finally
+            else
             {
-                downloader.deleteFolder(extractFolder);
+                return base.postDownload(archive);
             }
-            return target;
-            //}
-            //else
-            //{
-            //    return base.postDownload(archive);
-            //}
         }
 
         protected override string GetBrowserVersion()

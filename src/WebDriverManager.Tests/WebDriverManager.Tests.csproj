@@ -63,7 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\wdm-test.properties" />
+    <Content Include="Resources\webdrivermanager.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebDriverManager\WebDriverManager.csproj">

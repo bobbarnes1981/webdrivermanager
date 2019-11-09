@@ -943,9 +943,9 @@ namespace WebDriverManager
                 }
 
                 // Filter by arch
-                filesInCache = filterCacheBy(filesInCache, arch.ToString());
+                filesInCache = filterCacheBy(filesInCache, arch.GetString());
 
-                if (filesInCache != null)
+                if (filesInCache != null && filesInCache.Count > 1)
                 {
                     return filesInCache[filesInCache.Count() - 1].ToString();
                 }
@@ -963,7 +963,7 @@ namespace WebDriverManager
                 string keyInLowerCase = key.ToLower();
                 foreach (FileInfo f in input)
                 {
-                    if (!f.ToString().ToLower().Contains(keyInLowerCase))
+                    if (!f.FullName.ToLower().Contains(keyInLowerCase))
                     {
                         output.Remove(f);
                     }
@@ -975,7 +975,7 @@ namespace WebDriverManager
 
         protected List<FileInfo> getFilesInCache()
         {
-            return new DirectoryInfo(downloader.getTargetPath()).GetFiles().ToList();
+            return new DirectoryInfo(downloader.getTargetPath()).GetFiles("*.*", SearchOption.AllDirectories).ToList();
         }
 
         protected static List<Uri> removeFromList(List<Uri> list, string version)
@@ -1226,8 +1226,8 @@ namespace WebDriverManager
         /// <returns></returns>
         protected Stream openGitHubConnection(Uri driverUrl)
         {
-            string gitHubTokenName = Config().getGitHubTokenName();
-            string gitHubTokenSecret = Config().getGitHubTokenSecret();
+            string gitHubTokenName = Config().getGitHubTokenName().Trim();
+            string gitHubTokenSecret = Config().getGitHubTokenSecret().Trim();
             AuthenticationHeaderValue authHeader = null;
             if (!string.IsNullOrEmpty(gitHubTokenName) && !string.IsNullOrEmpty(gitHubTokenSecret))
             {

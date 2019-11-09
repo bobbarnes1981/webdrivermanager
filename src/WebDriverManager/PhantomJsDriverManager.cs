@@ -119,35 +119,31 @@ namespace WebDriverManager
 
         public override FileInfo postDownload(FileInfo archive)
         {
-            //log.Trace("PhantomJS package name: {}", archive);
+            log.Trace("PhantomJS package name: {0}", archive);
 
-            //FileInfo extractFolder = archive.getParentFile().listFiles(getFolderFilter())[0];
-            //log.Trace("PhantomJS extract folder (to be deleted): {}",
-            //        extractFolder);
+            DirectoryInfo extractFolder = getFolderFilter(archive.Directory)[0];
+            log.Trace("PhantomJS extract folder (to be deleted): {0}", extractFolder);
 
-            //File binFolder = new File(extractFolder.getAbsoluteFile() + separator + "bin");
-            //// Exception for older version of PhantomJS
-            //int binaryIndex = 0;
-            //if (!binFolder.exists())
-            //{
-            //    binFolder = extractFolder;
-            //    binaryIndex = 3;
-            //}
+            DirectoryInfo binFolder = new DirectoryInfo(extractFolder.FullName + Path.DirectorySeparatorChar + "bin");
+            // Exception for older version of PhantomJS
+            int binaryIndex = 0;
+            if (!binFolder.Exists)
+            {
+                binFolder = extractFolder;
+                binaryIndex = 3;
+            }
 
-            //log.trace("PhantomJS bin folder: {} (index {})", binFolder,
-            //        binaryIndex);
+            log.Trace("PhantomJS bin folder: {0} (index {1})", binFolder, binaryIndex);
 
-            //File phantomjs = binFolder.listFiles()[binaryIndex];
-            //log.trace("PhantomJS binary: {}", phantomjs);
+            FileInfo phantomjs = binFolder.GetFiles()[binaryIndex];
+            log.Trace("PhantomJS binary: {0}", phantomjs);
 
-            //File target = new File(archive.getParentFile().getAbsolutePath(),
-            //        phantomjs.getName());
-            //log.trace("PhantomJS target: {}", target);
+            FileInfo target = new FileInfo(Path.Combine(archive.Directory.FullName, phantomjs.Name));
+            log.Trace("PhantomJS target: {0}", target);
 
-            //downloader.RenameFile(phantomjs, target);
-            //downloader.deleteFolder(extractFolder);
-            //return target;
-            throw new System.NotImplementedException();
+            downloader.RenameFile(phantomjs, target);
+            downloader.deleteFolder(extractFolder);
+            return target;
         }
 
         protected override string GetBrowserVersion()

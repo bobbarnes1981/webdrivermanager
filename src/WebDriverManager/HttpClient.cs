@@ -87,6 +87,7 @@ namespace WebDriverManager
             }
 
             closeableHttpClient = new System.Net.Http.HttpClient(handler);
+            closeableHttpClient.DefaultRequestHeaders.Add("User-Agent", "WebDriverManager-Sharp");
         }
 
         public static IWebProxy createProxy(string proxy)
@@ -114,9 +115,9 @@ namespace WebDriverManager
             System.Net.Http.HttpResponseMessage response = responseTask.Result;
             if (!response.IsSuccessStatusCode)
             {
-                string errorMessage = "Error HTTP "
-                    + response.StatusCode + " executing "
-                    + url;
+                string responseString = response.Content.ReadAsStringAsync().Result;
+
+                string errorMessage = "Error HTTP " + response.StatusCode + " executing " + url + " [" + responseString + "]";
                 log.Error(errorMessage);
                 throw new WebDriverManagerException(errorMessage);
             }

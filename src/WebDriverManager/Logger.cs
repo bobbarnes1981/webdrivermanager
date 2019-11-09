@@ -35,7 +35,7 @@ namespace WebDriverManager
 
         private Logger()
         {
-            logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            logger = new LoggerConfiguration().WriteTo.Console().WriteTo.Debug().CreateLogger();
         }
 
         public static ILogger GetLogger()

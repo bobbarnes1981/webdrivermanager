@@ -60,7 +60,7 @@ namespace WebDriverManager.Tests.Test
             browserManager.forceCache().forceDownload().architecture(architecture).version(driverVersion).setup();
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDriverFromCache", BindingFlags.NonPublic | BindingFlags.Instance);
-            string driverInCachePath = (string)method.Invoke(browserManager, new object[] { browserManager, driverVersion, architecture });
+            string driverInCachePath = (string)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config().getOs() });
 
             Assert.That(driverInCachePath, Is.Not.Null);
         }
