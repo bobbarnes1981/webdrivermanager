@@ -36,8 +36,7 @@ namespace WebDriverManager.Tests.Test
         [TearDown]
         public void cleanCache()
         {
-            new DirectoryInfo(downloader.getTargetPath()).Delete(true);
-
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
         }
 
         [Test]

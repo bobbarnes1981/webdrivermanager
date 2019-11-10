@@ -46,7 +46,7 @@ namespace WebDriverManager.Tests.Test
             WebDriverManager.chromedriver().setup();
             string binaryPath = WebDriverManager.chromedriver().getBinaryPath();
             log.Info("Binary path {0}", binaryPath);
-            StringAssert.StartsWith(binaryPath, tmpFolder.ToString());
+            StringAssert.StartsWith(tmpFolder.ToString(), binaryPath);
         }
 
         [TearDown]

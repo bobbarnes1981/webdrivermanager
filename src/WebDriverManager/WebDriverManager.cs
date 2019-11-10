@@ -205,19 +205,19 @@ namespace WebDriverManager
 
         public static WebDriverManager getInstance(Type driverType)
         {
-            switch (driverType.Name)
+            switch (driverType.FullName)
             {
-                case "org.openqa.selenium.chrome.ChromeDriver":
+                case "OpenQA.Selenium.Chrome.ChromeDriver":
                     return chromedriver();
-                case "org.openqa.selenium.firefox.FirefoxDriver":
+                case "OpenQA.Selenium.Firefox.FirefoxDriver":
                     return firefoxdriver();
-                case "org.openqa.selenium.opera.OperaDriver":
+                case "OpenQA.Selenium.Opera.OperaDriver":
                     return operadriver();
-                case "org.openqa.selenium.ie.InternetExplorerDriver":
+                case "OpenQA.Selenium.IE.InternetExplorerDriver":
                     return iedriver();
-                case "org.openqa.selenium.edge.EdgeDriver":
+                case "OpenQA.Selenium.Edge.EdgeDriver":
                     return edgedriver();
-                case "org.openqa.selenium.phantomjs.PhantomJSDriver":
+                case "OpenQA.Selenium.Phantomjs.PhantomJSDriver":
                     return phantomjs();
                 default:
                     return voiddriver();

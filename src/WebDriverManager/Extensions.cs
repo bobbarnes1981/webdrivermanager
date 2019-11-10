@@ -33,9 +33,9 @@ namespace WebDriverManager
         }
         public static string SubstringJava(this string str, int startIndex, int endIndex)
         {
-            if (endIndex < startIndex)
+            if (startIndex < 0 || startIndex > endIndex || endIndex > str.Length)
             {
-                throw new NotImplementedException();
+                throw new IndexOutOfRangeException();
             }
             return str.Substring(startIndex, endIndex - startIndex);
         }

@@ -37,18 +37,22 @@ namespace WebDriverManager.Tests.Test
         //@InjectMocks
         public Downloader downloader;
 
+        public ForceOsTest(OperatingSystem operatingSystem)
+        {
+            this.operatingSystem = operatingSystem;
+        }
+
         [SetUp]
         public void setup()
         {
             //initMocks(this);
-            new DirectoryInfo(downloader.getTargetPath()).Delete(true);
-
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
         }
 
         [TearDown]
         public void teardown()
         {
-            new DirectoryInfo(downloader.getTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
         }
 
         [Test]

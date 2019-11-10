@@ -89,8 +89,9 @@ namespace WebDriverManager
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
 
-                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/a");
-                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/p[contains(@class, 'driver-download__meta')]");
+                string baseXPath = "//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/";
+                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::a[@aria-label]", baseXPath));
+                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::p[contains(@class, 'driver-download__meta')]", baseXPath));
 
                 log.Trace("[Original] Download links:\n{0}", downloadLink);
                 log.Trace("[Original] Version paragraphs:\n{0}", versionParagraph);
@@ -131,11 +132,7 @@ namespace WebDriverManager
                         {
                             childIndex = 1;
                         }
-                        if (paragraph.ChildNodes[childIndex].Name == "a")
-                        {
-                            urlList.Add(new System.Uri(paragraph.ChildNodes[childIndex].Attributes["href"].Value));
-
-                        }
+                        urlList.Add(new System.Uri(paragraph.SelectNodes("a")[childIndex].Attributes["href"].Value));
                     }
                     else
                     {
