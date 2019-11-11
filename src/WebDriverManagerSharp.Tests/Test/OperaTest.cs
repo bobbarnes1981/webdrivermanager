@@ -19,7 +19,7 @@ using NUnit.Framework;
 using OpenQA.Selenium.Opera;
 using System.IO;
 using System.Runtime.InteropServices;
-using WebDriverManager.Tests.Base;
+using WebDriverManagerSharp.Tests.Base;
 
 namespace WebDriverManagerSharp.Tests.Test
 {

@@ -17,7 +17,7 @@
 
 using NUnit.Framework;
 using OpenQA.Selenium.Edge;
-using WebDriverManager.Tests.Base;
+using WebDriverManagerSharp.Tests.Base;
 
 namespace WebDriverManagerSharp.Tests.Test
 {

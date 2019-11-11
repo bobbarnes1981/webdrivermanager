@@ -25,7 +25,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
-using WebDriverManager.GitHubApi;
+using WebDriverManagerSharp.GitHubApi;
 
 namespace WebDriverManagerSharp
 {
@@ -1443,7 +1443,7 @@ namespace WebDriverManagerSharp
 
         private static void resolveLocal(string validBrowsers, string arg)
         {
-            log.Info("Using WebDriverManager to resolve {0}", arg);
+            log.Info("using WebDriverManagerSharp to resolve {0}", arg);
             try
             {
                 DriverManagerType driverManagerType = (DriverManagerType)System.Enum.Parse(typeof(DriverManagerType), arg.ToUpper());
