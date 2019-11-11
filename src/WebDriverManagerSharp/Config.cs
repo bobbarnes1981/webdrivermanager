@@ -186,8 +186,11 @@ namespace WebDriverManagerSharp
             Properties props = new Properties();
             try
             {
-                Stream inputStream = File.OpenRead(properties);
-                props.Load(inputStream);
+                if (File.Exists(properties))
+                {
+                    Stream inputStream = File.OpenRead(properties);
+                    props.Load(inputStream);
+                }
             }
             catch (IOException)
             {

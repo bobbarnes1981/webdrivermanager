@@ -29,30 +29,19 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 2.1.2
      */
-    [TestFixture("chrome", "chromedriver")]
-    [TestFixture("firefox", "geckodriver")]
-    [TestFixture("opera", "operadriver")]
-    [TestFixture("phantomjs", "phantomjs")]
-    [TestFixture("edge", "msedgedriver")]
-    [TestFixture("iexplorer", "IEDriverServer")]
     public class InteractiveTest
     {
         public static ILogger log = Logger.GetLogger();
 
         public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
-        public string argument;
-
-        public string driver;
-
-        public InteractiveTest(string argument, string driver)
-        {
-            this.argument = argument;
-            this.driver = driver + EXT;
-        }
-
-        [Test]
-        public void testInteractive()
+        [TestCase("chrome", "chromedriver")]
+        [TestCase("firefox", "geckodriver")]
+        [TestCase("opera", "operadriver")]
+        [TestCase("phantomjs", "phantomjs")]
+        [TestCase("edge", "msedgedriver")]
+        [TestCase("iexplorer", "IEDriverServer")]
+        public void testInteractive(string argument, string driver)
         {
             log.Debug("Running interactive wdm with arguments: {0}", argument);
             WebDriverManager.main(new string[] { argument });

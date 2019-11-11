@@ -29,22 +29,11 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.7.2
      */
-    [TestFixture(typeof(ChromeDriver), "99")]
-    [TestFixture(typeof(FirefoxDriver), "99")]
     public class WrongVersionTest
     {
-        public Type driverClass;
-
-        public string version;
-
-        public WrongVersionTest(Type driverClass, string version)
-        {
-            this.driverClass = driverClass;
-            this.version = version;
-        }
-
-        [Test]
-        public void testWrongVersion()
+        [TestCase(typeof(ChromeDriver), "99")]
+        [TestCase(typeof(FirefoxDriver), "99")]
+        public void testWrongVersion(Type driverClass, string version)
         {
             WebDriverManagerException exception = Assert.Throws<WebDriverManagerException>(WebDriverManager.getInstance(driverClass).version(version).setup);
             //FileInfo binary = new FileInfo(WebDriverManager.getInstance(driverClass).getBinaryPath());

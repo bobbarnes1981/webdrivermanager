@@ -28,31 +28,13 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.0.0
      */
-    [TestFixture("chromedriver", "chromedriver")] // + EXT
-    [TestFixture("firefoxdriver", "geckodriver")] // + EXT
-    [TestFixture("operadriver", "operadriver")] // + EXT
-    [TestFixture("phantomjs", "phantomjs")] // + EXT
-    [TestFixture("edgedriver", "msedgedriver.exe")]
-    [TestFixture("iedriver", "IEDriverServer.exe")]
-    [TestFixture("chromedriver?os=WIN", "chromedriver.exe")]
-    [TestFixture("chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true", "chromedriver")]
     public class ServerTest
     {
         private static ILogger log = Logger.GetLogger();
 
         public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
-        public string path;
-
-        public string driver;
-
         public static string serverPort;
-
-        public ServerTest(string path, string driver)
-        {
-            this.path = path;
-            this.driver = driver;
-        }
 
         [OneTimeSetUp]
         public static void startServer()
@@ -63,8 +45,15 @@ namespace WebDriverManagerSharp.Tests.Test
             WebDriverManager.main(new string[] { "server", serverPort });
         }
 
-        [Test]
-        public void testServer()
+        [TestCase("chromedriver", "chromedriver")] // + EXT
+        [TestCase("firefoxdriver", "geckodriver")] // + EXT
+        [TestCase("operadriver", "operadriver")] // + EXT
+        [TestCase("phantomjs", "phantomjs")] // + EXT
+        [TestCase("edgedriver", "msedgedriver.exe")]
+        [TestCase("iedriver", "IEDriverServer.exe")]
+        [TestCase("chromedriver?os=WIN", "chromedriver.exe")]
+        [TestCase("chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true", "chromedriver")]
+        public void testServer(string path, string driver)
         {
             throw new NotImplementedException();
             //string serverUrl = string.Format("http://localhost:%s/%s", serverPort, path);

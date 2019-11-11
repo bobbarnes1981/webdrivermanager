@@ -25,23 +25,12 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.6.1
      */
-    [TestFixture("Chromium 73.0.3683.86 Built on Ubuntu , running on Ubuntu 16.04", "73")]
-    [TestFixture("Chromium 74.0.3729.169 Built on Ubuntu , running on Ubuntu 18.04", "74")]
-    [TestFixture("Google Chrome 75.0.3770.80", "75")]
     public class ShellTest
     {
-        public string output;
-
-        public string version;
-
-        public ShellTest(string output, string version)
-        {
-            this.output = output;
-            this.version = version;
-        }
-
-        [Test]
-        public void versionFromPosixOutputTest()
+        [TestCase("Chromium 73.0.3683.86 Built on Ubuntu , running on Ubuntu 16.04", "73")]
+        [TestCase("Chromium 74.0.3729.169 Built on Ubuntu , running on Ubuntu 18.04", "74")]
+        [TestCase("Google Chrome 75.0.3770.80", "75")]
+        public void versionFromPosixOutputTest(string output, string version)
         {
             string versionFromPosixOutput = Shell.getVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
             Assert.That(versionFromPosixOutput, Is.EqualTo(version));

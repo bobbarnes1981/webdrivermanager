@@ -42,17 +42,17 @@ namespace WebDriverManagerSharp.Tests.Test
         public void setup()
         {
             phantomJsManager = WebDriverManager.phantomjs();
-            FieldInfo field = typeof(WebDriverManager).GetField("httpClient");
+            FieldInfo field = typeof(WebDriverManager).GetField("httpClient", BindingFlags.Instance | BindingFlags.NonPublic);
             field.SetValue(phantomJsManager, new HttpClient(new Config()));
 
-            MethodInfo method = typeof(WebDriverManager).GetMethod("getDrivers");
+            MethodInfo method = typeof(WebDriverManager).GetMethod("GetDrivers", BindingFlags.Instance | BindingFlags.NonPublic);
             driversUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[0]);
         }
 
         [Test]
         public void testFilterPhantomJs()
         {
-            MethodInfo method = typeof(WebDriverManager).GetMethod("checkLatest");
+            MethodInfo method = typeof(WebDriverManager).GetMethod("checkLatest", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> latestUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName });
 
             List<Uri> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls, Architecture.X64, false);
@@ -66,7 +66,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public void testFilterVersionPhantomJs()
         {
             String specificVersion = "1.9.6";
-            MethodInfo method = typeof(WebDriverManager).GetMethod("getVersion");
+            MethodInfo method = typeof(WebDriverManager).GetMethod("getVersion", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> specificVersionUrls = (List<Uri>)method.Invoke(
                     phantomJsManager, new object[] { driversUrls, phantomJsBinaryName,
                     specificVersion });

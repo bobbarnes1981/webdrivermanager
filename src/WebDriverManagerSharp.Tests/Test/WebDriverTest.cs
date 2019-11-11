@@ -30,20 +30,12 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.3.1
      */
-    [TestFixture(typeof(ChromeDriver))]
-    [TestFixture(typeof(FirefoxDriver))]
-    //[TestFixture(typeof(PhantomJsDriver))]
     public class WebDriverTest
     {
-        public Type driverClass;
-
-        public WebDriverTest(Type driverClass)
-        {
-            this.driverClass = driverClass;
-        }
-
-        [Test]
-        public void testWebDriver()
+        [TestCase(typeof(ChromeDriver))]
+        [TestCase(typeof(FirefoxDriver))]
+        //[TestCase(typeof(PhantomJsDriver))]
+        public void testWebDriver(Type driverClass)
         {
             WebDriverManager.getInstance(driverClass).setup();
             string binaryPath = WebDriverManager.getInstance(driverClass).getBinaryPath();

@@ -297,10 +297,10 @@ namespace WebDriverManagerSharp
 
         public WebDriverManager useMirror()
         {
-            System.Uri mirrorUrl = GetMirrorUrl();
-            if (mirrorUrl != null)
+            Uri mirrorUrl = GetMirrorUrl();
+            if (mirrorUrl == null)
             {
-                throw new WebDriverManagerException("Mirror System.Uri not available");
+                throw new WebDriverManagerException("Mirror URL not available");
             }
             Config().setUseMirror(true);
             return instanceMap[GetDriverManagerType().Value];

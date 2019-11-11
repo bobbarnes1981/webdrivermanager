@@ -33,26 +33,20 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 2.1.0
      */
-    [TestFixture(typeof(ChromeDriver))]
-    [TestFixture(typeof(FirefoxDriver))]
-    [TestFixture(typeof(OperaDriver))]
-    [TestFixture(typeof(EdgeDriver))]
-    [TestFixture(typeof(InternetExplorerDriver))]
-    //[TestFixture(typeof(PhantomJsDriver))]
     public class VersionsTest
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        public WebDriverManager driverManager;
-
-        public VersionsTest(Type driverManager)
+        [TestCase(typeof(ChromeDriver))]
+        [TestCase(typeof(FirefoxDriver))]
+        [TestCase(typeof(OperaDriver))]
+        [TestCase(typeof(EdgeDriver))]
+        [TestCase(typeof(InternetExplorerDriver))]
+        //[TestCase(typeof(PhantomJsDriver))]
+        public void testDriverVersions(Type driverManagerClass)
         {
-            this.driverManager = WebDriverManager.getInstance(driverManager);
-        }
+            WebDriverManager driverManager = WebDriverManager.getInstance(driverManagerClass);
 
-        [Test]
-        public void testChromeDriverVersions()
-        {
             List<string> versions = driverManager.getVersions();
             log.Debug("Versions of {0} {1}", driverManager.GetType().Name, versions);
             Assert.That(versions, Is.Not.Null);

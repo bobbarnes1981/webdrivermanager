@@ -26,7 +26,6 @@ namespace WebDriverManagerSharp.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.4.0
      */
-
     public class PhantomJsTest : BrowserTestParent
     {
 
@@ -39,7 +38,8 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setupTest()
         {
-            //driver = new PhantomJSDriver();
+            Assert.Ignore("Not currently supported");
+            //driver = new PhantomJsDriver();
         }
     }
 }

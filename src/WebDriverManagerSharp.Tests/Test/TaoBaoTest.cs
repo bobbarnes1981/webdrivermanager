@@ -58,9 +58,9 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testTaobaoException()
         {
-            Assert.Throws<WebDriverManagerException>(WebDriverManager.edgedriver().useMirror().setup);
-            FileInfo binary = new FileInfo(WebDriverManager.edgedriver().getBinaryPath());
-            Assert.True(binary.Exists);
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.edgedriver().useMirror());
+            //FileInfo binary = new FileInfo(WebDriverManager.edgedriver().getBinaryPath());
+            //Assert.True(binary.Exists);
         }
     }
 }
