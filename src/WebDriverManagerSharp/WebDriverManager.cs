@@ -660,7 +660,7 @@ namespace WebDriverManagerSharp
             if (version.Equals(PRE_INSTALLED))
             {
                 string systemRoot = System.Environment.GetEnvironmentVariable("SystemRoot");
-                FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(systemRoot, "System32" + Path.DirectorySeparatorChar + "MicrosoftWebDriver.exe"));
+                FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(systemRoot, "System32", "MicrosoftWebDriver.exe"));
                 if (microsoftWebDriverFile.Exists)
                 {
                     downloadedVersion = PRE_INSTALLED;

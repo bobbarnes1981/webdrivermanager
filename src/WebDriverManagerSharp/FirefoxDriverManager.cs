@@ -116,6 +116,5 @@ namespace WebDriverManagerSharp
             string[] programFilesEnvs = { getProgramFilesEnv() };
             return getDefaultBrowserVersion(programFilesEnvs, "\\\\Mozilla Firefox\\\\firefox.exe", "firefox", "/Applications/Firefox.app/Contents/MacOS/firefox", "-v", GetDriverManagerType().ToString());
         }
-
     }
 }

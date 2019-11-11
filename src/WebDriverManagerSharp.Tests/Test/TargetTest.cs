@@ -101,9 +101,9 @@ namespace WebDriverManagerSharp.Tests.Test
 
             FileInfo result = downloader.getTarget(version, new Uri(url));
             log.Info("{0}", result);
-            log.Info(targetPath + target);
+            log.Info(Path.Combine(targetPath, target));
 
-            FileInfo fileReal = new FileInfo(targetPath + target);
+            FileInfo fileReal = new FileInfo(Path.Combine(targetPath, target));
 
             Assert.That(result.FullName, Is.EqualTo(fileReal.FullName));
         }
