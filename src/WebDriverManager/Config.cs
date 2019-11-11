@@ -245,9 +245,12 @@ namespace WebDriverManager
 
         public bool isExecutable(FileInfo file)
         {
-            return resolve(os).ToLower().Equals("win")
-                    ? file.Extension.Equals(".exe")
-                    : throw new NotImplementedException("Detection of executable files on non-windows is not implemented");
+            if (resolve(os).ToLower().Equals("win"))
+            {
+                return file.Extension.Equals(".exe");
+            }
+
+            throw new NotImplementedException("Detection of executable files on non-windows is not implemented");
         }
 
         // Getters and setters
