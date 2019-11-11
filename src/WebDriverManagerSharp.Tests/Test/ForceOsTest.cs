@@ -18,7 +18,7 @@
 using NUnit.Framework;
 using System.IO;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Test for ignore versions.

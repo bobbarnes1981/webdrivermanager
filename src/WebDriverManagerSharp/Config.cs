@@ -20,7 +20,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Configuration class.

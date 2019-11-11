@@ -2,7 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 
-namespace WebDriverManager.Tests.Diagnostic
+namespace WebDriverManagerSharp.Tests.Diagnostic
 {
     class FirefoxTest
     {

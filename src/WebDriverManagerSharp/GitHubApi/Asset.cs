@@ -17,7 +17,7 @@
 
 using Newtonsoft.Json;
 
-namespace WebDriverManager.GitHubApi
+namespace WebDriverManagerSharp.GitHubApi
 {
     public class Asset
     {

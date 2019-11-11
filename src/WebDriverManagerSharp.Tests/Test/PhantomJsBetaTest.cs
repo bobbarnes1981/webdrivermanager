@@ -17,7 +17,7 @@
 
 using NUnit.Framework;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Test with PhantomJS beta.

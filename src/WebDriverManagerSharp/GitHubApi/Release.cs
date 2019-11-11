@@ -18,7 +18,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace WebDriverManager.GitHubApi
+namespace WebDriverManagerSharp.GitHubApi
 {
     /**
      * Plain-Old Java Object to parse JSON GitHub API (e.g.

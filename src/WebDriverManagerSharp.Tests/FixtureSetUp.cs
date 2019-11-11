@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace WebDriverManager.Tests
+namespace WebDriverManagerSharp.Tests
 {
     [SetUpFixture]
     class FixtureSetUp

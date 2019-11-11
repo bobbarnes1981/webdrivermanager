@@ -22,7 +22,7 @@ using OpenQA.Selenium.Safari;
 using System;
 using System.Reflection;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Parameterized test with several browsers.

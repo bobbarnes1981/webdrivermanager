@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManager.GitHubApi
+namespace WebDriverManagerSharp.GitHubApi
 {
     public class User
     {

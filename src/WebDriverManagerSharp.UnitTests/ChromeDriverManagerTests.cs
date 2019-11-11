@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace WebDriverManager.UnitTests
+namespace WebDriverManagerSharp.UnitTests
 {
     [TestFixture]
     public class ChromeDriverManagerTests

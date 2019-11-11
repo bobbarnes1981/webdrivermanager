@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Void manager.

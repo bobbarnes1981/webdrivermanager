@@ -18,7 +18,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Custom exception for WebDriverManager.

@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Manager for Chrome.

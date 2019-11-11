@@ -19,7 +19,7 @@ using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 using WebDriverManager.Tests.Base;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Test with Google Chrome browser.

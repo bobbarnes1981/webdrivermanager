@@ -18,7 +18,7 @@
 using NUnit.Framework;
 using WebDriverManager.Tests.Base;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 { 
     /**
      * Test asserting chromedriver versions.

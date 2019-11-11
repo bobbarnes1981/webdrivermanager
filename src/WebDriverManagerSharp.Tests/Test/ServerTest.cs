@@ -19,7 +19,7 @@ using NUnit.Framework;
 using System;
 using System.Runtime.InteropServices;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
 
     /**

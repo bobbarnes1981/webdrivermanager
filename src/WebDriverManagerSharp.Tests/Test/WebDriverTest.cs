@@ -21,7 +21,7 @@ using OpenQA.Selenium.Firefox;
 using System;
 using System.IO;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
 
     /**

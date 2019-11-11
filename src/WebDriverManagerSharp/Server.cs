@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using WebDriverManager.FakeJavalin;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
 
     /**

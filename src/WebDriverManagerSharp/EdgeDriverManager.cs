@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Manager for Microsoft Edge.

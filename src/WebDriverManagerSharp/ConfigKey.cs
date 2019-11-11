@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
 
     /**

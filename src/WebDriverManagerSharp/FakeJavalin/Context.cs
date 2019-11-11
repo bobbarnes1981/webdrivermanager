@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace WebDriverManager.FakeJavalin
+namespace WebDriverManagerSharp.FakeJavalin
 {
     public class Context
     {

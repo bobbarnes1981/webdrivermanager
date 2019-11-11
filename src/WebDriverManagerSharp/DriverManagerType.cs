@@ -16,7 +16,7 @@
  */
 using System.ComponentModel;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Types for driver managers.

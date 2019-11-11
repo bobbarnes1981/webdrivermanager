@@ -17,7 +17,7 @@
 
 using NUnit.Framework;
 
-namespace WebDriverManager.Tests.Base
+namespace WebDriverManagerSharp.Tests.Base
 {
 
     /**

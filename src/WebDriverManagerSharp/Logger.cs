@@ -17,7 +17,7 @@
 
 using Serilog;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     public interface ILogger
     {

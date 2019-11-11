@@ -19,7 +19,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Target folder test.

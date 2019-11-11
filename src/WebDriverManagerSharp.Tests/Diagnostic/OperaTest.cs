@@ -3,7 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Opera;
 using System.IO;
 
-namespace WebDriverManager.Tests.Diagnostic
+namespace WebDriverManagerSharp.Tests.Diagnostic
 {
     class OperaTest
     {

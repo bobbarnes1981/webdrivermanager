@@ -18,7 +18,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     [Serializable]
     public class IllegalStateException : Exception

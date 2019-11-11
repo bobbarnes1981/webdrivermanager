@@ -19,7 +19,7 @@ using NUnit.Framework;
 using System;
 using WebDriverManager.Tests.Base;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Test with HtmlUnit browser (which uses void driver manager).

@@ -17,7 +17,7 @@
 
 using System;
 
-namespace WebDriverManager.FakeJavalin
+namespace WebDriverManagerSharp.FakeJavalin
 {
     public class Response
     {

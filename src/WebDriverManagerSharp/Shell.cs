@@ -18,7 +18,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Command line executor.

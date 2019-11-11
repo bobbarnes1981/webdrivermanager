@@ -27,7 +27,7 @@ using System.Text;
 using System.Xml;
 using WebDriverManager.GitHubApi;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     /**
      * Parent driver manager.

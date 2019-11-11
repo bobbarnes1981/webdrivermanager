@@ -19,7 +19,7 @@ using NUnit.Framework;
 using System.IO;
 using System.Reflection;
 
-namespace WebDriverManager.Tests.Test
+namespace WebDriverManagerSharp.Tests.Test
 {
     /**
      * Test for driver cache.

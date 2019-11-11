@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace WebDriverManager
+namespace WebDriverManagerSharp
 {
     public static class Extensions
     {
