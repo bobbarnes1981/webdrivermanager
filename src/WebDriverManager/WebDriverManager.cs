@@ -479,7 +479,7 @@ namespace WebDriverManager
                 log.Debug("Clearing cache at {0}", targetPath);
                 Directory.Delete(targetPath);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 log.Warn("Exception deleting cache at {0}", targetPath, e);
             }
@@ -569,7 +569,7 @@ namespace WebDriverManager
                     cache = true;
                 }
 
-                string driverInCache = handleCache(arch, version, os, getLatest, cache);
+                FileInfo driverInCache = handleCache(arch, version, os, getLatest, cache);
 
                 string versionStr = getLatest ? "(latest version)" : version;
                 if (driverInCache != null && !Config().isOverride())
@@ -591,7 +591,6 @@ namespace WebDriverManager
 
                     downloadCandidateUrls(candidateUrls);
                 }
-
             }
             catch (Exception e)
             {
@@ -665,7 +664,7 @@ namespace WebDriverManager
                 if (microsoftWebDriverFile.Exists)
                 {
                     downloadedVersion = PRE_INSTALLED;
-                    exportDriver(microsoftWebDriverFile.ToString());
+                    exportDriver(microsoftWebDriverFile);
                     return true;
                 }
                 else
@@ -826,7 +825,7 @@ namespace WebDriverManager
         protected void downloadCandidateUrls(List<System.Uri> candidateUrls)
         {
             Uri url = candidateUrls.First();
-            string exportValue = downloader.download(url, versionToDownload, GetDriverName());
+            FileInfo exportValue = downloader.download(url, versionToDownload, GetDriverName());
             exportDriver(exportValue);
             downloadedVersion = versionToDownload;
         }
@@ -908,9 +907,9 @@ namespace WebDriverManager
             return candidateUrls;
         }
 
-        protected string handleCache(Architecture arch, string version, string os, bool getLatest, bool cache)
+        protected FileInfo handleCache(Architecture arch, string version, string os, bool getLatest, bool cache)
         {
-            string driverInCache = null;
+            FileInfo driverInCache = null;
             if (cache || !getLatest)
             {
                 driverInCache = getDriverFromCache(version, arch, os);
@@ -919,7 +918,7 @@ namespace WebDriverManager
             return driverInCache;
         }
 
-        protected string getDriverFromCache(string driverVersion, Architecture arch, string os)
+        protected FileInfo getDriverFromCache(string driverVersion, Architecture arch, string os)
         {
             log.Trace("Checking if {0} exists in cache", GetDriverName());
             List<FileInfo> filesInCache = getFilesInCache();
@@ -939,7 +938,7 @@ namespace WebDriverManager
 
                 if (filesInCache.Count == 1)
                 {
-                    return filesInCache[0].ToString();
+                    return filesInCache[0];
                 }
 
                 // Filter by arch
@@ -947,7 +946,7 @@ namespace WebDriverManager
 
                 if (filesInCache != null && filesInCache.Count > 1)
                 {
-                    return filesInCache[filesInCache.Count() - 1].ToString();
+                    return filesInCache[filesInCache.Count() - 1];
                 }
             }
 
@@ -1196,21 +1195,21 @@ namespace WebDriverManager
             }
         }
 
-        protected void exportDriver(string variableValue)
+        protected void exportDriver(FileInfo variableValue)
         {
-            binaryPath = variableValue;
+            binaryPath = variableValue.FullName;
             string exportParameter = GetExportParameter();
             if (!config.isAvoidExport() && exportParameter != null)
             {
                 // TODO: maybe remove this
                 string variableName = exportParameter;
                 log.Info("Exporting {0} as {1}", variableName, variableValue);
-                System.Environment.SetEnvironmentVariable(variableName, variableValue);
+                Environment.SetEnvironmentVariable(variableName, variableValue.FullName);
 
                 // Add driver to PATH
-                string pathVar = System.Environment.GetEnvironmentVariable("PATH");
-                pathVar += ";" + new FileInfo(variableValue).DirectoryName;
-                System.Environment.SetEnvironmentVariable("PATH", pathVar);
+                string pathVar = Environment.GetEnvironmentVariable("PATH");
+                pathVar += ";" + new FileInfo(variableValue.FullName).DirectoryName;
+                Environment.SetEnvironmentVariable("PATH", pathVar);
             }
             else
             {

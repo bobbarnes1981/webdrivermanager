@@ -53,7 +53,7 @@ namespace WebDriverManager
         /// <param name="driverName"></param>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        public string download(System.Uri url, string version, string driverName)
+        public FileInfo download(System.Uri url, string version, string driverName)
         {
             FileInfo targetFile = getTarget(version, url);
             FileInfo binary = checkBinary(driverName, targetFile);
@@ -61,7 +61,7 @@ namespace WebDriverManager
             {
                 binary = downloadAndExtract(url, targetFile);
             }
-            return binary.ToString();
+            return binary;
         }
 
         public FileInfo getTarget(string version, System.Uri url)

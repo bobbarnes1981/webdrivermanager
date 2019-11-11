@@ -29,7 +29,6 @@ namespace WebDriverManager.Tests.Base
      */
     public abstract class BrowserTestParent
     {
-
         protected IWebDriver driver;
 
         [TearDown]

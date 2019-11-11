@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BrowserTestParent.cs" />
+    <Compile Include="FixtureSetUp.cs" />
     <Compile Include="Base\VersionTestParent.cs" />
     <Compile Include="Diagnostic\EdgeTest.cs" />
     <Compile Include="Diagnostic\OperaTest.cs" />

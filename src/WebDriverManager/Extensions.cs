@@ -71,7 +71,7 @@ namespace WebDriverManager
             return newArray;
         }
 
-        private static Dictionary<Architecture, string> architectureStrings = new Dictionary<Architecture, string>
+        private static readonly Dictionary<Architecture, string> architectureStrings = new Dictionary<Architecture, string>
         {
             { Architecture.DEFAULT, "DEFAULT" },
             { Architecture.X32, "32" },

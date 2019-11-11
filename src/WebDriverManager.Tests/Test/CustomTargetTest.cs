@@ -28,7 +28,7 @@ namespace WebDriverManager.Tests.Test
      */
     public class CustomTargetTest
     {
-        private ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
         DirectoryInfo tmpFolder;
 

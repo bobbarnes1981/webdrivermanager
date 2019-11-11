@@ -29,7 +29,7 @@ namespace WebDriverManager.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        static int NUM = 40;
+        private static readonly int NUM = 40;
 
         [Ignore("")]
         [Test]
