@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManager", "WebDriverManager\WebDriverManager.csproj", "{299FF6B7-A285-40D3-B024-E5ADD10F3882}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManagerSharp", "WebDriverManagerSharp\WebDriverManagerSharp.csproj", "{299FF6B7-A285-40D3-B024-E5ADD10F3882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManager.Tests", "WebDriverManager.Tests\WebDriverManager.Tests.csproj", "{04966332-060B-49C0-8F5C-68E8140681A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManagerSharp.Tests", "WebDriverManagerSharp.Tests\WebDriverManagerSharp.Tests.csproj", "{04966332-060B-49C0-8F5C-68E8140681A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManager.UnitTests", "WebDriverManager.UnitTests\WebDriverManager.UnitTests.csproj", "{C078CAF7-19C9-46F3-BDCC-90BF18D42F17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriverManagerSharp.UnitTests", "WebDriverManagerSharp.UnitTests\WebDriverManagerSharp.UnitTests.csproj", "{C078CAF7-19C9-46F3-BDCC-90BF18D42F17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
