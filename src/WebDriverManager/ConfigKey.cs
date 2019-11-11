@@ -33,7 +33,7 @@ namespace WebDriverManager
         public ConfigKey(string name)
         {
             this.name = name;
-            this.defaultValue = default;
+            this.defaultValue = default(T);
         }
 
         public ConfigKey(string name, T value)
