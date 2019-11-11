@@ -517,7 +517,7 @@ namespace WebDriverManager
                         url.GetFile().IndexOf(SLASH) + 1,
                         url.GetFile().LastIndexOf(SLASH));
             }
-            catch (System.ArgumentOutOfRangeException e)
+            catch (ArgumentOutOfRangeException e)
             {
                 log.Trace("Exception getting version of System.Uri {0} ({1})", url, e.Message);
             }
@@ -593,7 +593,7 @@ namespace WebDriverManager
                 }
 
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 handleException(e, arch, version);
             }
@@ -825,7 +825,7 @@ namespace WebDriverManager
         /// <param name="candidateUrls"></param>
         protected void downloadCandidateUrls(List<System.Uri> candidateUrls)
         {
-            System.Uri url = candidateUrls.First();
+            Uri url = candidateUrls.First();
             string exportValue = downloader.download(url, versionToDownload, GetDriverName());
             exportDriver(exportValue);
             downloadedVersion = versionToDownload;

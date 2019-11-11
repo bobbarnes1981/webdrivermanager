@@ -37,6 +37,11 @@ namespace WebDriverManager.Tests.Test
     {
         public Type driverClass;
 
+        public WebDriverTest(Type driverClass)
+        {
+            this.driverClass = driverClass;
+        }
+
         [Test]
         public void testWebDriver()
         {

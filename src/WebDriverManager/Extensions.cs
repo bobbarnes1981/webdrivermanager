@@ -35,7 +35,7 @@ namespace WebDriverManager
         {
             if (startIndex < 0 || startIndex > endIndex || endIndex > str.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new ArgumentOutOfRangeException();
             }
             return str.Substring(startIndex, endIndex - startIndex);
         }

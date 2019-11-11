@@ -17,6 +17,7 @@
 
 using NUnit.Framework;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace WebDriverManager.Tests.Test
@@ -32,8 +33,8 @@ namespace WebDriverManager.Tests.Test
     [TestFixture("firefox", "geckodriver")]
     [TestFixture("opera", "operadriver")]
     [TestFixture("phantomjs", "phantomjs")]
-    [TestFixture("edge", "msedgedriver.exe")]
-    [TestFixture("iexplorer", "IEDriverServer.exe")]
+    [TestFixture("edge", "msedgedriver")]
+    [TestFixture("iexplorer", "IEDriverServer")]
     public class InteractiveTest
     {
         public static ILogger log = Logger.GetLogger();
@@ -55,7 +56,7 @@ namespace WebDriverManager.Tests.Test
         {
             log.Debug("Running interactive wdm with arguments: {0}", argument);
             WebDriverManager.main(new string[] { argument });
-            FileInfo binary = new FileInfo(driver);
+            FileInfo binary = new FileInfo(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, driver));
             Assert.True(binary.Exists);
             binary.Delete();
             log.Debug("Interactive test with {0} OK", argument);

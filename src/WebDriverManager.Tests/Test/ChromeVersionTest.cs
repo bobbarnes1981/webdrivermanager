@@ -31,6 +31,10 @@ namespace WebDriverManager.Tests.Test
         public ChromeVersionTest(Architecture architecture)
             : base(architecture)
         {
+            if (architecture == Architecture.X64 && ((os != null && os == OperatingSystem.WIN) || new Config().getOs() == OperatingSystem.WIN.ToString()))
+            {
+                Assert.Ignore("No X64 driver for WIN chromedriver");
+            }
         }
 
         [SetUp]

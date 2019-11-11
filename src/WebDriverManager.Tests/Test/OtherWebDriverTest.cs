@@ -14,9 +14,13 @@
  * limitations under the License.
  *
  */
+
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Safari;
 using System;
+using System.Reflection;
 
 namespace WebDriverManager.Tests.Test
 {
@@ -26,22 +30,23 @@ namespace WebDriverManager.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.3.1
      */
+    [TestFixture(typeof(SafariDriver), typeof(WebDriverException))]
+    //[TestFixture(typeof(EventFiringWebDriver), InstantiationException)]
+    //[TestFixture(typeof(HtmlUnitDriver), null)]
+    [TestFixture(typeof(RemoteWebDriver), typeof(Exception))] // IllegalAccesException)]
     public class OtherWebDriverTest
     {
         public Type driverClass;
 
-        public Exception exception;
+        public Type exception;
 
         protected IWebDriver driver;
 
-        //public static Collection<Object[]> data()
-        //{
-        //    return asList(new Object[][] {
-        //            { SafariDriver.class, WebDriverException.class },
-        //            { EventFiringWebDriver.class, InstantiationException.class },
-        //            { HtmlUnitDriver.class, null },
-        //            { RemoteWebDriver.class, IllegalAccessException.class } });
-        //}
+        public OtherWebDriverTest(Type driverClass, Type exception)
+        {
+            this.driverClass = driverClass;
+            this.exception = exception;
+        }
 
         [SetUp]
         public void setupTest()
@@ -61,12 +66,12 @@ namespace WebDriverManager.Tests.Test
         [Test]
         public void test()
         {
+            ConstructorInfo constructor = driverClass.GetConstructor(new Type[] { });
+
             if (exception != null)
             {
-                //thrown.expect(exception);
+                Assert.Throws<Exception>(() => constructor.Invoke(new object[] { }));
             }
-            //driver = driverClass.newInstance();
         }
-
     }
 }

@@ -84,7 +84,7 @@ namespace WebDriverManager
             {
                 driverType = "Chromium";
             }
-            int i = output.IndexOf(driverType);
+            int i = output.ToLower().IndexOf(driverType.ToLower());
             int j = output.IndexOf('.');
             return i != -1 && j != -1 ? output.SubstringJava(i + driverType.Length, j).Trim() : output;
         }

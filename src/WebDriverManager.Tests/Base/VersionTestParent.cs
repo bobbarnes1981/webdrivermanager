@@ -35,7 +35,7 @@ namespace WebDriverManager.Tests.Base
 
         protected WebDriverManager browserManager;
         protected string[] specificVersions;
-        protected OperatingSystem os;
+        protected OperatingSystem? os;
 
         ILogger log = Logger.GetLogger();
 
@@ -49,7 +49,7 @@ namespace WebDriverManager.Tests.Base
         {
             if (os != null)
             {
-                browserManager.operatingSystem(os);
+                browserManager.operatingSystem(os.Value);
             }
             switch (architecture)
             {
@@ -79,7 +79,7 @@ namespace WebDriverManager.Tests.Base
                 }
                 if (os != null)
                 {
-                    browserManager.operatingSystem(os);
+                    browserManager.operatingSystem(os.Value);
                 }
                 browserManager.version(specificVersion).setup();
 

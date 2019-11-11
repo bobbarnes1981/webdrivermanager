@@ -57,7 +57,7 @@ namespace WebDriverManager.Tests.Test
                         DriverManagerType.EDGE)]
     [TestFixture("75.0.137.0",
                         "https://az813057.vo.msecnd.net/webdriver/msedgedriver_x86/msedgedriver.exe",
-                        "/msedgedriver/x64/75.0.137.0/msedgedriver.exe", DriverManagerType.EDGE)]
+                        "/msedgedriver/x32/75.0.137.0/msedgedriver.exe", DriverManagerType.EDGE)]
     [TestFixture("0.6.2",
                         "https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-OSX.gz",
                         "/wires/osx/0.6.2/wires-0.6.2-OSX.gz", DriverManagerType.FIREFOX)]
@@ -85,6 +85,14 @@ namespace WebDriverManager.Tests.Test
 
         public DriverManagerType driverManagerType;
 
+        public TargetTest(string version, string url, string target, DriverManagerType driverManagerType)
+        {
+            this.version = version;
+            this.url = url;
+            this.target = target;
+            this.driverManagerType = driverManagerType;
+        }
+
         [Test]
         public void testTarget()
         {
@@ -97,7 +105,7 @@ namespace WebDriverManager.Tests.Test
 
             FileInfo fileReal = new FileInfo(targetPath + target);
 
-            Assert.That(result, Is.EqualTo(fileReal));
+            Assert.That(result.FullName, Is.EqualTo(fileReal.FullName));
         }
     }
 }

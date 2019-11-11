@@ -44,7 +44,7 @@ namespace WebDriverManager.Tests.Test
         public void versionFromPosixOutputTest()
         {
             string versionFromPosixOutput = Shell.getVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
-            Assert.Equals(version, versionFromPosixOutput);
+            Assert.That(versionFromPosixOutput, Is.EqualTo(version));
         }
     }
 }
