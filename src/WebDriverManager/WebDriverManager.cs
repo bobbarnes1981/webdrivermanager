@@ -1462,7 +1462,8 @@ namespace WebDriverManager
 
         private static void startServer(string[] args)
         {
-            if (args.Length < 2 || !int.TryParse(args[1], out int port))
+            int port;
+            if (args.Length < 2 || !int.TryParse(args[1], out port))
             {
                 port = new Config().getServerPort();
             }
