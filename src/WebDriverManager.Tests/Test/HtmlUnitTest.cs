@@ -34,6 +34,7 @@ namespace WebDriverManager.Tests.Test
         [OneTimeSetUp]
         public static void setupClass()
         {
+            Assert.Ignore("HtmlUnitDriver not relevant for .NET");
 //            webDriverClass = typeof(HtmlUnitDriver);
             WebDriverManager.getInstance(webDriverClass).setup();
         }

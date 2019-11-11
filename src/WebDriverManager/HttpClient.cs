@@ -74,12 +74,13 @@ namespace WebDriverManager
                     handler.Credentials = provider;
                 }
 
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 // TODO: this handler requires .NET 4.7.1
-                handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
-                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
-                {
-                    return true;
-                };
+                //handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
+                //handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
+                //{
+                //    return true;
+                //};
             }
             catch (System.Exception e)
             {

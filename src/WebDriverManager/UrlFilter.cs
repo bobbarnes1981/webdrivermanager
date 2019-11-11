@@ -151,7 +151,7 @@ namespace WebDriverManager
             string outString = "";
             string key = "UBUNTU_CODENAME";
             DirectoryInfo dir = new DirectoryInfo(Path.DirectorySeparatorChar + "etc");
-            FileInfo[] fileList = Array.Empty<FileInfo>();
+            FileInfo[] fileList = new FileInfo[0];
             if (dir.Exists)
             {
                 fileList = dir.GetFiles("*-release");

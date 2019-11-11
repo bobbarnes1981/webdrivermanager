@@ -30,10 +30,10 @@ namespace WebDriverManager.Tests.Test
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.3.1
      */
-    [TestFixture(typeof(SafariDriver), typeof(WebDriverException))]
+    [TestFixture(typeof(SafariDriver), typeof(DriverServiceNotFoundException))]
     //[TestFixture(typeof(EventFiringWebDriver), InstantiationException)]
     //[TestFixture(typeof(HtmlUnitDriver), null)]
-    [TestFixture(typeof(RemoteWebDriver), typeof(Exception))] // IllegalAccesException)]
+    //[TestFixture(typeof(RemoteWebDriver), typeof(Exception))] // IllegalAccesException)]
     public class OtherWebDriverTest
     {
         public Type driverClass;
@@ -70,7 +70,7 @@ namespace WebDriverManager.Tests.Test
 
             if (exception != null)
             {
-                Assert.Throws<Exception>(() => constructor.Invoke(new object[] { }));
+                Assert.Throws<TargetInvocationException>(() => constructor.Invoke(new object[] { }));
             }
         }
     }

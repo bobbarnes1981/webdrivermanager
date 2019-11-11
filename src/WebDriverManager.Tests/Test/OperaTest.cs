@@ -42,13 +42,20 @@ namespace WebDriverManager.Tests.Test
         public void setupTest()
         {
             string operaBinary = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? "C:\\Program Files\\Opera\\launcher.exe"
+                    ? Path.Combine(System.Environment.ExpandEnvironmentVariables("%LocalAppData%"), @"Programs\Opera\64.0.3417.92\opera.exe")
                     : RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/Applications/Opera.app/Contents/MacOS/Opera"
                             : "/usr/bin/opera";
+
+
+            OperaOptions options = new OperaOptions()
+            {
+                BinaryLocation = operaBinary
+            };
+
             FileInfo opera = new FileInfo(operaBinary);
             Assume.That(opera.Exists);
 
-            driver = new OperaDriver();
+            driver = new OperaDriver(options);
         }
     }
 }

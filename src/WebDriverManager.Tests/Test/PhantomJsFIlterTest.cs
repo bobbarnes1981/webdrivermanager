@@ -46,7 +46,7 @@ namespace WebDriverManager.Tests.Test
             field.SetValue(phantomJsManager, new HttpClient(new Config()));
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDrivers");
-            driversUrls = (List<Uri>)method.Invoke(phantomJsManager, Array.Empty<object>());
+            driversUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[0]);
         }
 
         [Test]

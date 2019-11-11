@@ -204,7 +204,7 @@ namespace WebDriverManager
                 {
                     try
                     {
-                        field.GetType().GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(this, Array.Empty<object>());
+                        field.GetType().GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(this, new object[0]);
                     }
                     catch (Exception)
                     {
@@ -496,7 +496,7 @@ namespace WebDriverManager
         public string[] getIgnoreVersions()
         {
             string ignored = resolve(ignoreVersions);
-            string[] output = Array.Empty<string>();
+            string[] output = new string[0];
             if (!string.IsNullOrEmpty(ignored))
             {
                 output = ignored.Split(',');
