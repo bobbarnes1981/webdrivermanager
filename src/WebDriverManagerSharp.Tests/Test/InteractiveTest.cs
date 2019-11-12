@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class InteractiveTest
     {
-        public static ILogger log = Logger.GetLogger();
+        private static ILogger log = Logger.GetLogger();
 
         public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
@@ -41,8 +41,10 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("phantomjs", "phantomjs")]
         [TestCase("edge", "msedgedriver")]
         [TestCase("iexplorer", "IEDriverServer")]
-        public void testInteractive(string argument, string driver)
+        public void TestInteractive(string argument, string driver)
         {
+            driver = driver + EXT;
+
             log.Debug("Running interactive wdm with arguments: {0}", argument);
             WebDriverManager.main(new string[] { argument });
             FileInfo binary = new FileInfo(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, driver));

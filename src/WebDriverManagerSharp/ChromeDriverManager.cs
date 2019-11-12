@@ -65,7 +65,7 @@ namespace WebDriverManagerSharp
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setChromeDriverUrl(url);
+            Config().SetChromeDriverUrl(url);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace WebDriverManagerSharp
         protected override List<System.Uri> GetDrivers()
         {
             System.Uri mirrorUrl = GetMirrorUrl();
-            if (mirrorUrl != null && Config().isUseMirror())
+            if (mirrorUrl != null && Config().IsUseMirror())
             {
                 return getDriversFromMirror(mirrorUrl);
             }
@@ -88,7 +88,7 @@ namespace WebDriverManagerSharp
 
         protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
-            if (Config().isUseMirror())
+            if (Config().IsUseMirror())
             {
                 int i = url.GetFile().LastIndexOf(SLASH);
                 int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH) + 1;
@@ -109,7 +109,7 @@ namespace WebDriverManagerSharp
         protected override string getLatestVersion()
         {
             string url = Config().GetChromeDriverUrl() + "LATEST_RELEASE";
-            if (Config().isUseMirror())
+            if (Config().IsUseMirror())
             {
                 url = Config().GetChromeDriverMirrorUrl() + "LATEST_RELEASE";
             }

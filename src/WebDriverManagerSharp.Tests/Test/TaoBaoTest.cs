@@ -33,7 +33,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void TestTaobao()
         {
-            WebDriverManager.ChromeDriver().Config().setAvoidAutoVersion(true)
+            WebDriverManager.ChromeDriver().Config().SetAvoidAutoVersion(true)
                     .SetChromeDriverMirrorUrl(
                             new Uri("http://npm.taobao.org/mirrors/chromedriver/"));
             WebDriverManager.ChromeDriver().UseMirror().ForceDownload().Setup();
@@ -46,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void TestOtherMirrorUrl()
         {
-            WebDriverManager.ChromeDriver().Config().setAvoidAutoVersion(true)
+            WebDriverManager.ChromeDriver().Config().SetAvoidAutoVersion(true)
                         .SetChromeDriverMirrorUrl(
                                 new Uri("https://cnpmjs.org/mirrors/chromedriver/"));
             WebDriverManager.ChromeDriver().UseMirror().ForceDownload().Setup();

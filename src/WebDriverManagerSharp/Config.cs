@@ -159,7 +159,7 @@ namespace WebDriverManagerSharp
         private string getProperty(string key)
         {
             string value = null;
-            string propertiesValue = getProperties();
+            string propertiesValue = GetProperties();
             string defaultProperties = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "Resources", "webdrivermanager.properties");
             try
             {
@@ -199,7 +199,7 @@ namespace WebDriverManagerSharp
             return props.GetProperty(key);
         }
 
-        public void reset()
+        public void Reset()
         {
             foreach (FieldInfo field in typeof(Config).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
             {
@@ -246,7 +246,7 @@ namespace WebDriverManagerSharp
             throw new Exception(string.Format("Unhandled architecture {0}", arch));
         }
 
-        public bool isExecutable(FileInfo file)
+        public bool IsExecutable(FileInfo file)
         {
             if (resolve(os).ToLower().Equals("win"))
             {
@@ -258,18 +258,18 @@ namespace WebDriverManagerSharp
 
         // Getters and setters
 
-        public string getProperties()
+        public string GetProperties()
         {
             return resolve(properties);
         }
 
-        public Config setProperties(string properties)
+        public Config SetProperties(string properties)
         {
             this.properties.SetValue(properties);
             return this;
         }
 
-        public string getTargetPath()
+        public string GetTargetPath()
         {
             string resolved = resolve(targetPath);
             string path = null;
@@ -297,145 +297,145 @@ namespace WebDriverManagerSharp
             return path;
         }
 
-        public Config setTargetPath(string value)
+        public Config SetTargetPath(string value)
         {
             this.targetPath.SetValue(value);
             return this;
         }
 
-        public bool isForceCache()
+        public bool IsForceCache()
         {
             return resolve(forceCache);
         }
 
-        public Config setForceCache(bool value)
+        public Config SetForceCache(bool value)
         {
             this.forceCache.SetValue(value);
             return this;
         }
 
-        public bool isOverride()
+        public bool IsOverride()
         {
             return resolve(over_ride);
         }
 
-        public Config setOverride(bool value)
+        public Config SetOverride(bool value)
         {
             this.over_ride.SetValue(value);
             return this;
         }
 
-        public bool isUseMirror()
+        public bool IsUseMirror()
         {
             return resolve(useMirror);
         }
 
-        public Config setUseMirror(bool value)
+        public Config SetUseMirror(bool value)
         {
             this.useMirror.SetValue(value);
             return this;
         }
 
-        public bool isUseBetaVersions()
+        public bool IsUseBetaVersions()
         {
             return resolve(useBetaVersions);
         }
 
-        public Config setUseBetaVersions(bool value)
+        public Config SetUseBetaVersions(bool value)
         {
             this.useBetaVersions.SetValue(value);
             return this;
         }
 
-        public bool isAvoidExport()
+        public bool IsAvoidExport()
         {
             return resolve(avoidExport);
         }
 
-        public Config setAvoidExport(bool value)
+        public Config SetAvoidExport(bool value)
         {
             this.avoidExport.SetValue(value);
             return this;
         }
 
-        public bool isAvoidOutputTree()
+        public bool IsAvoidOutputTree()
         {
             return resolve(avoidOutputTree);
         }
 
-        public Config setAvoidOutputTree(bool value)
+        public Config SetAvoidOutputTree(bool value)
         {
             this.avoidOutputTree.SetValue(value);
             return this;
         }
 
-        public bool isAvoidAutoVersion()
+        public bool IsAvoidAutoVersion()
         {
             return resolve(avoidAutoVersion);
         }
 
-        public Config setAvoidAutoVersion(bool value)
+        public Config SetAvoidAutoVersion(bool value)
         {
             this.avoidAutoVersion.SetValue(value);
             return this;
         }
 
-        public bool isAvoidAutoReset()
+        public bool IsAvoidAutoReset()
         {
             return resolve(avoidAutoReset);
         }
 
-        public Config setAvoidAutoReset(bool value)
+        public Config SetAvoidAutoReset(bool value)
         {
             this.avoidAutoReset.SetValue(value);
             return this;
         }
 
-        public bool isAvoidPreferences()
+        public bool IsAvoidPreferences()
         {
             return resolve(avoidPreferences);
         }
 
-        public Config setAvoidPreferences(bool value)
+        public Config SetAvoidPreferences(bool value)
         {
             this.avoidPreferences.SetValue(value);
             return this;
         }
 
-        public int getTimeout()
+        public int GetTimeout()
         {
             return resolve(timeout);
         }
 
-        public Config setTimeout(int value)
+        public Config SetTimeout(int value)
         {
             this.timeout.SetValue(value);
             return this;
         }
 
-        public bool getVersionsPropertiesOnlineFirst()
+        public bool GetVersionsPropertiesOnlineFirst()
         {
             return resolve(versionsPropertiesOnlineFirst);
         }
 
-        public Config setVersionsPropertiesOnlineFirst(bool value)
+        public Config SetVersionsPropertiesOnlineFirst(bool value)
         {
             this.versionsPropertiesOnlineFirst.SetValue(value);
             return this;
         }
 
-        public System.Uri getVersionsPropertiesUrl()
+        public Uri GetVersionsPropertiesUrl()
         {
             return resolve(versionsPropertiesUrl);
         }
 
-        public Config setVersionsPropertiesUrl(System.Uri value)
+        public Config SetVersionsPropertiesUrl(System.Uri value)
         {
             this.versionsPropertiesUrl.SetValue(value);
             return this;
         }
 
-        public Architecture getArchitecture()
+        public Architecture GetArchitecture()
         {
             string architectureString = resolve(architecture);
             if ("32".Equals(architectureString))
@@ -449,57 +449,57 @@ namespace WebDriverManagerSharp
             return (Architecture)Enum.Parse(typeof(Architecture), architectureString);
         }
 
-        public Config setArchitecture(Architecture value)
+        public Config SetArchitecture(Architecture value)
         {
             this.architecture.SetValue(value.ToString());
             return this;
         }
 
-        public string getOs()
+        public string GetOs()
         {
             return resolve(os);
         }
 
-        public Config setOs(string value)
+        public Config SetOs(string value)
         {
             this.os.SetValue(value);
             return this;
         }
 
-        public string getProxy()
+        public string GetProxy()
         {
             return resolve(proxy);
         }
 
-        public Config setProxy(string value)
+        public Config SetProxy(string value)
         {
             this.proxy.SetValue(value);
             return this;
         }
 
-        public string getProxyUser()
+        public string GetProxyUser()
         {
             return resolve(proxyUser);
         }
 
-        public Config setProxyUser(string value)
+        public Config SetProxyUser(string value)
         {
             this.proxyUser.SetValue(value);
             return this;
         }
 
-        public string getProxyPass()
+        public string GetProxyPass()
         {
             return resolve(proxyPass);
         }
 
-        public Config setProxyPass(string value)
+        public Config SetProxyPass(string value)
         {
             this.proxyPass.SetValue(value);
             return this;
         }
 
-        public string[] getIgnoreVersions()
+        public string[] GetIgnoreVersions()
         {
             string ignored = resolve(ignoreVersions);
             string[] output = new string[0];
@@ -510,68 +510,68 @@ namespace WebDriverManagerSharp
             return output;
         }
 
-        public Config setIgnoreVersions(params string[] value)
+        public Config SetIgnoreVersions(params string[] value)
         {
             this.ignoreVersions.SetValue(string.Join(",", value));
             return this;
         }
 
-        public string getGitHubTokenName()
+        public string GetGitHubTokenName()
         {
             return resolve(gitHubTokenName);
         }
 
-        public Config setGitHubTokenName(string value)
+        public Config SetGitHubTokenName(string value)
         {
             this.gitHubTokenName.SetValue(value);
             return this;
         }
 
-        public string getGitHubTokenSecret()
+        public string GetGitHubTokenSecret()
         {
             return resolve(gitHubTokenSecret);
         }
 
-        public Config setGitHubTokenSecret(string value)
+        public Config SetGitHubTokenSecret(string value)
         {
             this.gitHubTokenSecret.SetValue(value);
             return this;
         }
 
-        public string getLocalRepositoryUser()
+        public string GetLocalRepositoryUser()
         {
             return resolve(localRepositoryUser);
         }
 
-        public Config setLocalRepositoryUser(string value)
+        public Config SetLocalRepositoryUser(string value)
         {
             this.localRepositoryUser.SetValue(value);
             return this;
         }
 
-        public string getLocalRepositoryPassword()
+        public string GetLocalRepositoryPassword()
         {
             return resolve(localRepositoryPassword);
         }
 
-        public Config setLocalRepositoryPassword(string value)
+        public Config SetLocalRepositoryPassword(string value)
         {
             this.localRepositoryPassword.SetValue(value);
             return this;
         }
 
-        public int getServerPort()
+        public int GetServerPort()
         {
             return resolve(serverPort);
         }
 
-        public Config setServerPort(int value)
+        public Config SetServerPort(int value)
         {
             this.serverPort.SetValue(value);
             return this;
         }
 
-        public int getTtl()
+        public int GetTtl()
         {
             return resolve(ttl);
         }
@@ -620,7 +620,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverUrl);
         }
 
-        public Config setChromeDriverUrl(System.Uri value)
+        public Config SetChromeDriverUrl(System.Uri value)
         {
             this.chromeDriverUrl.SetValue(value);
             return this;
@@ -664,7 +664,7 @@ namespace WebDriverManagerSharp
             return resolve(edgeDriverUrl);
         }
 
-        public Config SetEdgeDriverUrl(System.Uri value)
+        public Config SetEdgeDriverUrl(Uri value)
         {
             this.edgeDriverUrl.SetValue(value);
             return this;
@@ -697,18 +697,18 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverUrl);
         }
 
-        public Config SetFirefoxDriverUrl(System.Uri value)
+        public Config SetFirefoxDriverUrl(Uri value)
         {
             this.firefoxDriverUrl.SetValue(value);
             return this;
         }
 
-        public System.Uri getFirefoxDriverMirrorUrl()
+        public Uri getFirefoxDriverMirrorUrl()
         {
             return resolve(firefoxDriverMirrorUrl);
         }
 
-        public Config setFirefoxDriverMirrorUrl(System.Uri value)
+        public Config setFirefoxDriverMirrorUrl(Uri value)
         {
             this.firefoxDriverMirrorUrl.SetValue(value);
             return this;
@@ -736,12 +736,12 @@ namespace WebDriverManagerSharp
             return this;
         }
 
-        public System.Uri getInternetExplorerDriverUrl()
+        public Uri getInternetExplorerDriverUrl()
         {
             return resolve(internetExplorerDriverUrl);
         }
 
-        public Config setInternetExplorerDriverUrl(System.Uri value)
+        public Config setInternetExplorerDriverUrl(Uri value)
         {
             this.internetExplorerDriverUrl.SetValue(value);
             return this;

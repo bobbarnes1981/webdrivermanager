@@ -37,6 +37,12 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.16\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.0.0\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Hosting.Self.1.0.0\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -67,9 +73,6 @@
   <ItemGroup>
     <Compile Include="Architecture.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="FakeJavalin\Context.cs" />
-    <Compile Include="FakeJavalin\Javalin.cs" />
-    <Compile Include="FakeJavalin\Response.cs" />
     <Compile Include="GitHubApi\Asset.cs" />
     <Compile Include="ChromeDriverManager.cs" />
     <Compile Include="Config.cs" />

@@ -85,7 +85,7 @@ namespace WebDriverManagerSharp
                     .Replace(".tar.bz2", "").Replace(".tar.gz", "")
                     .Replace(".msi", "").Replace(".exe", "")
                     .Replace('_', Path.DirectorySeparatorChar);
-            string path = config.isAvoidOutputTree() ? GetTargetPath() + zip
+            string path = config.IsAvoidOutputTree() ? GetTargetPath() + zip
                     : GetTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
             string target = WebDriverManager.GetInstance(driverManagerType).PreDownload(path, version);
 
@@ -96,7 +96,7 @@ namespace WebDriverManagerSharp
 
         public string GetTargetPath()
         {
-            string targetPath = config.getTargetPath();
+            string targetPath = config.GetTargetPath();
             log.Trace("Target path {0}", targetPath);
 
             // Create repository folder if not exits
@@ -134,7 +134,7 @@ namespace WebDriverManagerSharp
             FileInfo resultingBinary = new FileInfo(Path.Combine(targetFolder.FullName, extractedFile.Name));
             bool binaryExists = resultingBinary.Exists;
 
-            if (!binaryExists || config.isOverride())
+            if (!binaryExists || config.IsOverride())
             {
                 if (binaryExists)
                 {
@@ -147,7 +147,7 @@ namespace WebDriverManagerSharp
                 }
                 extractedFile.MoveTo(Path.Combine(resultingBinary.FullName));
             }
-            if (!config.isExecutable(resultingBinary))
+            if (!config.IsExecutable(resultingBinary))
             {
                 setFileExecutable(resultingBinary);
             }
@@ -160,14 +160,14 @@ namespace WebDriverManagerSharp
         private FileInfo checkBinary(string driverName, FileInfo targetFile)
         {
             DirectoryInfo parentFolder = targetFile.Directory;
-            if (parentFolder.Exists && !config.isOverride())
+            if (parentFolder.Exists && !config.IsOverride())
             {
                 // Check if binary exits in parent folder and it is valid
 
                 FileInfo[] listFiles = parentFolder.GetFiles();
                 foreach (FileInfo file in listFiles)
                 {
-                    if (file.FullName.StartsWith(driverName) && config.isExecutable(file))
+                    if (file.FullName.StartsWith(driverName) && config.IsExecutable(file))
                     {
                         log.Info("Using binary driver previously downloaded");
                         return new FileInfo(file.FullName);
@@ -250,7 +250,7 @@ namespace WebDriverManagerSharp
                     if (name.EndsWith("/"))
                     {
                         DirectoryInfo dir = new DirectoryInfo(Path.Combine(compressedFile.Directory.FullName, name));
-                        if (!dir.Exists || config.isOverride())
+                        if (!dir.Exists || config.IsOverride())
                         {
                             dir.Create();
                         }
@@ -262,7 +262,7 @@ namespace WebDriverManagerSharp
                     else
                     {
                         FileInfo file = new FileInfo(Path.Combine(compressedFile.Directory.FullName, name));
-                        if (!file.Exists || config.isOverride())
+                        if (!file.Exists || config.IsOverride())
                         {
                             zipEntry.ExtractToFile(file.FullName);
                             setFileExecutable(file);

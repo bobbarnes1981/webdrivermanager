@@ -124,11 +124,11 @@ namespace WebDriverManagerSharp
                     {
                         // Edge driver version 75 and above
                         int childIndex = 0;
-                        if (Config().getOs().Equals(WebDriverManagerSharp.OperatingSystem.MAC.ToString()))
+                        if (Config().GetOs().Equals(WebDriverManagerSharp.OperatingSystem.MAC.ToString()))
                         {
                             childIndex = 2;
                         }
-                        else if (Config().getArchitecture() == WebDriverManagerSharp.Architecture.X64)
+                        else if (Config().GetArchitecture() == WebDriverManagerSharp.Architecture.X64)
                         {
                             childIndex = 1;
                         }
@@ -182,7 +182,7 @@ namespace WebDriverManagerSharp
                 if (iVersion != -1)
                 {
                     target = target.SubstringJava(0, iVersion)
-                            + Config().getArchitecture().ToString().ToLower()
+                            + Config().GetArchitecture().ToString().ToLower()
                             + Path.DirectorySeparatorChar + target.SubstringJava(iVersion);
                 }
             }

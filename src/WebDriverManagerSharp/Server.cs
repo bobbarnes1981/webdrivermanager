@@ -15,37 +15,27 @@
  *
  */
 
+using Nancy;
+using Nancy.Responses;
 using System.Collections.Generic;
 using System.IO;
-using WebDriverManagerSharp.FakeJavalin;
 
 namespace WebDriverManagerSharp
 {
-
     /**
      * WebDriverManager server.
      *
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.0.0
      */
-    public class Server
+    public class Server : NancyModule
     {
 
         private readonly ILogger log = Logger.GetLogger();
 
-        public Server(int port)
+        public Server()
         {
-            Javalin app = Javalin.Create().Start(port);
-
-            app.Get("/chromedriver", handleRequest);
-            app.Get("/firefoxdriver", handleRequest);
-            app.Get("/edgedriver", handleRequest);
-            app.Get("/iedriver", handleRequest);
-            app.Get("/operadriver", handleRequest);
-            app.Get("/phantomjs", handleRequest);
-            app.Get("/selenium-server-standalone", handleRequest);
-
-            log.Info("WebDriverManager server listening on port {0}", port);
+            this.Get["/{driverName}"] = parameters => handleRequest("GET", parameters.driverName);
         }
 
         /// <summary>
@@ -53,23 +43,26 @@ namespace WebDriverManagerSharp
         /// </summary>
         /// <exception cref="IOException" />
         /// <param name="ctx"></param>
-        private void handleRequest(Context ctx)
+        private Response handleRequest(string requestMethod, string driverName)
         {
-            string requestMethod = ctx.Method();
-            string requestPath = ctx.Path();
-            log.Info("Server request: {0} {1}", requestMethod, requestPath);
+            log.Info("Server request: {0} {1}", requestMethod, driverName);
 
-            WebDriverManager driverManager = createDriverManager(requestPath);
+            WebDriverManager driverManager = createDriverManager(driverName);
             if (driverManager != null)
             {
-                resolveDriver(ctx, driverManager);
+                return resolveDriver(driverManager);
             }
+
+            return new Response()
+            {
+                StatusCode = HttpStatusCode.NotFound
+            };
         }
 
-        private WebDriverManager createDriverManager(string requestPath)
+        private WebDriverManager createDriverManager(string driverName)
         {
             WebDriverManager outDriver;
-            switch (requestPath.SubstringJava(1))
+            switch (driverName)
             {
                 case "chromedriver":
                     outDriver = WebDriverManager.ChromeDriver();
@@ -93,7 +86,7 @@ namespace WebDriverManagerSharp
                     outDriver = WebDriverManager.SeleniumServerStandalone();
                     break;
                 default:
-                    log.Warn("Unknown option {0}", requestPath);
+                    log.Warn("Unknown option {0}", driverName);
                     outDriver = null;
                     break;
             }
@@ -106,43 +99,48 @@ namespace WebDriverManagerSharp
         /// <param name="ctx"></param>
         /// <param name="driverManager"></param>
         /// <exception cref="IOException" />
-        private void resolveDriver(Context ctx, WebDriverManager driverManager)
+        private Response resolveDriver(WebDriverManager driverManager)
         {
             // Query string (for configuration parameters)
-            Dictionary<string, List<string>> queryParamMap = ctx.QueryParamMap();
+            DynamicDictionary queryParamMap = this.Context.Request.Query;
             if (queryParamMap != null)
             {
                 log.Info("Server query string for configuration {0}", queryParamMap);
-                foreach (KeyValuePair<string, List<string>> entry in queryParamMap)
+                foreach (string key in queryParamMap.Keys)
                 {
-                    string configKey = "wdm." + entry.Key;
-                    string configValue = entry.Value[0];
+                    string configKey = "wdm." + key;
+                    string configValue = queryParamMap[key];
                     log.Trace("\t{0} = {1}", configKey, configValue);
                     System.Environment.SetEnvironmentVariable(configKey, configValue);
                 }
             }
 
             // Resolve driver
-            driverManager.Config().setAvoidExport(true);
-            driverManager.Config().setAvoidAutoVersion(true);
+            driverManager.Config().SetAvoidExport(true);
+            driverManager.Config().SetAvoidAutoVersion(true);
             driverManager.Setup();
             FileInfo binary = new FileInfo(driverManager.GetBinaryPath());
             string binaryVersion = driverManager.GetDownloadedVersion();
-            string binaryName = binary.FullName;
+            string binaryName = binary.Name;
             string binaryLength = binary.Length.ToString();
-
-            // Response
-            ctx.Res.SetHeader("Content-Disposition", "attachment; filename=\"" + binaryName + "\"");
-            using (FileStream stream = File.OpenRead(binary.FullName))
-            {
-                ctx.Result(stream);
-            }
-            log.Info("Server response: {0} {1} ({2} bytes)", binaryName, binaryVersion, binaryLength);
 
             // Clear configuration
             foreach (string key in queryParamMap.Keys)
             {
                 System.Environment.SetEnvironmentVariable("wdm." + key, null);
+            }
+
+            // Response
+            using (FileStream stream = File.OpenRead(binary.FullName))
+            {
+                StreamResponse response = new StreamResponse(() => stream, MimeTypes.GetMimeType(binary.FullName))
+                {
+                    StatusCode = HttpStatusCode.OK
+                };
+                response.Headers["Content-Disposition"] = "attachment; filename=\"" + binaryName + "\"";
+
+                log.Info("Server response: {0} {1} ({2} bytes)", binaryName, binaryVersion, binaryLength);
+                return response;
             }
         }
     }

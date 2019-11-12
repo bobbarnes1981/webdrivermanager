@@ -36,7 +36,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public void setup()
         {
             tmpFolder = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-            WebDriverManager.GlobalConfig().setTargetPath(tmpFolder.ToString());
+            WebDriverManager.GlobalConfig().SetTargetPath(tmpFolder.ToString());
             log.Info("Using temporal folder {0} as cache", tmpFolder);
         }
 
@@ -54,7 +54,7 @@ namespace WebDriverManagerSharp.Tests.Test
         {
             log.Info("Deleting temporal folder {0}", tmpFolder);
             WebDriverManager.ChromeDriver().ClearCache();
-            WebDriverManager.GlobalConfig().reset();
+            WebDriverManager.GlobalConfig().Reset();
         }
     }
 }

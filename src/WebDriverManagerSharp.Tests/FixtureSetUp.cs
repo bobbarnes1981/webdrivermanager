@@ -18,7 +18,8 @@ namespace WebDriverManagerSharp.Tests
             string[] driversToKill = new string[]
             {
                 "chromedriver",
-                "operadriver"
+                "operadriver",
+                "geckodriver"
             };
 
             IEnumerable<Process> processes = Process.GetProcesses().Where(p => driversToKill.Contains(p.ProcessName));

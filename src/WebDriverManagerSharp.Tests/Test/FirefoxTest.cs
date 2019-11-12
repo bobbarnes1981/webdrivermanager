@@ -30,13 +30,13 @@ namespace WebDriverManagerSharp.Tests.Test
     public class FirefoxTest : BrowserTestParent
     {
         [OneTimeSetUp]
-        public static void setupClass()
+        public static void SetupClass()
         {
             WebDriverManager.FirefoxDriver().Setup();
         }
 
         [SetUp]
-        public void setupTest()
+        public void SetupTest()
         {
             driver = new FirefoxDriver();
         }

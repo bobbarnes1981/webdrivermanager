@@ -70,7 +70,7 @@ namespace WebDriverManagerSharp
 
         protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
-            if (Config().isUseMirror())
+            if (Config().IsUseMirror())
             {
                 int i = url.GetFile().LastIndexOf(SLASH);
                 int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH) + 1;
@@ -118,7 +118,7 @@ namespace WebDriverManagerSharp
                                     "Driver binary for Opera not found in zip file");
                         }
                         operadriver = listFiles[i];
-                        isOperaDriver = Config().isExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
+                        isOperaDriver = Config().IsExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
                         i++;
                         Log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
                     } while (!isOperaDriver);

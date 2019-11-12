@@ -32,7 +32,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public void testCustomProperties()
         {
             WebDriverManager chromedriver = WebDriverManager.ChromeDriver();
-            chromedriver.Config().setProperties("wdm-test.properties");
+            chromedriver.Config().SetProperties("wdm-test.properties");
             chromedriver.Setup();
             string binaryPath = chromedriver.GetBinaryPath();
             FileInfo binary = new FileInfo(binaryPath);

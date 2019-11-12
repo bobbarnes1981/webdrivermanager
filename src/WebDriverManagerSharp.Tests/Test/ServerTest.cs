@@ -16,12 +16,13 @@
  */
 
 using NUnit.Framework;
-using System;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
 namespace WebDriverManagerSharp.Tests.Test
 {
-
     /**
      * Test using wdm server.
      *
@@ -34,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
 
         public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
-        public static string serverPort;
+        public static int serverPort;
 
         [OneTimeSetUp]
         public static void startServer()
@@ -42,43 +43,41 @@ namespace WebDriverManagerSharp.Tests.Test
             serverPort = getFreePort();
             log.Debug("Test is starting WebDriverManager server at port {0}", serverPort);
 
-            WebDriverManager.main(new string[] { "server", serverPort });
+            WebDriverManager.main(new string[] { "server", serverPort.ToString() });
         }
 
-        [TestCase("chromedriver", "chromedriver")] // + EXT
-        [TestCase("firefoxdriver", "geckodriver")] // + EXT
-        [TestCase("operadriver", "operadriver")] // + EXT
-        [TestCase("phantomjs", "phantomjs")] // + EXT
+        [TestCase("chromedriver", "chromedriver.exe")]
+        [TestCase("firefoxdriver", "geckodriver.exe")]
+        [TestCase("operadriver", "operadriver.exe")]
+        [TestCase("phantomjs", "phantomjs.exe")]
         [TestCase("edgedriver", "msedgedriver.exe")]
         [TestCase("iedriver", "IEDriverServer.exe")]
         [TestCase("chromedriver?os=WIN", "chromedriver.exe")]
         [TestCase("chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true", "chromedriver")]
         public void testServer(string path, string driver)
         {
-            throw new NotImplementedException();
-            //string serverUrl = string.Format("http://localhost:%s/%s", serverPort, path);
-            //OkHttpClient client = new OkHttpClient();
-            //Request request = new Request.Builder().url(serverUrl).build();
+            string serverUrl = string.Format("http://localhost:{0}/{1}", serverPort, path);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverUrl);
 
-            //// Assert response
-            //Response response = client.newCall(request).execute();
-            //Assert.True(response.isSuccessful());
+            // Assert response
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            //// Assert attachment
-            //string attachment = string.Format("attachment; filename=\"%s\"", driver);
+            // Assert attachment
+            string attachment = string.Format("attachment; filename=\"{0}\"", driver);
 
-            //List<string> headers = response.headers().values("Content-Disposition");
-            //log.Debug("Assessing {} ... {} should contain {}", driver, headers, attachment);
-            //Assert.True(headers.Contains(attachment));
+            string[] headers = response.Headers.GetValues("Content-Disposition");
+            log.Debug("Assessing {0} ... {1} should contain {2}", driver, headers, attachment);
+            Assert.That(headers.Where(h => h == attachment).Count, Is.GreaterThan(0));
         }
 
-        public static string getFreePort()
+        public static int getFreePort()
         {
-            //using (ServerSocket socket = new ServerSocket(0))
-            //{
-            //    return socket.getLocalPort();
-            //}
-            throw new NotImplementedException();
+            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            int port = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
+            return port;
         }
     }
 }

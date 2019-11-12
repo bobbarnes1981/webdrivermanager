@@ -64,7 +64,7 @@ namespace WebDriverManagerSharp
             if (getValueFromPreferences(key) == null)
             {
                 prefs[key] = value;
-                long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.getTtl()).TotalMilliseconds);
+                long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.GetTtl()).TotalMilliseconds);
                 prefs[getExpirationKey(key)] = expirationTime.ToString();
                 if (log.IsDebugEnabled())
                 {

@@ -32,7 +32,7 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia
      * @since 2.1.0
      */
-    public class HttpClient : System.IDisposable
+    public class HttpClient : IDisposable
     {
         private readonly ILogger log = Logger.GetLogger();
 
@@ -50,7 +50,7 @@ namespace WebDriverManagerSharp
 
             try
             {
-                string proxy = config.getProxy();
+                string proxy = config.GetProxy();
 
                 IWebProxy proxyHost = CreateProxy(proxy);
                 if (proxyHost != null)
@@ -58,15 +58,15 @@ namespace WebDriverManagerSharp
                     handler.Proxy = proxyHost;
                     handler.UseProxy = true;
 
-                    ICredentials credentialsProvider = createBasicCredentialsProvider(proxy, config.getProxyUser(), config.getProxyPass(), proxyHost);
+                    ICredentials credentialsProvider = createBasicCredentialsProvider(proxy, config.GetProxyUser(), config.GetProxyPass(), proxyHost);
                     if (credentialsProvider != null)
                     {
                         handler.Proxy.Credentials = credentialsProvider;
                     }
                 }
 
-                string localRepositoryUser = config.getLocalRepositoryUser().Trim();
-                string localRepositoryPassword = config.getLocalRepositoryPassword().Trim();
+                string localRepositoryUser = config.GetLocalRepositoryUser().Trim();
+                string localRepositoryPassword = config.GetLocalRepositoryPassword().Trim();
 
                 if (!string.IsNullOrEmpty(localRepositoryUser) && !string.IsNullOrEmpty(localRepositoryPassword))
                 {
@@ -82,7 +82,7 @@ namespace WebDriverManagerSharp
                 //    return true;
                 //};
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 throw new WebDriverManagerException(e);
             }
@@ -112,7 +112,7 @@ namespace WebDriverManagerSharp
                 closeableHttpClient.DefaultRequestHeaders.Authorization = authHeader;
             }
             Task<System.Net.Http.HttpResponseMessage> responseTask = closeableHttpClient.GetAsync(url);
-            responseTask.Wait(System.TimeSpan.FromSeconds(config.getTimeout()).Milliseconds);
+            responseTask.Wait(System.TimeSpan.FromSeconds(config.GetTimeout()).Milliseconds);
             System.Net.Http.HttpResponseMessage response = responseTask.Result;
             if (!response.IsSuccessStatusCode)
             {

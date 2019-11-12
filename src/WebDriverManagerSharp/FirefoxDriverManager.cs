@@ -15,6 +15,7 @@
  *
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace WebDriverManagerSharp
@@ -42,12 +43,12 @@ namespace WebDriverManagerSharp
             return Config().GetFirefoxDriverVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
             return getDriverUrlCheckingMirror(Config().GetFirefoxDriverUrl());
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return Config().getFirefoxDriverMirrorUrl();
         }
@@ -62,7 +63,7 @@ namespace WebDriverManagerSharp
             Config().SetFirefoxDriverVersion(version);
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             Config().SetFirefoxDriverUrl(url);
         }
@@ -72,12 +73,12 @@ namespace WebDriverManagerSharp
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
+        protected override List<Uri> GetDrivers()
         {
             return getDriversFromGitHub();
         }
 
-        protected override string GetCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(Uri url, string driverName)
         {
             string currentVersion = url.GetFile().SubstringJava(
                     url.GetFile().IndexOf('-') + 1, url.GetFile().LastIndexOf('-'));
