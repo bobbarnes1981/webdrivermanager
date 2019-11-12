@@ -19,7 +19,6 @@ using System.IO;
 
 namespace WebDriverManagerSharp
 {
-
     /**
      * Manager for PhantomJs.
      *
@@ -45,7 +44,7 @@ namespace WebDriverManagerSharp
 
         protected override System.Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
+            return base.getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -91,13 +90,14 @@ namespace WebDriverManagerSharp
                 {
                     dashIndex = currentVersion.IndexOf('-', dashIndex + 1);
                 }
+
                 currentVersion = dashIndex != -1
                         ? currentVersion.SubstringJava(0, dashIndex)
-                        : "";
+                        : string.Empty;
             }
             else
             {
-                currentVersion = "";
+                currentVersion = string.Empty;
             }
 
             return currentVersion;
@@ -113,7 +113,7 @@ namespace WebDriverManagerSharp
             target = target.SubstringJava(0, iSeparator + 1)
                     + target.SubstringJava(iDash + 1, iPoint)
                     + target.SubstringJava(iSeparator);
-            target = target.Replace("beta-", "");
+            target = target.Replace("beta-", string.Empty);
             return target;
         }
 
@@ -141,8 +141,8 @@ namespace WebDriverManagerSharp
             FileInfo target = new FileInfo(Path.Combine(archive.Directory.FullName, phantomjs.Name));
             Log.Trace("PhantomJS target: {0}", target);
 
-            downloader.RenameFile(phantomjs, target);
-            downloader.DeleteFolder(extractFolder);
+            Downloader.RenameFile(phantomjs, target);
+            Downloader.DeleteFolder(extractFolder);
             return target;
         }
 

@@ -74,15 +74,15 @@ namespace WebDriverManagerSharp
 
         private static Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
 
-        protected HttpClient httpClient;
-        protected Downloader downloader;
+        protected HttpClient HttpClient;
+        protected Downloader Downloader;
         private UrlFilter urlFilter;
-        protected string versionToDownload;
+        protected string VersionToDownload;
         private string downloadedVersion;
         private string latestVersion;
         private string binaryPath;
         private bool mirrorLog;
-        protected List<string> listVersions;
+        protected List<string> ListVersions;
         private bool forcedArch;
         private bool forcedOs;
         private bool isLatest;
@@ -436,7 +436,7 @@ namespace WebDriverManagerSharp
 
         public virtual List<string> GetVersions()
         {
-            httpClient = new HttpClient(Config());
+            HttpClient = new HttpClient(Config());
             try
             {
                 List<Uri> drivers = GetDrivers();
@@ -469,12 +469,12 @@ namespace WebDriverManagerSharp
 
         public HttpClient GetHttpClient()
         {
-            return httpClient;
+            return HttpClient;
         }
 
         public void ClearPreferences()
         {
-            instanceMap[GetDriverManagerType().Value].preferences.clear();
+            instanceMap[GetDriverManagerType().Value].preferences.Clear();
         }
 
         public void ClearCache()
@@ -533,10 +533,10 @@ namespace WebDriverManagerSharp
 
         protected void Manage(Architecture arch, string version)
         {
-            httpClient = new HttpClient(Config());
+            HttpClient = new HttpClient(Config());
             try
             {
-                downloader = new Downloader(GetDriverManagerType().Value);
+                Downloader = new Downloader(GetDriverManagerType().Value);
                 urlFilter = new UrlFilter();
 
                 bool getLatest = isVersionLatest(version);
@@ -614,9 +614,9 @@ namespace WebDriverManagerSharp
 
             string driverManagerTypeLowerCase = GetDriverManagerType().ToString().ToLower();
             string optionalBrowserVersion;
-            if (usePreferences() && preferences.checkKeyInPreferences(driverManagerTypeLowerCase))
+            if (usePreferences() && preferences.CheckKeyInPreferences(driverManagerTypeLowerCase))
             {
-                optionalBrowserVersion = preferences.getValueFromPreferences(driverManagerTypeLowerCase);
+                optionalBrowserVersion = preferences.GetValueFromPreferences(driverManagerTypeLowerCase);
             }
             else
             {
@@ -630,10 +630,10 @@ namespace WebDriverManagerSharp
 
                 preferenceKey = driverManagerTypeLowerCase + browserVersion;
 
-                if (usePreferences() && preferences.checkKeyInPreferences(preferenceKey))
+                if (usePreferences() && preferences.CheckKeyInPreferences(preferenceKey))
                 {
                     // Get driver version from preferences
-                    version = preferences.getValueFromPreferences(preferenceKey);
+                    version = preferences.GetValueFromPreferences(preferenceKey);
                 }
                 else
                 {
@@ -643,7 +643,7 @@ namespace WebDriverManagerSharp
                 if (!string.IsNullOrEmpty(version))
                 {
                     Log.Info("Using {0} {1} (since {2} {3} is installed in your machine)", GetDriverName(), version, GetDriverManagerType(), browserVersion);
-                    preferences.putValueInPreferencesIfEmpty(driverManagerTypeLowerCase, browserVersion);
+                    preferences.PutValueInPreferencesIfEmpty(driverManagerTypeLowerCase, browserVersion);
                 }
             }
             else
@@ -800,7 +800,7 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         private Stream getOnlineVersionsInputStream()
         {
-            return httpClient.ExecuteHttpGet(Config().GetVersionsPropertiesUrl()).Content.ReadAsStreamAsync().Result;
+            return HttpClient.ExecuteHttpGet(Config().GetVersionsPropertiesUrl()).Content.ReadAsStreamAsync().Result;
         }
 
         protected void handleException(System.Exception e, Architecture arch, string version)
@@ -831,9 +831,9 @@ namespace WebDriverManagerSharp
         protected void downloadCandidateUrls(List<System.Uri> candidateUrls)
         {
             Uri url = candidateUrls.First();
-            FileInfo exportValue = downloader.Download(url, versionToDownload, GetDriverName());
+            FileInfo exportValue = Downloader.Download(url, VersionToDownload, GetDriverName());
             exportDriver(exportValue);
-            downloadedVersion = versionToDownload;
+            downloadedVersion = VersionToDownload;
         }
 
         /// <summary>
@@ -856,7 +856,7 @@ namespace WebDriverManagerSharp
                 // Get the latest or concrete version
                 candidateUrls = getLatest ? checkLatest(urls, GetDriverName()) : getVersion(urls, GetDriverName(), version);
                 Log.Trace("Candidate System.Uris: {0}", candidateUrls);
-                if (versionToDownload == null || this.GetType().Equals(typeof(EdgeDriverManager)))
+                if (VersionToDownload == null || this.GetType().Equals(typeof(EdgeDriverManager)))
                 {
                     break;
                 }
@@ -880,9 +880,9 @@ namespace WebDriverManagerSharp
                 continueSearchingVersion = candidateUrls.Count == 0 && getLatest;
                 if (continueSearchingVersion)
                 {
-                    Log.Info("No binary found for {0} {1} ... seeking another version", GetDriverName(), versionToDownload);
-                    urls = removeFromList(urls, versionToDownload);
-                    versionToDownload = null;
+                    Log.Info("No binary found for {0} {1} ... seeking another version", GetDriverName(), VersionToDownload);
+                    urls = removeFromList(urls, VersionToDownload);
+                    VersionToDownload = null;
                 }
             } while (continueSearchingVersion);
             return candidateUrls;
@@ -980,7 +980,7 @@ namespace WebDriverManagerSharp
 
         protected List<FileInfo> getFilesInCache()
         {
-            return new DirectoryInfo(downloader.GetTargetPath()).GetFiles("*.*", SearchOption.AllDirectories).ToList();
+            return new DirectoryInfo(Downloader.GetTargetPath()).GetFiles("*.*", SearchOption.AllDirectories).ToList();
         }
 
         protected static List<Uri> removeFromList(List<Uri> list, string version)
@@ -1001,7 +1001,7 @@ namespace WebDriverManagerSharp
             List<Uri> outList = new List<Uri>();
             if (GetDriverName().Contains("msedgedriver"))
             {
-                int i = listVersions.IndexOf(version);
+                int i = ListVersions.IndexOf(version);
                 if (i != -1)
                 {
                     outList.Add(list[i]);
@@ -1018,9 +1018,9 @@ namespace WebDriverManagerSharp
                 }
             }
 
-            if (versionToDownload != null && !versionToDownload.Equals(version))
+            if (VersionToDownload != null && !VersionToDownload.Equals(version))
             {
-                versionToDownload = version;
+                VersionToDownload = version;
                 Log.Info("Using {0} {1}", driver, version);
             }
 
@@ -1045,9 +1045,9 @@ namespace WebDriverManagerSharp
                     list.Remove(url);
                 }
             }
-            storeVersionToDownload(versionToDownload);
-            latestVersion = versionToDownload;
-            Log.Info("Latest version of {0} is {1}", driver, versionToDownload);
+            storeVersionToDownload(VersionToDownload);
+            latestVersion = VersionToDownload;
+            Log.Info("Latest version of {0} is {1}", driver, VersionToDownload);
             return outList;
         }
 
@@ -1066,16 +1066,16 @@ namespace WebDriverManagerSharp
                 {
                     return;
                 }
-                if (versionToDownload == null)
+                if (VersionToDownload == null)
                 {
-                    versionToDownload = currentVersion;
+                    VersionToDownload = currentVersion;
                 }
-                if (versionCompare(currentVersion, versionToDownload) > 0)
+                if (versionCompare(currentVersion, VersionToDownload) > 0)
                 {
-                    versionToDownload = currentVersion;
+                    VersionToDownload = currentVersion;
                     outList.Clear();
                 }
-                if (url.GetFile().Contains(versionToDownload))
+                if (url.GetFile().Contains(VersionToDownload))
                 {
                     outList.Add(url);
                 }
@@ -1131,7 +1131,7 @@ namespace WebDriverManagerSharp
 
             string driverStr = driverUrl.ToString();
 
-            using (StreamReader inStream = new StreamReader(httpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
+            using (StreamReader inStream = new StreamReader(HttpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
             {
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
@@ -1170,7 +1170,7 @@ namespace WebDriverManagerSharp
             List<System.Uri> urls = new List<System.Uri>();
             try
             {
-                using (Stream reader = httpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result)
+                using (Stream reader = HttpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result)
                 {
                     XmlDocument xml = loadXML(reader);
                     
@@ -1239,7 +1239,7 @@ namespace WebDriverManagerSharp
                 authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(gitHubTokenName + ":" + gitHubTokenSecret)));
             }
 
-            return httpClient.ExecuteHttpGet(driverUrl, authHeader).Content.ReadAsStreamAsync().Result;
+            return HttpClient.ExecuteHttpGet(driverUrl, authHeader).Content.ReadAsStreamAsync().Result;
         }
 
         /// <summary>
@@ -1260,7 +1260,7 @@ namespace WebDriverManagerSharp
             }
             else
             {
-                string driverVersion = versionToDownload;
+                string driverVersion = VersionToDownload;
 
                 using (JsonReader reader = new JsonTextReader(new StreamReader(openGitHubConnection(driverUrl))))
                 {
@@ -1379,8 +1379,8 @@ namespace WebDriverManagerSharp
         {
             Config().Reset();
             mirrorLog = false;
-            listVersions = null;
-            versionToDownload = null;
+            ListVersions = null;
+            VersionToDownload = null;
             forcedArch = false;
             forcedOs = false;
             retry = true;
@@ -1433,7 +1433,7 @@ namespace WebDriverManagerSharp
                 }
                 else if (arg.Equals("clear-preferences", System.StringComparison.InvariantCultureIgnoreCase))
                 {
-                    new Preferences(new Config()).clear();
+                    new Preferences(new Config()).Clear();
                 }
                 else
                 {
@@ -1505,10 +1505,10 @@ namespace WebDriverManagerSharp
                 {
                     version = version.SubstringJava(1);
                 }
-                versionToDownload = version;
+                VersionToDownload = version;
                 if (isLatest && usePreferences() && !string.IsNullOrEmpty(preferenceKey))
                 {
-                    preferences.putValueInPreferencesIfEmpty(preferenceKey, version);
+                    preferences.PutValueInPreferencesIfEmpty(preferenceKey, version);
                 }
             }
         }

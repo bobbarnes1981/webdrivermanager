@@ -78,13 +78,13 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         protected override List<System.Uri> GetDrivers()
         {
-            listVersions = new List<string>();
+            ListVersions = new List<string>();
             List<System.Uri> urlList = new List<System.Uri>();
 
             System.Uri driverUrl = GetDriverUrl();
             Log.Debug("Reading {0} to find out the latest version of Edge driver", driverUrl);
 
-            using (StreamReader inStream = new StreamReader(httpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
+            using (StreamReader inStream = new StreamReader(HttpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
             {
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
@@ -118,7 +118,7 @@ namespace WebDriverManagerSharp
                     HtmlNode paragraph = versionParagraphClean[i];
                     string[] version = paragraph.InnerText.Split(' ');
                     string v = version[1];
-                    listVersions.Add(v);
+                    ListVersions.Add(v);
 
                     if (isChromiumBased(v))
                     {
@@ -151,12 +151,12 @@ namespace WebDriverManagerSharp
 
         public override List<string> GetVersions()
         {
-            httpClient = new HttpClient(Config());
+            HttpClient = new HttpClient(Config());
             try
             {
                 GetDrivers();
-                listVersions.Sort(new VersionComparator());
-                return listVersions;
+                ListVersions.Sort(new VersionComparator());
+                return ListVersions;
             }
             catch (IOException e)
             {
@@ -168,9 +168,9 @@ namespace WebDriverManagerSharp
         {
             Log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
             List<System.Uri> outList = new List<System.Uri>();
-            versionToDownload = listVersions.First();
+            VersionToDownload = ListVersions.First();
             outList.Add(list.First());
-            Log.Info("Latest version of Edge driver is {0}", versionToDownload);
+            Log.Info("Latest version of Edge driver is {0}", VersionToDownload);
             return outList;
         }
 

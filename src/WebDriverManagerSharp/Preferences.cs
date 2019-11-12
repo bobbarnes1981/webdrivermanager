@@ -45,7 +45,7 @@ namespace WebDriverManagerSharp
             this.config = config;
         }
 
-        public string getValueFromPreferences(string key)
+        public string GetValueFromPreferences(string key)
         {
             if (!prefs.ContainsKey(key))
             {
@@ -59,9 +59,9 @@ namespace WebDriverManagerSharp
             return long.Parse(prefs[getExpirationKey(key)]); //default 0
         }
 
-        public void putValueInPreferencesIfEmpty(string key, string value)
+        public void PutValueInPreferencesIfEmpty(string key, string value)
         {
-            if (getValueFromPreferences(key) == null)
+            if (GetValueFromPreferences(key) == null)
             {
                 prefs[key] = value;
                 long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.GetTtl()).TotalMilliseconds);
@@ -79,7 +79,7 @@ namespace WebDriverManagerSharp
             prefs.Remove(getExpirationKey(key));
         }
 
-        public void clear()
+        public void Clear()
         {
             try
             {
@@ -115,9 +115,9 @@ namespace WebDriverManagerSharp
             return key + TTL;
         }
 
-        public bool checkKeyInPreferences(string key)
+        public bool CheckKeyInPreferences(string key)
         {
-            string valueFromPreferences = getValueFromPreferences(key);
+            string valueFromPreferences = GetValueFromPreferences(key);
             bool valueInPreferences = !string.IsNullOrEmpty(valueFromPreferences);
             if (valueInPreferences)
             {

@@ -30,7 +30,7 @@ namespace WebDriverManagerSharp.Tests.Test
         private readonly ILogger log = Logger.GetLogger();
 
         [Test]
-        public void testLatestAndBetaChromedriver()
+        public void TestLatestAndBetaChromedriver()
         {
             WebDriverManager.ChromeDriver().AvoidPreferences().AvoidAutoVersion().Setup();
             string chromedriverStable = WebDriverManager.ChromeDriver().GetDownloadedVersion();

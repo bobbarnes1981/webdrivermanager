@@ -127,11 +127,11 @@ namespace WebDriverManagerSharp
                     target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
                     Log.Trace("Operadriver target: {0}", target);
 
-                    downloader.RenameFile(operadriver, target);
+                    Downloader.RenameFile(operadriver, target);
                 }
                 finally
                 {
-                    downloader.DeleteFolder(extractFolder);
+                    Downloader.DeleteFolder(extractFolder);
                 }
                 return target;
             }

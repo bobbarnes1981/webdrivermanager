@@ -116,7 +116,7 @@ namespace WebDriverManagerSharp
             string version = null;
             try
             {
-                Stream response = httpClient.ExecuteHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
+                Stream response = HttpClient.ExecuteHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
                 using (StreamReader reader = new StreamReader(response))
                 {
                     version = reader.ReadToEnd();

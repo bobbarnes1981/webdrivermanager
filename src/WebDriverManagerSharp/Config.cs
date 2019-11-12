@@ -620,7 +620,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverUrl);
         }
 
-        public Config SetChromeDriverUrl(System.Uri value)
+        public Config SetChromeDriverUrl(Uri value)
         {
             this.chromeDriverUrl.SetValue(value);
             return this;
@@ -708,40 +708,40 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverMirrorUrl);
         }
 
-        public Config setFirefoxDriverMirrorUrl(Uri value)
+        public Config SetFirefoxDriverMirrorUrl(Uri value)
         {
             this.firefoxDriverMirrorUrl.SetValue(value);
             return this;
         }
 
-        public string getInternetExplorerDriverVersion()
+        public string GetInternetExplorerDriverVersion()
         {
             return resolve(internetExplorerDriverVersion);
         }
 
-        public Config setInternetExplorerDriverVersion(string value)
+        public Config SetInternetExplorerDriverVersion(string value)
         {
             this.internetExplorerDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getInternetExplorerDriverExport()
+        public string GetInternetExplorerDriverExport()
         {
             return resolve(internetExplorerDriverExport);
         }
 
-        public Config setInternetExplorerDriverExport(string value)
+        public Config SetInternetExplorerDriverExport(string value)
         {
             this.internetExplorerDriverExport.SetValue(value);
             return this;
         }
 
-        public Uri getInternetExplorerDriverUrl()
+        public Uri GetInternetExplorerDriverUrl()
         {
             return resolve(internetExplorerDriverUrl);
         }
 
-        public Config setInternetExplorerDriverUrl(Uri value)
+        public Config SetInternetExplorerDriverUrl(Uri value)
         {
             this.internetExplorerDriverUrl.SetValue(value);
             return this;

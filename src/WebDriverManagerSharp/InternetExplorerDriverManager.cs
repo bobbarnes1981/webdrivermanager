@@ -40,12 +40,12 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getInternetExplorerDriverVersion();
+            return Config().GetInternetExplorerDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return Config().getInternetExplorerDriverUrl();
+            return Config().GetInternetExplorerDriverUrl();
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -55,17 +55,17 @@ namespace WebDriverManagerSharp
 
         protected override string GetExportParameter()
         {
-            return Config().getInternetExplorerDriverExport();
+            return Config().GetInternetExplorerDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setInternetExplorerDriverVersion(version);
+            Config().SetInternetExplorerDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setInternetExplorerDriverUrl(url);
+            Config().SetInternetExplorerDriverUrl(url);
         }
 
         /// <summary>

@@ -38,9 +38,9 @@ namespace WebDriverManagerSharp.Tests.Test
         public static int serverPort;
 
         [OneTimeSetUp]
-        public static void startServer()
+        public static void StartServer()
         {
-            serverPort = getFreePort();
+            serverPort = GetFreePort();
             log.Debug("Test is starting WebDriverManager server at port {0}", serverPort);
 
             WebDriverManager.main(new string[] { "server", serverPort.ToString() });
@@ -54,7 +54,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("iedriver", "IEDriverServer.exe")]
         [TestCase("chromedriver?os=WIN", "chromedriver.exe")]
         [TestCase("chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true", "chromedriver")]
-        public void testServer(string path, string driver)
+        public void TestServer(string path, string driver)
         {
             string serverUrl = string.Format("http://localhost:{0}/{1}", serverPort, path);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverUrl);
@@ -68,10 +68,10 @@ namespace WebDriverManagerSharp.Tests.Test
 
             string[] headers = response.Headers.GetValues("Content-Disposition");
             log.Debug("Assessing {0} ... {1} should contain {2}", driver, headers, attachment);
-            Assert.That(headers.Where(h => h == attachment).Count, Is.GreaterThan(0));
+            Assert.That(headers.Where(h => h == attachment).Count(), Is.GreaterThan(0));
         }
 
-        public static int getFreePort()
+        public static int GetFreePort()
         {
             TcpListener l = new TcpListener(IPAddress.Loopback, 0);
             l.Start();
