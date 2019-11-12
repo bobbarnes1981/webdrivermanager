@@ -25,8 +25,19 @@ namespace WebDriverManagerSharp
      */
     public enum OperatingSystem
     {
+        /// <summary>
+        /// Windows
+        /// </summary>
         WIN,
+
+        /// <summary>
+        /// Linux
+        /// </summary>
         LINUX,
+
+        /// <summary>
+        /// Mac
+        /// </summary>
         MAC
     }
 }

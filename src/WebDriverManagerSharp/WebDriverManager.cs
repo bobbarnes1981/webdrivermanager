@@ -72,7 +72,7 @@ namespace WebDriverManagerSharp
 
         protected abstract string GetExportParameter();
 
-        private static Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
+        private readonly static Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
 
         protected HttpClient HttpClient;
         protected Downloader Downloader;
@@ -88,7 +88,7 @@ namespace WebDriverManagerSharp
         private bool isLatest;
         private bool retry = true;
         private Config config = new Config();
-        private Preferences preferences;
+        private readonly Preferences preferences;
         private string preferenceKey;
         private Properties versionsProperties;
 
@@ -1027,19 +1027,19 @@ namespace WebDriverManagerSharp
             return outList;
         }
 
-        protected virtual List<System.Uri> checkLatest(List<System.Uri> list, string driver)
+        protected virtual List<Uri> checkLatest(List<Uri> list, string driver)
         {
             Log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
-            List<System.Uri> outList = new List<System.Uri>();
-            List<System.Uri> copyOfList = new List<System.Uri>(list);
+            List<Uri> outList = new List<Uri>();
+            List<Uri> copyOfList = new List<Uri>(list);
 
-            foreach (System.Uri url in copyOfList)
+            foreach (Uri url in copyOfList)
             {
                 try
                 {
                     handleDriver(url, driver, outList);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Log.Trace("There was a problem with System.Uri {0} : {1}", url, e.Message);
                     list.Remove(url);
@@ -1051,7 +1051,7 @@ namespace WebDriverManagerSharp
             return outList;
         }
 
-        protected void handleDriver(System.Uri url, string driver, List<System.Uri> outList)
+        protected void handleDriver(Uri url, string driver, List<Uri> outList)
         {
             if (!Config().IsUseBetaVersions() && (url.GetFile().ToLower().Contains("beta")))
             {
@@ -1062,7 +1062,7 @@ namespace WebDriverManagerSharp
             {
                 string currentVersion = GetCurrentVersion(url, driver);
 
-                if (currentVersion.Equals(driver, System.StringComparison.InvariantCultureIgnoreCase))
+                if (currentVersion.Equals(driver, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return;
                 }

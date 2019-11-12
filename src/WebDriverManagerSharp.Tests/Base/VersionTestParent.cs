@@ -37,9 +37,9 @@ namespace WebDriverManagerSharp.Tests.Base
         protected string[] specificVersions;
         protected OperatingSystem? os;
 
-        ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Logger.GetLogger();
 
-        public VersionTestParent(Architecture architecture)
+        protected VersionTestParent(Architecture architecture)
         {
             this.architecture = architecture;
         }

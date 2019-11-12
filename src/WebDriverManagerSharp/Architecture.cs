@@ -27,10 +27,21 @@ namespace WebDriverManagerSharp
      */
     public enum Architecture
     {
+        /// <summary>
+        /// Default Architecture
+        /// </summary>
         [Description("DEFAULT")]
         DEFAULT,
+
+        /// <summary>
+        /// 32 Bit Architecture
+        /// </summary>
         [Description("32")]
         X32,
+
+        /// <summary>
+        /// 64 Bit Architecture
+        /// </summary>
         [Description("64")]
         X64
     }

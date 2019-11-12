@@ -15,6 +15,7 @@
  *
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -43,12 +44,12 @@ namespace WebDriverManagerSharp
             return Config().GetChromeDriverVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().GetChromeDriverUrl());
+            return base.getDriverUrlCheckingMirror(Config().GetChromeDriverUrl());
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return Config().GetChromeDriverMirrorUrl();
         }
@@ -63,7 +64,7 @@ namespace WebDriverManagerSharp
             Config().SetChromeDriverVersion(version);
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             Config().SetChromeDriverUrl(url);
         }
@@ -73,9 +74,9 @@ namespace WebDriverManagerSharp
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
+        protected override List<Uri> GetDrivers()
         {
-            System.Uri mirrorUrl = GetMirrorUrl();
+            Uri mirrorUrl = GetMirrorUrl();
             if (mirrorUrl != null && Config().IsUseMirror())
             {
                 return getDriversFromMirror(mirrorUrl);
@@ -86,7 +87,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        protected override string GetCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(Uri url, string driverName)
         {
             if (Config().IsUseMirror())
             {
@@ -116,13 +117,13 @@ namespace WebDriverManagerSharp
             string version = null;
             try
             {
-                Stream response = HttpClient.ExecuteHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
+                Stream response = HttpClient.ExecuteHttpGet(new Uri(url)).Content.ReadAsStreamAsync().Result;
                 using (StreamReader reader = new StreamReader(response))
                 {
                     version = reader.ReadToEnd();
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Log.Warn("Exception reading {0} to get latest version of {1}", url, GetDriverName(), e);
             }
@@ -130,8 +131,8 @@ namespace WebDriverManagerSharp
             {
                 Log.Debug("Latest version of {0} according to {1} is {2}", GetDriverName(), url, version);
             }
+
             return version;
         }
-
     }
 }

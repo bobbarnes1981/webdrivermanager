@@ -283,7 +283,7 @@ namespace WebDriverManagerSharp
         /// <exception cref="IOException"/>
         private void unGzip(FileInfo archive)
         {
-            //log.Trace("UnGzip {0}", archive);
+            log.Trace("UnGzip {0}", archive);
             //string fileName = archive.FullName;
             //    int iDash = fileName.IndexOf('-');
             //    if (iDash != -1)
@@ -319,9 +319,9 @@ namespace WebDriverManagerSharp
 
         private void unTarGz(FileInfo archive)
         {
+            log.Trace("unTarGz {0}", archive);
             //Archiver archiver = createArchiver(TAR, GZIP);
             //archiver.extract(archive, archive.getParentFile());
-            //log.trace("unTarGz {}", archive);
             throw new System.NotImplementedException("extract tar.gz not implemented");
         }
 
@@ -332,9 +332,9 @@ namespace WebDriverManagerSharp
         /// <exception cref="IOException"/>
         private void unBZip2(FileInfo archive)
         {
+            log.Trace("Unbzip2 {0}", archive);
             //Archiver archiver = createArchiver(TAR, BZIP2);
             //archiver.extract(archive, archive.getParentFile());
-            //log.trace("Unbzip2 {}", archive);
             throw new System.NotImplementedException("extract bzip2 not implemented");
         }
 
@@ -346,6 +346,7 @@ namespace WebDriverManagerSharp
         /// //InterruptedException
         private void extractMsi(FileInfo msi)
         {
+            log.Trace("Extract MSI {0}", msi);
             //        File tmpMsi = new File(
             //                createTempDirectory("").toFile().getAbsoluteFile() + separator
             //                        + msi.getName());

@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class InteractiveTest
     {
-        private static ILogger log = Logger.GetLogger();
+        private readonly static ILogger log = Logger.GetLogger();
 
         public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
@@ -43,7 +43,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("iexplorer", "IEDriverServer")]
         public void TestInteractive(string argument, string driver)
         {
-            driver = driver + EXT;
+            driver += EXT;
 
             log.Debug("Running interactive wdm with arguments: {0}", argument);
             WebDriverManager.main(new string[] { argument });
