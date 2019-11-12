@@ -80,9 +80,9 @@ namespace WebDriverManagerSharp.Tests.Test
         public void testTarget(string version, string url, string target, DriverManagerType driverManagerType)
         {
             Downloader downloader = new Downloader(driverManagerType);
-            string targetPath = downloader.getTargetPath();
+            string targetPath = downloader.GetTargetPath();
 
-            FileInfo result = downloader.getTarget(version, new Uri(url));
+            FileInfo result = downloader.GetTarget(version, new Uri(url));
             log.Info("{0}", result);
             log.Info(Path.Combine(targetPath, target));
 

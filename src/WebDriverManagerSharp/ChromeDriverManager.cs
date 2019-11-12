@@ -40,27 +40,27 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getChromeDriverVersion();
+            return Config().GetChromeDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().getChromeDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetChromeDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
         {
-            return Config().getChromeDriverMirrorUrl();
+            return Config().GetChromeDriverMirrorUrl();
         }
 
         protected override string GetExportParameter()
         {
-            return Config().getChromeDriverExport();
+            return Config().GetChromeDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setChromeDriverVersion(version);
+            Config().SetChromeDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
@@ -86,7 +86,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        protected override string getCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
             if (Config().isUseMirror())
             {
@@ -96,27 +96,27 @@ namespace WebDriverManagerSharp
             }
             else
             {
-                return base.getCurrentVersion(url, driverName);
+                return base.GetCurrentVersion(url, driverName);
             }
         }
 
         protected override string GetBrowserVersion()
         {
             string[] programFilesEnvs = { getProgramFilesEnv(), "LOCALAPPDATA", getOtherProgramFilesEnv() };
-            return getDefaultBrowserVersion(programFilesEnvs, "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe", "google-chrome", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version", GetDriverManagerType().ToString());
+            return GetDefaultBrowserVersion(programFilesEnvs, "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe", "google-chrome", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version", GetDriverManagerType().ToString());
         }
 
         protected override string getLatestVersion()
         {
-            string url = Config().getChromeDriverUrl() + "LATEST_RELEASE";
-            if (config.isUseMirror())
+            string url = Config().GetChromeDriverUrl() + "LATEST_RELEASE";
+            if (Config().isUseMirror())
             {
-                url = Config().getChromeDriverMirrorUrl() + "LATEST_RELEASE";
+                url = Config().GetChromeDriverMirrorUrl() + "LATEST_RELEASE";
             }
             string version = null;
             try
             {
-                Stream response = httpClient.executeHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
+                Stream response = httpClient.ExecuteHttpGet(new System.Uri(url)).Content.ReadAsStreamAsync().Result;
                 using (StreamReader reader = new StreamReader(response))
                 {
                     version = reader.ReadToEnd();
@@ -124,11 +124,11 @@ namespace WebDriverManagerSharp
             }
             catch (System.Exception e)
             {
-                log.Warn("Exception reading {0} to get latest version of {1}", url, GetDriverName(), e);
+                Log.Warn("Exception reading {0} to get latest version of {1}", url, GetDriverName(), e);
             }
             if (version != null)
             {
-                log.Debug("Latest version of {0} according to {1} is {2}", GetDriverName(), url, version);
+                Log.Debug("Latest version of {0} according to {1} is {2}", GetDriverName(), url, version);
             }
             return version;
         }

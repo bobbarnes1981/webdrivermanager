@@ -30,13 +30,13 @@ namespace WebDriverManagerSharp.Tests.Test
         [OneTimeSetUp]
         public static void setupClass()
         {
-            WebDriverManager.phantomjs().useBetaVersions().setup();
+            WebDriverManager.PhantomJS().UseBetaVersions().Setup();
         }
 
         [Test]
         public void testPhantomBeta()
         {
-            string binaryPath = WebDriverManager.phantomjs().getBinaryPath();
+            string binaryPath = WebDriverManager.PhantomJS().GetBinaryPath();
             Assert.That(binaryPath, Is.Not.Null);
         }
     }

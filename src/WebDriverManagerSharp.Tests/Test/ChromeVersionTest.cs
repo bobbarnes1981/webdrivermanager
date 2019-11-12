@@ -40,7 +40,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setup()
         {
-            browserManager = WebDriverManager.chromedriver();
+            browserManager = WebDriverManager.ChromeDriver();
             specificVersions = new string[] { "2.10", "2.33" };
         }
     }

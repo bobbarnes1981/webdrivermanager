@@ -35,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase(typeof(FirefoxDriver), "99")]
         public void testWrongVersion(Type driverClass, string version)
         {
-            WebDriverManagerException exception = Assert.Throws<WebDriverManagerException>(WebDriverManager.getInstance(driverClass).version(version).setup);
+            WebDriverManagerException exception = Assert.Throws<WebDriverManagerException>(WebDriverManager.GetInstance(driverClass).Version(version).Setup);
             //FileInfo binary = new FileInfo(WebDriverManager.getInstance(driverClass).getBinaryPath());
             //Assert.That(binary.Exists);
         }

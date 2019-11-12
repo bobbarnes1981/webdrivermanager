@@ -32,12 +32,12 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testLatestAndBetaChromedriver()
         {
-            WebDriverManager.chromedriver().avoidPreferences().avoidAutoVersion().setup();
-            string chromedriverStable = WebDriverManager.chromedriver().getDownloadedVersion();
+            WebDriverManager.ChromeDriver().AvoidPreferences().AvoidAutoVersion().Setup();
+            string chromedriverStable = WebDriverManager.ChromeDriver().GetDownloadedVersion();
             log.Debug("Chromedriver LATEST version: {0}", chromedriverStable);
 
-            WebDriverManager.chromedriver().avoidPreferences().avoidAutoVersion().useBetaVersions().setup();
-            string chromedriverBeta = WebDriverManager.chromedriver().getDownloadedVersion();
+            WebDriverManager.ChromeDriver().AvoidPreferences().AvoidAutoVersion().UseBetaVersions().Setup();
+            string chromedriverBeta = WebDriverManager.ChromeDriver().GetDownloadedVersion();
             log.Debug("Chromedriver BETA version: {0}", chromedriverBeta);
 
             Assert.That(chromedriverStable, Is.Not.EqualTo(chromedriverBeta));

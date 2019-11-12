@@ -51,7 +51,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setupTest()
         {
-            WebDriverManager.getInstance(driverClass).setup();
+            WebDriverManager.GetInstance(driverClass).Setup();
         }
 
         [TearDown]

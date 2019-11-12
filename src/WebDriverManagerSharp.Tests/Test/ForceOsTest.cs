@@ -46,20 +46,20 @@ namespace WebDriverManagerSharp.Tests.Test
         public void setup()
         {
             //initMocks(this);
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [TearDown]
         public void teardown()
         {
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [Test]
         public void testForceOs()
         {
-            WebDriverManager.chromedriver().operatingSystem(operatingSystem).setup();
-            FileInfo binary = new FileInfo(WebDriverManager.chromedriver().getBinaryPath());
+            WebDriverManager.ChromeDriver().OperatingSystem(operatingSystem).Setup();
+            FileInfo binary = new FileInfo(WebDriverManager.ChromeDriver().GetBinaryPath());
             log.Debug("OS {0} - binary path {1}", operatingSystem, binary);
             Assert.True(binary.Exists);
         }

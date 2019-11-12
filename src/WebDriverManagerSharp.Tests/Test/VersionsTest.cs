@@ -45,9 +45,9 @@ namespace WebDriverManagerSharp.Tests.Test
         //[TestCase(typeof(PhantomJsDriver))]
         public void testDriverVersions(Type driverManagerClass)
         {
-            WebDriverManager driverManager = WebDriverManager.getInstance(driverManagerClass);
+            WebDriverManager driverManager = WebDriverManager.GetInstance(driverManagerClass);
 
-            List<string> versions = driverManager.getVersions();
+            List<string> versions = driverManager.GetVersions();
             log.Debug("Versions of {0} {1}", driverManager.GetType().Name, versions);
             Assert.That(versions, Is.Not.Null);
             Assert.That(versions, Is.Not.Empty);

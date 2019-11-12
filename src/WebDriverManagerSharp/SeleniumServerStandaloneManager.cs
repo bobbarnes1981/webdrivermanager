@@ -39,12 +39,12 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getSeleniumServerStandaloneVersion();
+            return Config().GetSeleniumServerStandaloneVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return Config().getSeleniumServerStandaloneUrl();
+            return Config().GetSeleniumServerStandaloneUrl();
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -60,15 +60,15 @@ namespace WebDriverManagerSharp
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setSeleniumServerStandaloneVersion(version);
+            Config().SetSeleniumServerStandaloneVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setSeleniumServerStandaloneUrl(url);
+            Config().SetSeleniumServerStandaloneUrl(url);
         }
 
-        public override FileInfo postDownload(FileInfo archive)
+        public override FileInfo PostDownload(FileInfo archive)
         {
             return archive;
         }

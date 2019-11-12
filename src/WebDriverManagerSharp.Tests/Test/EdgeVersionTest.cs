@@ -37,7 +37,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setup()
         {
-            browserManager = WebDriverManager.getInstance(typeof(EdgeDriver));
+            browserManager = WebDriverManager.GetInstance(typeof(EdgeDriver));
             os = OperatingSystem.WIN;
             specificVersions = new string[] { "1.10240", "2.10586", "3.14393", "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.183.0", "77.0.237.0" };
         }

@@ -40,7 +40,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public void setup()
         {
             os = OperatingSystem.WIN;
-            browserManager = WebDriverManager.getInstance(typeof(InternetExplorerDriver));
+            browserManager = WebDriverManager.GetInstance(typeof(InternetExplorerDriver));
             specificVersions = new string[] { "2.39", "2.47" };
         }
     }

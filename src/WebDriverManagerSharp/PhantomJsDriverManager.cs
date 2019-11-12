@@ -40,42 +40,42 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getPhantomjsDriverVersion();
+            return Config().GetPhantomjsDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().getPhantomjsDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
         {
-            return Config().getPhantomjsDriverMirrorUrl();
+            return Config().GetPhantomjsDriverMirrorUrl();
         }
 
         protected override string GetExportParameter()
         {
-            return Config().getPhantomjsDriverExport();
+            return Config().GetPhantomjsDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setPhantomjsDriverVersion(version);
+            Config().SetPhantomjsDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setPhantomjsDriverUrl(url);
+            Config().SetPhantomjsDriverUrl(url);
         }
 
         protected override List<System.Uri> GetDrivers()// throws IOException
         {
             System.Uri driverUrl = GetDriverUrl();
-            log.Info("Reading {0} to seek {1}", driverUrl, GetDriverName());
+            Log.Info("Reading {0} to seek {1}", driverUrl, GetDriverName());
             return getDriversFromMirror(driverUrl);
         }
 
-        protected override string getCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
             string file = url.GetFile();
             file = url.GetFile().SubstringJava(file.LastIndexOf(SLASH), file.Length);
@@ -103,7 +103,7 @@ namespace WebDriverManagerSharp
             return currentVersion;
         }
 
-        public override string preDownload(string target, string version)
+        public override string PreDownload(string target, string version)
         {
             int iSeparator = target.IndexOf(version) - 1;
             int iDash = target.LastIndexOf(version) + version.Length;
@@ -117,12 +117,12 @@ namespace WebDriverManagerSharp
             return target;
         }
 
-        public override FileInfo postDownload(FileInfo archive)
+        public override FileInfo PostDownload(FileInfo archive)
         {
-            log.Trace("PhantomJS package name: {0}", archive);
+            Log.Trace("PhantomJS package name: {0}", archive);
 
-            DirectoryInfo extractFolder = getFolderFilter(archive.Directory)[0];
-            log.Trace("PhantomJS extract folder (to be deleted): {0}", extractFolder);
+            DirectoryInfo extractFolder = GetFolderFilter(archive.Directory)[0];
+            Log.Trace("PhantomJS extract folder (to be deleted): {0}", extractFolder);
 
             DirectoryInfo binFolder = new DirectoryInfo(extractFolder.FullName + Path.DirectorySeparatorChar + "bin");
             // Exception for older version of PhantomJS
@@ -133,16 +133,16 @@ namespace WebDriverManagerSharp
                 binaryIndex = 3;
             }
 
-            log.Trace("PhantomJS bin folder: {0} (index {1})", binFolder, binaryIndex);
+            Log.Trace("PhantomJS bin folder: {0} (index {1})", binFolder, binaryIndex);
 
             FileInfo phantomjs = binFolder.GetFiles()[binaryIndex];
-            log.Trace("PhantomJS binary: {0}", phantomjs);
+            Log.Trace("PhantomJS binary: {0}", phantomjs);
 
             FileInfo target = new FileInfo(Path.Combine(archive.Directory.FullName, phantomjs.Name));
-            log.Trace("PhantomJS target: {0}", target);
+            Log.Trace("PhantomJS target: {0}", target);
 
             downloader.RenameFile(phantomjs, target);
-            downloader.deleteFolder(extractFolder);
+            downloader.DeleteFolder(extractFolder);
             return target;
         }
 

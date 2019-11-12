@@ -49,8 +49,8 @@ namespace WebDriverManagerSharp.Tests.Test
 
         private void exerciseEdgeInsider()
         {
-            WebDriverManager.edgedriver().operatingSystem(OperatingSystem.WIN).version("pre-installed").setup();
-            FileInfo binary = new FileInfo(WebDriverManager.edgedriver().getBinaryPath());
+            WebDriverManager.EdgeDriver().OperatingSystem(OperatingSystem.WIN).Version("pre-installed").Setup();
+            FileInfo binary = new FileInfo(WebDriverManager.EdgeDriver().GetBinaryPath());
             log.Debug("Edge driver {0}", binary);
             Assert.That(binary.Extension, Is.EqualTo(".exe"));
         }

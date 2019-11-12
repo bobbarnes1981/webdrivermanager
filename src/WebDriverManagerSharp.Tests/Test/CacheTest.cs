@@ -50,14 +50,14 @@ namespace WebDriverManagerSharp.Tests.Test
         [TearDown]
         public void cleanCache()
         {
-            new DirectoryInfo(new Downloader(driverManagerType).getTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(driverManagerType).GetTargetPath()).Delete(true);
         }
 
         [Test]
         public void testCache()
         {
-            WebDriverManager browserManager = WebDriverManager.getInstance(driverManagerType);
-            browserManager.forceCache().forceDownload().architecture(architecture).version(driverVersion).setup();
+            WebDriverManager browserManager = WebDriverManager.GetInstance(driverManagerType);
+            browserManager.ForceCache().ForceDownload().Architecture(architecture).Version(driverVersion).Setup();
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDriverFromCache", BindingFlags.NonPublic | BindingFlags.Instance);
             FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config().getOs() });

@@ -36,15 +36,15 @@ namespace WebDriverManagerSharp.Tests.Test
         public void setup()
         {
             tmpFolder = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-            WebDriverManager.globalConfig().setTargetPath(tmpFolder.ToString());
+            WebDriverManager.GlobalConfig().setTargetPath(tmpFolder.ToString());
             log.Info("Using temporal folder {0} as cache", tmpFolder);
         }
 
         [Test]
         public void testTargetPath()
         {
-            WebDriverManager.chromedriver().setup();
-            string binaryPath = WebDriverManager.chromedriver().getBinaryPath();
+            WebDriverManager.ChromeDriver().Setup();
+            string binaryPath = WebDriverManager.ChromeDriver().GetBinaryPath();
             log.Info("Binary path {0}", binaryPath);
             StringAssert.StartsWith(tmpFolder.ToString(), binaryPath);
         }
@@ -53,8 +53,8 @@ namespace WebDriverManagerSharp.Tests.Test
         public void teardown()
         {
             log.Info("Deleting temporal folder {0}", tmpFolder);
-            WebDriverManager.chromedriver().clearCache();
-            WebDriverManager.globalConfig().reset();
+            WebDriverManager.ChromeDriver().ClearCache();
+            WebDriverManager.GlobalConfig().reset();
         }
     }
 }

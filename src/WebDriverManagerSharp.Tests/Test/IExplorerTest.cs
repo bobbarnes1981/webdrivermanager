@@ -33,20 +33,20 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testIExplorerLatest()
         {
-            WebDriverManager.iedriver().operatingSystem(OperatingSystem.WIN).setup();
+            WebDriverManager.IEDriver().OperatingSystem(OperatingSystem.WIN).Setup();
             assertIEDriverBinary();
         }
 
         [Test]
         public void testIExplorerVersion()
         {
-            WebDriverManager.iedriver().operatingSystem(OperatingSystem.WIN).version("3.11").setup();
+            WebDriverManager.IEDriver().OperatingSystem(OperatingSystem.WIN).Version("3.11").Setup();
             assertIEDriverBinary();
         }
 
         private void assertIEDriverBinary()
         {
-            FileInfo binary = new FileInfo(WebDriverManager.iedriver().getBinaryPath());
+            FileInfo binary = new FileInfo(WebDriverManager.IEDriver().GetBinaryPath());
             log.Debug("Binary path for IEDriverServer {0}", binary);
             Assert.True(binary.Exists);
         }

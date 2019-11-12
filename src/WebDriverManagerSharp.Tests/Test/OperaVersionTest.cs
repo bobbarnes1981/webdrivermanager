@@ -36,7 +36,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setup()
         {
-            browserManager = WebDriverManager.operadriver();
+            browserManager = WebDriverManager.OperaDriver();
             specificVersions = new string[] { "0.2.2", "2.32" };
         }
     }

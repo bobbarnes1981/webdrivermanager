@@ -36,7 +36,7 @@ namespace WebDriverManagerSharp
         [SetUp]
         public void setup()
         {
-            browserManager = WebDriverManager.phantomjs();
+            browserManager = WebDriverManager.PhantomJS();
             specificVersions = new string[] { "1.9.7", "2.1.1" };
         }
     }

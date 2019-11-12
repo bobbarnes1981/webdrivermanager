@@ -29,18 +29,18 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class HtmlUnitTest : BrowserTestParent
     {
-        private static Type webDriverClass;
+        private readonly static Type webDriverClass;
 
         [OneTimeSetUp]
-        public static void setupClass()
+        public static void SetupClass()
         {
             Assert.Ignore("HtmlUnitDriver not relevant for .NET");
 //            webDriverClass = typeof(HtmlUnitDriver);
-            WebDriverManager.getInstance(webDriverClass).setup();
+            WebDriverManager.GetInstance(webDriverClass).Setup();
         }
 
         [SetUp]
-        public void htmlUnitTest()
+        public void HtmlUnitDriverTest()
         {
 //            driver = new HtmlUnitDriver();
         }

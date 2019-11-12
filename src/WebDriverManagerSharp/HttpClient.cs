@@ -52,7 +52,7 @@ namespace WebDriverManagerSharp
             {
                 string proxy = config.getProxy();
 
-                IWebProxy proxyHost = createProxy(proxy);
+                IWebProxy proxyHost = CreateProxy(proxy);
                 if (proxyHost != null)
                 {
                     handler.Proxy = proxyHost;
@@ -91,9 +91,9 @@ namespace WebDriverManagerSharp
             closeableHttpClient.DefaultRequestHeaders.Add("User-Agent", "WebDriverManager-Sharp");
         }
 
-        public static IWebProxy createProxy(string proxy)
+        public static IWebProxy CreateProxy(string proxy)
         {
-            System.Uri url = determineProxyUrl(proxy);
+            Uri url = determineProxyUrl(proxy);
             if (url != null)
             {
                 string proxyHost = url.Host;
@@ -105,7 +105,7 @@ namespace WebDriverManagerSharp
             return null;
         }
 
-        public System.Net.Http.HttpResponseMessage executeHttpGet(System.Uri url, AuthenticationHeaderValue authHeader = null)
+        public System.Net.Http.HttpResponseMessage ExecuteHttpGet(Uri url, AuthenticationHeaderValue authHeader = null)
         {
             if (authHeader != null)
             {
@@ -127,7 +127,7 @@ namespace WebDriverManagerSharp
 
         private static Uri determineProxyUrl(string proxy)
         {
-            string proxyFromEnvCaps = System.Environment.GetEnvironmentVariable("HTTPS_PROXY");
+            string proxyFromEnvCaps = Environment.GetEnvironmentVariable("HTTPS_PROXY");
             string proxyFromEnv = string.IsNullOrEmpty(proxyFromEnvCaps) ? System.Environment.GetEnvironmentVariable("https_proxy") : proxyFromEnvCaps;
             string proxyInput = string.IsNullOrEmpty(proxy) ? proxyFromEnv : proxy;
             if (!string.IsNullOrEmpty(proxyInput))

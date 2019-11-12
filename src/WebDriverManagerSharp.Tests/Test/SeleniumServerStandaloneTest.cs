@@ -31,22 +31,22 @@ namespace WebDriverManagerSharp.Tests.Test
         private readonly ILogger log = Logger.GetLogger();
 
         [Test]
-        public void testSeleniumServerLatest()
+        public void TestSeleniumServerLatest()
         {
-            WebDriverManager.seleniumServerStandalone().setup();
+            WebDriverManager.SeleniumServerStandalone().Setup();
             assertBinary();
         }
 
         [Test]
-        public void testSeleniumServerVersion()
+        public void TestSeleniumServerVersion()
         {
-            WebDriverManager.seleniumServerStandalone().version("3.13").setup();
+            WebDriverManager.SeleniumServerStandalone().Version("3.13").Setup();
             assertBinary();
         }
 
         private void assertBinary()
         {
-            FileInfo binary = new FileInfo(WebDriverManager.seleniumServerStandalone().getBinaryPath());
+            FileInfo binary = new FileInfo(WebDriverManager.SeleniumServerStandalone().GetBinaryPath());
             log.Debug("Binary path for selenium-server-standalone {0}", binary);
             Assert.True(binary.Exists);
         }

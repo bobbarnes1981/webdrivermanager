@@ -35,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [OneTimeSetUp]
         public static void setupClass()
         {
-            WebDriverManager.operadriver().setup();
+            WebDriverManager.OperaDriver().Setup();
         }
 
         [SetUp]

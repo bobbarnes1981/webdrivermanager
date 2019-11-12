@@ -8,7 +8,7 @@ namespace WebDriverManagerSharp.UnitTests
         [Test]
         public void GetDriverManager()
         {
-            WebDriverManager manager = WebDriverManager.chromedriver();
+            WebDriverManager manager = WebDriverManager.ChromeDriver();
 
             Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
         }

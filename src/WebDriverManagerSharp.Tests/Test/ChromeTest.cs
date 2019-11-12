@@ -32,7 +32,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [OneTimeSetUp]
         public static void setupClass()
         {
-            WebDriverManager.chromedriver().setup();
+            WebDriverManager.ChromeDriver().Setup();
         }
 
         [SetUp]

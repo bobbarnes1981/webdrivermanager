@@ -33,8 +33,8 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testMsiInWindows()
         {
-            WebDriverManager.edgedriver().version("2.10586").setup();
-            FileInfo binary = new FileInfo(WebDriverManager.edgedriver().getBinaryPath());
+            WebDriverManager.EdgeDriver().Version("2.10586").Setup();
+            FileInfo binary = new FileInfo(WebDriverManager.EdgeDriver().GetBinaryPath());
             log.Debug("Edge driver {0}", binary);
             Assert.That(binary.Extension, Is.EqualTo(".exe"));
         }

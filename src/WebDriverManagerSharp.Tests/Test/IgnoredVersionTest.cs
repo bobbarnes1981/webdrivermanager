@@ -36,15 +36,15 @@ namespace WebDriverManagerSharp.Tests.Test
         [TearDown]
         public void cleanCache()
         {
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).getTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [Test]
         public void testIgnoreVersions()
         {
             string[] ignoredVersions = { "2.33", "2.32" };
-            WebDriverManager.chromedriver().ignoreVersions(ignoredVersions).setup();
-            FileInfo binary = new FileInfo(WebDriverManager.chromedriver().getBinaryPath());
+            WebDriverManager.ChromeDriver().IgnoreVersions(ignoredVersions).Setup();
+            FileInfo binary = new FileInfo(WebDriverManager.ChromeDriver().GetBinaryPath());
             log.Debug("Using binary {0} (ignoring {1})", binary, ignoredVersions.ToStringJava());
 
             foreach (string version in ignoredVersions)

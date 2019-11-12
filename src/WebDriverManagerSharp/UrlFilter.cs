@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        public List<Uri> filterByOs(List<Uri> list, string osName)
+        public List<Uri> FilterByOs(List<Uri> list, string osName)
         {
             log.Trace("System.Uris before filtering by OS ({0}): {1}", osName, list);
             List<Uri> outList = new List<Uri>();
@@ -55,12 +55,12 @@ namespace WebDriverManagerSharp
             return outList;
         }
 
-        public List<System.Uri> filterByArch(List<Uri> list, Architecture arch, bool forcedArch)
+        public List<Uri> FilterByArch(List<Uri> list, Architecture arch, bool forcedArch)
         {
             log.Trace("System.Uris before filtering by architecture ({0}): {1}", arch, list);
-            List<System.Uri> outList = new List<System.Uri>(list);
+            List<Uri> outList = new List<Uri>(list);
 
-            if ((forcedArch || outList.Count > 1) && arch != null)
+            if (forcedArch || outList.Count > 1)
             {
                 foreach (Uri url in list)
                 {
@@ -96,13 +96,13 @@ namespace WebDriverManagerSharp
         /// <param name="version"></param>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        public List<System.Uri> filterByDistro(List<System.Uri> list, string version)
+        public List<Uri> FilterByDistro(List<Uri> list, string version)
         {
             string distro = getDistroName();
             log.Trace("System.Uris before filtering by Linux distribution ({0}): {1}", distro, list);
-            List<System.Uri> outList = new List<System.Uri>(list);
+            List<Uri> outList = new List<Uri>(list);
 
-            foreach (System.Uri url in list)
+            foreach (Uri url in list)
             {
                 if (url.GetFile().Contains(version) && !url.GetFile().Contains(distro))
                 {
@@ -114,15 +114,15 @@ namespace WebDriverManagerSharp
             return outList;
         }
 
-        public List<System.Uri> filterByIgnoredVersions(List<System.Uri> list, params string[] ignoredVersions)
+        public List<Uri> FilterByIgnoredVersions(List<Uri> list, params string[] ignoredVersions)
         {
             if (log.IsTraceEnabled())
             {
                 log.Trace("System.Uris before filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), list);
             }
-            List<System.Uri> outList = new List<System.Uri>(list);
+            List<Uri> outList = new List<Uri>(list);
 
-            foreach (System.Uri url in list)
+            foreach (Uri url in list)
             {
                 foreach (string s in ignoredVersions)
                 {

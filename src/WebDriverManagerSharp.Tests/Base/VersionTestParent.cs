@@ -49,22 +49,22 @@ namespace WebDriverManagerSharp.Tests.Base
         {
             if (os != null)
             {
-                browserManager.operatingSystem(os.Value);
+                browserManager.OperatingSystem(os.Value);
             }
             switch (architecture)
             {
                 case Architecture.X32:
-                    browserManager.arch32().setup();
+                    browserManager.Arch32().Setup();
                     break;
                 case Architecture.X64:
-                    browserManager.arch64().setup();
+                    browserManager.Arch64().Setup();
                     break;
                 default:
-                    browserManager.setup();
+                    browserManager.Setup();
                     break;
             }
 
-            Assert.That(browserManager.getDownloadedVersion(), Is.Not.Null);
+            Assert.That(browserManager.GetDownloadedVersion(), Is.Not.Null);
         }
 
         [Test]
@@ -75,15 +75,15 @@ namespace WebDriverManagerSharp.Tests.Base
                 log.Info("Test specific version arch={0} version={1}", architecture, specificVersion);
                 if (architecture != Architecture.DEFAULT)
                 {
-                    browserManager.architecture(architecture);
+                    browserManager.Architecture(architecture);
                 }
                 if (os != null)
                 {
-                    browserManager.operatingSystem(os.Value);
+                    browserManager.OperatingSystem(os.Value);
                 }
-                browserManager.version(specificVersion).setup();
+                browserManager.Version(specificVersion).Setup();
 
-                Assert.That(browserManager.getDownloadedVersion(), Is.EqualTo(specificVersion));
+                Assert.That(browserManager.GetDownloadedVersion(), Is.EqualTo(specificVersion));
             }
         }
 

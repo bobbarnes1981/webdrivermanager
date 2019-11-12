@@ -43,12 +43,12 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getEdgeDriverVersion();
+            return Config().GetEdgeDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return Config().getEdgeDriverUrl();
+            return Config().GetEdgeDriverUrl();
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -58,17 +58,17 @@ namespace WebDriverManagerSharp
 
         protected override string GetExportParameter()
         {
-            return Config().getEdgeDriverExport();
+            return Config().GetEdgeDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setEdgeDriverVersion(version);
+            Config().SetEdgeDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setEdgeDriverUrl(url);
+            Config().SetEdgeDriverUrl(url);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace WebDriverManagerSharp
             List<System.Uri> urlList = new List<System.Uri>();
 
             System.Uri driverUrl = GetDriverUrl();
-            log.Debug("Reading {0} to find out the latest version of Edge driver", driverUrl);
+            Log.Debug("Reading {0} to find out the latest version of Edge driver", driverUrl);
 
-            using (StreamReader inStream = new StreamReader(httpClient.executeHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
+            using (StreamReader inStream = new StreamReader(httpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
             {
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
@@ -93,8 +93,8 @@ namespace WebDriverManagerSharp
                 HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::a[@aria-label]", baseXPath));
                 HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::p[contains(@class, 'driver-download__meta')]", baseXPath));
 
-                log.Trace("[Original] Download links:\n{0}", downloadLink);
-                log.Trace("[Original] Version paragraphs:\n{0}", versionParagraph);
+                Log.Trace("[Original] Download links:\n{0}", downloadLink);
+                Log.Trace("[Original] Version paragraphs:\n{0}", versionParagraph);
 
                 // Remove non-necessary paragraphs and links elements
                 List<HtmlNode> versionParagraphClean = new List<HtmlNode>();
@@ -107,11 +107,11 @@ namespace WebDriverManagerSharp
                     }
                 }
 
-                log.Trace("[Clean] Download links:\n{0}", downloadLink);
-                log.Trace("[Clean] Version paragraphs:\n{0}", versionParagraphClean);
+                Log.Trace("[Clean] Download links:\n{0}", downloadLink);
+                Log.Trace("[Clean] Version paragraphs:\n{0}", versionParagraphClean);
 
                 int shiftLinks = versionParagraphClean.Count() - downloadLink.Count();
-                log.Trace("The difference between the size of versions and links is {0}", shiftLinks);
+                Log.Trace("The difference between the size of versions and links is {0}", shiftLinks);
 
                 for (int i = 0; i < versionParagraphClean.Count(); i++)
                 {
@@ -124,11 +124,11 @@ namespace WebDriverManagerSharp
                     {
                         // Edge driver version 75 and above
                         int childIndex = 0;
-                        if (Config().getOs().Equals(OperatingSystem.MAC.ToString()))
+                        if (Config().getOs().Equals(WebDriverManagerSharp.OperatingSystem.MAC.ToString()))
                         {
                             childIndex = 2;
                         }
-                        else if (Config().getArchitecture() == Architecture.X64)
+                        else if (Config().getArchitecture() == WebDriverManagerSharp.Architecture.X64)
                         {
                             childIndex = 1;
                         }
@@ -144,12 +144,12 @@ namespace WebDriverManagerSharp
                     }
                 }
 
-                log.Trace("Edge driver System.Uri list {0}", urlList);
+                Log.Trace("Edge driver System.Uri list {0}", urlList);
                 return urlList;
             }
         }
 
-        public override List<string> getVersions()
+        public override List<string> GetVersions()
         {
             httpClient = new HttpClient(Config());
             try
@@ -166,15 +166,15 @@ namespace WebDriverManagerSharp
 
         protected override List<System.Uri> checkLatest(List<System.Uri> list, string driver)
         {
-            log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
+            Log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
             List<System.Uri> outList = new List<System.Uri>();
             versionToDownload = listVersions.First();
             outList.Add(list.First());
-            log.Info("Latest version of Edge driver is {0}", versionToDownload);
+            Log.Info("Latest version of Edge driver is {0}", versionToDownload);
             return outList;
         }
 
-        public override string preDownload(string target, string version)
+        public override string PreDownload(string target, string version)
         {
             if (isChromiumBased(version))
             {
@@ -186,12 +186,12 @@ namespace WebDriverManagerSharp
                             + Path.DirectorySeparatorChar + target.SubstringJava(iVersion);
                 }
             }
-            log.Trace("Pre-download in EdgeDriver -- target={0}, version={1}", target,
+            Log.Trace("Pre-download in EdgeDriver -- target={0}, version={1}", target,
                     version);
             return target;
         }
 
-        public override FileInfo postDownload(FileInfo archive)
+        public override FileInfo PostDownload(FileInfo archive)
         {
             List<FileInfo> listFiles = archive.Directory.GetFiles().ToList();
             List<FileInfo>.Enumerator iterator = listFiles.GetEnumerator();
@@ -212,12 +212,12 @@ namespace WebDriverManagerSharp
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 string[] programFilesEnvs = { getProgramFilesEnv() };
-                string msedgeVersion = getDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", "", "", "--version", GetDriverManagerType().ToString());
+                string msedgeVersion = GetDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", "", "", "--version", GetDriverManagerType().ToString());
                 string browserVersionOutput;
                 if (msedgeVersion != null)
                 {
                     browserVersionOutput = msedgeVersion;
-                    log.Debug("Edge Dev (based on Chromium) version {0} found", browserVersionOutput);
+                    Log.Debug("Edge Dev (based on Chromium) version {0} found", browserVersionOutput);
                     return browserVersionOutput;
                 }
                 else
@@ -235,7 +235,7 @@ namespace WebDriverManagerSharp
         private bool isChromiumBased(string version)
         {
             long countDot = version.Count(c => c == '.');
-            log.Trace("Edge driver version {0} ({1} dots)", version, countDot);
+            Log.Trace("Edge driver version {0} ({1} dots)", version, countDot);
             return countDot > 1;
         }
     }

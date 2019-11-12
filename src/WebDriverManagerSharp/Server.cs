@@ -72,25 +72,25 @@ namespace WebDriverManagerSharp
             switch (requestPath.SubstringJava(1))
             {
                 case "chromedriver":
-                    outDriver = WebDriverManager.chromedriver();
+                    outDriver = WebDriverManager.ChromeDriver();
                     break;
                 case "firefoxdriver":
-                    outDriver = WebDriverManager.firefoxdriver();
+                    outDriver = WebDriverManager.FirefoxDriver();
                     break;
                 case "edgedriver":
-                    outDriver = WebDriverManager.edgedriver();
+                    outDriver = WebDriverManager.EdgeDriver();
                     break;
                 case "iedriver":
-                    outDriver = WebDriverManager.iedriver();
+                    outDriver = WebDriverManager.IEDriver();
                     break;
                 case "operadriver":
-                    outDriver = WebDriverManager.operadriver();
+                    outDriver = WebDriverManager.OperaDriver();
                     break;
                 case "phantomjs":
-                    outDriver = WebDriverManager.phantomjs();
+                    outDriver = WebDriverManager.PhantomJS();
                     break;
                 case "selenium-server-standalone":
-                    outDriver = WebDriverManager.seleniumServerStandalone();
+                    outDriver = WebDriverManager.SeleniumServerStandalone();
                     break;
                 default:
                     log.Warn("Unknown option {0}", requestPath);
@@ -125,9 +125,9 @@ namespace WebDriverManagerSharp
             // Resolve driver
             driverManager.Config().setAvoidExport(true);
             driverManager.Config().setAvoidAutoVersion(true);
-            driverManager.setup();
-            FileInfo binary = new FileInfo(driverManager.getBinaryPath());
-            string binaryVersion = driverManager.getDownloadedVersion();
+            driverManager.Setup();
+            FileInfo binary = new FileInfo(driverManager.GetBinaryPath());
+            string binaryVersion = driverManager.GetDownloadedVersion();
             string binaryName = binary.FullName;
             string binaryLength = binary.Length.ToString();
 

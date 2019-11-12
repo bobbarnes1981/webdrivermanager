@@ -40,9 +40,9 @@ namespace WebDriverManagerSharp
         {
             this.driverManagerType = driverManagerType;
 
-            WebDriverManager webDriverManager = WebDriverManager.getInstance(driverManagerType);
+            WebDriverManager webDriverManager = WebDriverManager.GetInstance(driverManagerType);
             config = webDriverManager.Config();
-            httpClient = webDriverManager.getHttpClient();
+            httpClient = webDriverManager.GetHttpClient();
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace WebDriverManagerSharp
         /// <param name="driverName"></param>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        public FileInfo download(System.Uri url, string version, string driverName)
+        public FileInfo Download(System.Uri url, string version, string driverName)
         {
-            FileInfo targetFile = getTarget(version, url);
+            FileInfo targetFile = GetTarget(version, url);
             FileInfo binary = checkBinary(driverName, targetFile);
             if (binary == null)
             {
@@ -64,7 +64,7 @@ namespace WebDriverManagerSharp
             return binary;
         }
 
-        public FileInfo getTarget(string version, System.Uri url)
+        public FileInfo GetTarget(string version, System.Uri url)
         {
             log.Trace("getTarget {0} {1}", version, url);
             string zip = url.GetFile().SubstringJava(url.GetFile().LastIndexOf('/'));
@@ -85,16 +85,16 @@ namespace WebDriverManagerSharp
                     .Replace(".tar.bz2", "").Replace(".tar.gz", "")
                     .Replace(".msi", "").Replace(".exe", "")
                     .Replace('_', Path.DirectorySeparatorChar);
-            string path = config.isAvoidOutputTree() ? getTargetPath() + zip
-                    : getTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
-            string target = WebDriverManager.getInstance(driverManagerType).preDownload(path, version);
+            string path = config.isAvoidOutputTree() ? GetTargetPath() + zip
+                    : GetTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
+            string target = WebDriverManager.GetInstance(driverManagerType).PreDownload(path, version);
 
             log.Trace("Target file for System.Uri {0} version {1} = {2}", url, version, target);
 
             return new FileInfo(target);
         }
 
-        public string getTargetPath()
+        public string GetTargetPath()
         {
             string targetPath = config.getTargetPath();
             log.Trace("Target path {0}", targetPath);
@@ -128,7 +128,7 @@ namespace WebDriverManagerSharp
             }
 
             log.Trace("Target folder {0} ... using temporal file {1}", targetFolder, temporaryFile);
-            temporaryFile.CreateFromStream(httpClient.executeHttpGet(url).Content.ReadAsStreamAsync().Result);
+            temporaryFile.CreateFromStream(httpClient.ExecuteHttpGet(url).Content.ReadAsStreamAsync().Result);
 
             FileInfo extractedFile = extract(temporaryFile);
             FileInfo resultingBinary = new FileInfo(Path.Combine(targetFolder.FullName, extractedFile.Name));
@@ -220,7 +220,7 @@ namespace WebDriverManagerSharp
                 compressedFile.Delete();
             }
 
-            FileInfo result = WebDriverManager.getInstance(driverManagerType).postDownload(compressedFile);
+            FileInfo result = WebDriverManager.GetInstance(driverManagerType).PostDownload(compressedFile);
             log.Trace("Resulting binary file {0}", result);
 
             return result;
@@ -403,7 +403,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        public void deleteFolder(DirectoryInfo folder)
+        public void DeleteFolder(DirectoryInfo folder)
         {
             log.Trace("Deleting folder {0}", folder);
             try

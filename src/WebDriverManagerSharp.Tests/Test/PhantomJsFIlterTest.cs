@@ -41,7 +41,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setup()
         {
-            phantomJsManager = WebDriverManager.phantomjs();
+            phantomJsManager = WebDriverManager.PhantomJS();
             FieldInfo field = typeof(WebDriverManager).GetField("httpClient", BindingFlags.Instance | BindingFlags.NonPublic);
             field.SetValue(phantomJsManager, new HttpClient(new Config()));
 
@@ -55,7 +55,7 @@ namespace WebDriverManagerSharp.Tests.Test
             MethodInfo method = typeof(WebDriverManager).GetMethod("checkLatest", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> latestUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName });
 
-            List<Uri> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls, Architecture.X64, false);
+            List<Uri> filteredLatestUrls = new UrlFilter().FilterByArch(latestUrls, Architecture.X64, false);
 
             log.Info("Filtered UriS for LATEST version {} : {}", phantomJsBinaryName, filteredLatestUrls);
 
@@ -72,7 +72,7 @@ namespace WebDriverManagerSharp.Tests.Test
                     specificVersion });
 
             List<Uri> filteredVersionUrls = new UrlFilter()
-                    .filterByArch(specificVersionUrls, Architecture.X64, false);
+                    .FilterByArch(specificVersionUrls, Architecture.X64, false);
 
             log.Info("Filtered UriS for {} version {}: {}", phantomJsBinaryName,
                             specificVersion, filteredVersionUrls);

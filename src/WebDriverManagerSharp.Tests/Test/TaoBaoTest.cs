@@ -31,35 +31,35 @@ namespace WebDriverManagerSharp.Tests.Test
     {
 
         [Test]
-        public void testTaobao()
+        public void TestTaobao()
         {
-            WebDriverManager.chromedriver().Config().setAvoidAutoVersion(true)
-                    .setChromeDriverMirrorUrl(
+            WebDriverManager.ChromeDriver().Config().setAvoidAutoVersion(true)
+                    .SetChromeDriverMirrorUrl(
                             new Uri("http://npm.taobao.org/mirrors/chromedriver/"));
-            WebDriverManager.chromedriver().useMirror().forceDownload().setup();
+            WebDriverManager.ChromeDriver().UseMirror().ForceDownload().Setup();
 
-            FileInfo binary = new FileInfo(WebDriverManager.chromedriver().getBinaryPath());
+            FileInfo binary = new FileInfo(WebDriverManager.ChromeDriver().GetBinaryPath());
             Assert.True(binary.Exists);
         }
 
         [Ignore("Flaky test due to cnpmjs.org")]
         [Test]
-        public void testOtherMirrorUrl()
+        public void TestOtherMirrorUrl()
         {
-            WebDriverManager.chromedriver().Config().setAvoidAutoVersion(true)
-                        .setChromeDriverMirrorUrl(
+            WebDriverManager.ChromeDriver().Config().setAvoidAutoVersion(true)
+                        .SetChromeDriverMirrorUrl(
                                 new Uri("https://cnpmjs.org/mirrors/chromedriver/"));
-            WebDriverManager.chromedriver().useMirror().forceDownload().setup();
+            WebDriverManager.ChromeDriver().UseMirror().ForceDownload().Setup();
 
-            FileInfo binary = new FileInfo(WebDriverManager.chromedriver().getBinaryPath());
+            FileInfo binary = new FileInfo(WebDriverManager.ChromeDriver().GetBinaryPath());
             Assert.True(binary.Exists);
         }
 
         [Test]
-        public void testTaobaoException()
+        public void TestTaobaoException()
         {
-            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.edgedriver().useMirror());
-            //FileInfo binary = new FileInfo(WebDriverManager.edgedriver().getBinaryPath());
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.EdgeDriver().UseMirror());
+            //FileInfo binary = new FileInfo(WebDriverManager.EdgeDriver().getBinaryPath());
             //Assert.True(binary.Exists);
         }
     }

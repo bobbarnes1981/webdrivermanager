@@ -31,15 +31,15 @@ namespace WebDriverManagerSharp.Tests.Test
         private readonly ILogger log = Logger.GetLogger();
 
         //@InjectMocks
-        public Downloader downloader;
+        private Downloader downloader;
 
         //private ClientAndProxy proxy;
-        private int proxyPort;
+        private readonly int proxyPort;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            DirectoryInfo wdmCache = new DirectoryInfo(downloader.getTargetPath());
+            DirectoryInfo wdmCache = new DirectoryInfo(downloader.GetTargetPath());
             log.Debug("Cleaning local cache {0}", wdmCache);
             wdmCache.Delete(true);
 
@@ -52,21 +52,21 @@ namespace WebDriverManagerSharp.Tests.Test
         }
 
         [TearDown]
-        public void teardown()
+        public void Teardown()
         {
             log.Debug("Stopping mock proxy on port {0}", proxyPort);
             //proxy.stop();
         }
 
         [Test]
-        public void testMockProx()
+        public void TestMockProx()
         {
-            WebDriverManager.chromedriver().proxy("localhost:" + proxyPort).proxyUser("")
-                        .proxyPass("")
-                        .driverRepositoryUrl(
+            WebDriverManager.ChromeDriver().Proxy("localhost:" + proxyPort).ProxyUser("")
+                        .ProxyPass("")
+                        .DriverRepositoryUrl(
                                 new Uri("https://chromedriver.storage.googleapis.com/"))
-                        .setup();
-            FileInfo binary = new FileInfo(WebDriverManager.chromedriver().getBinaryPath());
+                        .Setup();
+            FileInfo binary = new FileInfo(WebDriverManager.ChromeDriver().GetBinaryPath());
             Assert.True(binary.Exists);
         }
     }

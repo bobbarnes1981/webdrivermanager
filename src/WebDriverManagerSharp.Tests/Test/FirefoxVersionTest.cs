@@ -36,7 +36,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void setup()
         {
-            browserManager = WebDriverManager.firefoxdriver();
+            browserManager = WebDriverManager.FirefoxDriver();
             specificVersions = new string[] { "0.8.0", "0.19.1" };
         }
     }

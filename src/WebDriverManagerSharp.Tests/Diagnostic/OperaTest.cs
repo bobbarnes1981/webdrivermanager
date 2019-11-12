@@ -12,7 +12,7 @@ namespace WebDriverManagerSharp.Tests.Diagnostic
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            WebDriverManager.operadriver().setup();
+            WebDriverManager.OperaDriver().Setup();
 
             //1. It checks the version of the browser installed in your machine(e.g.Chrome, Firefox).
             //2. It checks the version of the driver(e.g.chromedriver, geckodriver).If unknown, it uses the latest version of the driver.

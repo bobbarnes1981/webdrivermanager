@@ -31,10 +31,10 @@ namespace WebDriverManagerSharp.Tests.Test
         private readonly ILogger log = Logger.GetLogger();
 
         [Test]
-        public void edgeVersionsTest()
+        public void EdgeVersionsTest()
         {
             string[] expectedVersions = { "1.10240", "2.10586", "3.14393", "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.183.0", "77.0.237.0" };
-            List<string> versions = WebDriverManager.edgedriver().getVersions();
+            List<string> versions = WebDriverManager.EdgeDriver().GetVersions();
 
             log.Debug("Expected edge versions: {0}", expectedVersions.ToStringJava());
             log.Debug("Edge versions read from the web page: {0}", versions);

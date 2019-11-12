@@ -31,10 +31,10 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testCustomProperties()
         {
-            WebDriverManager chromedriver = WebDriverManager.chromedriver();
+            WebDriverManager chromedriver = WebDriverManager.ChromeDriver();
             chromedriver.Config().setProperties("wdm-test.properties");
-            chromedriver.setup();
-            string binaryPath = chromedriver.getBinaryPath();
+            chromedriver.Setup();
+            string binaryPath = chromedriver.GetBinaryPath();
             FileInfo binary = new FileInfo(binaryPath);
             Assert.True(binary.Exists);
         }
@@ -42,7 +42,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testEmptyProperties()
         {
-            WebDriverManager.chromedriver().properties("").setup();
+            WebDriverManager.ChromeDriver().Properties("").Setup();
         }
     }
 }

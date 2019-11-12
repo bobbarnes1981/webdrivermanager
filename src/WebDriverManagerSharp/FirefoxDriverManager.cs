@@ -39,12 +39,12 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getFirefoxDriverVersion();
+            return Config().GetFirefoxDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().getFirefoxDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetFirefoxDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -54,17 +54,17 @@ namespace WebDriverManagerSharp
 
         protected override string GetExportParameter()
         {
-            return Config().getFirefoxDriverExport();
+            return Config().GetFirefoxDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setFirefoxDriverVersion(version);
+            Config().SetFirefoxDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setFirefoxDriverUrl(url);
+            Config().SetFirefoxDriverUrl(url);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace WebDriverManagerSharp
             return getDriversFromGitHub();
         }
 
-        protected override string getCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
             string currentVersion = url.GetFile().SubstringJava(
                     url.GetFile().IndexOf('-') + 1, url.GetFile().LastIndexOf('-'));
@@ -88,7 +88,7 @@ namespace WebDriverManagerSharp
             return currentVersion;
         }
 
-        public override string preDownload(string target, string version)
+        public override string PreDownload(string target, string version)
         {
             int iSeparator = target.IndexOf(version) - 1;
             int iDash = target.LastIndexOf(version) + version.Length;
@@ -114,7 +114,7 @@ namespace WebDriverManagerSharp
         protected override string GetBrowserVersion()
         {
             string[] programFilesEnvs = { getProgramFilesEnv() };
-            return getDefaultBrowserVersion(programFilesEnvs, "\\\\Mozilla Firefox\\\\firefox.exe", "firefox", "/Applications/Firefox.app/Contents/MacOS/firefox", "-v", GetDriverManagerType().ToString());
+            return GetDefaultBrowserVersion(programFilesEnvs, "\\\\Mozilla Firefox\\\\firefox.exe", "firefox", "/Applications/Firefox.app/Contents/MacOS/firefox", "-v", GetDriverManagerType().ToString());
         }
     }
 }

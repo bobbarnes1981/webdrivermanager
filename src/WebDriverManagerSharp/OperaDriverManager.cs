@@ -40,37 +40,37 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return Config().getOperaDriverVersion();
+            return Config().GetOperaDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return getDriverUrlCheckingMirror(Config().getOperaDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetOperaDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
         {
-            return Config().getOperaDriverMirrorUrl();
+            return Config().GetOperaDriverMirrorUrl();
         }
 
         protected override string GetExportParameter()
         {
-            return Config().getOperaDriverExport();
+            return Config().GetOperaDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().setOperaDriverVersion(version);
+            Config().SetOperaDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().setOperaDriverUrl(url);
+            Config().SetOperaDriverUrl(url);
         }
 
-        protected override string getCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(System.Uri url, string driverName)
         {
-            if (config.isUseMirror())
+            if (Config().isUseMirror())
             {
                 int i = url.GetFile().LastIndexOf(SLASH);
                 int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH) + 1;
@@ -94,18 +94,18 @@ namespace WebDriverManagerSharp
             return getDriversFromGitHub();
         }
 
-        public override FileInfo postDownload(FileInfo archive)
+        public override FileInfo PostDownload(FileInfo archive)
         {
-            log.Trace("Post processing for Opera: {0}", archive);
+            Log.Trace("Post processing for Opera: {0}", archive);
 
-            DirectoryInfo[] folders = getFolderFilter(archive.Directory);
+            DirectoryInfo[] folders = GetFolderFilter(archive.Directory);
             if (folders.Length > 0)
             {
-                DirectoryInfo extractFolder = getFolderFilter(archive.Directory)[0];
+                DirectoryInfo extractFolder = GetFolderFilter(archive.Directory)[0];
                 FileInfo target;
                 try
                 {
-                    log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
+                    Log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
                     FileInfo[] listFiles = extractFolder.GetFiles();
                     int i = 0;
                     FileInfo operadriver;
@@ -120,31 +120,31 @@ namespace WebDriverManagerSharp
                         operadriver = listFiles[i];
                         isOperaDriver = Config().isExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
                         i++;
-                        log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
+                        Log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
                     } while (!isOperaDriver);
-                    log.Info("Operadriver binary: {0}", operadriver);
+                    Log.Info("Operadriver binary: {0}", operadriver);
 
                     target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
-                    log.Trace("Operadriver target: {0}", target);
+                    Log.Trace("Operadriver target: {0}", target);
 
                     downloader.RenameFile(operadriver, target);
                 }
                 finally
                 {
-                    downloader.deleteFolder(extractFolder);
+                    downloader.DeleteFolder(extractFolder);
                 }
                 return target;
             }
             else
             {
-                return base.postDownload(archive);
+                return base.PostDownload(archive);
             }
         }
 
         protected override string GetBrowserVersion()
         {
             string[] programFilesEnvs = { "PROGRAMFILES" };
-            return getDefaultBrowserVersion(programFilesEnvs, "\\\\Opera\\\\launcher.exe", "opera", "/Applications/Opera.app/Contents/MacOS/Opera", "--version", "");
+            return GetDefaultBrowserVersion(programFilesEnvs, "\\\\Opera\\\\launcher.exe", "opera", "/Applications/Opera.app/Contents/MacOS/Opera", "--version", "");
         }
     }
 }

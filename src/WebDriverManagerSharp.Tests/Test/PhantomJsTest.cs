@@ -32,7 +32,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [OneTimeSetUp]
         public static void setupClass()
         {
-            WebDriverManager.phantomjs().setup();
+            WebDriverManager.PhantomJS().Setup();
         }
 
         [SetUp]

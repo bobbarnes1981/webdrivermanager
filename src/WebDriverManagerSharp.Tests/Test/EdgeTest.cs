@@ -35,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public static void setupClass()
         {
             Assume.That(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
-            WebDriverManager.edgedriver().avoidPreferences().setup();
+            WebDriverManager.EdgeDriver().AvoidPreferences().Setup();
         }
 
         [SetUp]

@@ -37,8 +37,8 @@ namespace WebDriverManagerSharp.Tests.Test
         //[TestCase(typeof(PhantomJsDriver))]
         public void testWebDriver(Type driverClass)
         {
-            WebDriverManager.getInstance(driverClass).setup();
-            string binaryPath = WebDriverManager.getInstance(driverClass).getBinaryPath();
+            WebDriverManager.GetInstance(driverClass).Setup();
+            string binaryPath = WebDriverManager.GetInstance(driverClass).GetBinaryPath();
             FileInfo binary = new FileInfo(binaryPath);
             Assert.True(binary.Exists);
         }

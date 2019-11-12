@@ -30,8 +30,8 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void test()
         {
-            WebDriverManager.chromedriver().forceDownload().avoidAutoVersion().timeout(20).setup();
-            Assert.That(WebDriverManager.chromedriver().getBinaryPath(), Is.Not.Null);
+            WebDriverManager.ChromeDriver().ForceDownload().AvoidAutoVersion().Timeout(20).Setup();
+            Assert.That(WebDriverManager.ChromeDriver().GetBinaryPath(), Is.Not.Null);
         }
     }
 }

@@ -38,8 +38,8 @@ namespace WebDriverManagerSharp.Tests.Test
             for (int i = 0; i < NUM; i++)
             {
                 log.Debug("Forcing 403 error {0}/{1}", i + 1, NUM);
-                WebDriverManager.firefoxdriver().avoidAutoVersion().avoidPreferences().setup();
-                Assert.That(WebDriverManager.firefoxdriver().getBinaryPath(), Is.Not.Null);
+                WebDriverManager.FirefoxDriver().AvoidAutoVersion().AvoidPreferences().Setup();
+                Assert.That(WebDriverManager.FirefoxDriver().GetBinaryPath(), Is.Not.Null);
             }
         }
     }

@@ -576,46 +576,46 @@ namespace WebDriverManagerSharp
             return resolve(ttl);
         }
 
-        public Config setTtl(int value)
+        public Config SetTtl(int value)
         {
             this.ttl.SetValue(value);
             return this;
         }
 
-        public string getBinaryPath()
+        public string GetBinaryPath()
         {
             return resolve(binaryPath);
         }
 
-        public Config setBinaryPath(string value)
+        public Config SetBinaryPath(string value)
         {
             this.binaryPath.SetValue(value);
             return this;
         }
 
-        public string getChromeDriverVersion()
+        public string GetChromeDriverVersion()
         {
             return resolve(chromeDriverVersion);
         }
 
-        public Config setChromeDriverVersion(string value)
+        public Config SetChromeDriverVersion(string value)
         {
             this.chromeDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getChromeDriverExport()
+        public string GetChromeDriverExport()
         {
             return resolve(chromeDriverExport);
         }
 
-        public Config setChromeDriverExport(string value)
+        public Config SetChromeDriverExport(string value)
         {
             this.chromeDriverExport.SetValue(value);
             return this;
         }
 
-        public System.Uri getChromeDriverUrl()
+        public Uri GetChromeDriverUrl()
         {
             return resolve(chromeDriverUrl);
         }
@@ -626,78 +626,78 @@ namespace WebDriverManagerSharp
             return this;
         }
 
-        public System.Uri getChromeDriverMirrorUrl()
+        public Uri GetChromeDriverMirrorUrl()
         {
             return resolve(chromeDriverMirrorUrl);
         }
 
-        public Config setChromeDriverMirrorUrl(System.Uri value)
+        public Config SetChromeDriverMirrorUrl(System.Uri value)
         {
             this.chromeDriverMirrorUrl.SetValue(value);
             return this;
         }
 
-        public string getEdgeDriverVersion()
+        public string GetEdgeDriverVersion()
         {
             return resolve(edgeDriverVersion);
         }
 
-        public Config setEdgeDriverVersion(string value)
+        public Config SetEdgeDriverVersion(string value)
         {
             this.edgeDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getEdgeDriverExport()
+        public string GetEdgeDriverExport()
         {
             return resolve(edgeDriverExport);
         }
 
-        public Config setEdgeDriverExport(string value)
+        public Config SetEdgeDriverExport(string value)
         {
             this.edgeDriverExport.SetValue(value);
             return this;
         }
 
-        public Uri getEdgeDriverUrl()
+        public Uri GetEdgeDriverUrl()
         {
             return resolve(edgeDriverUrl);
         }
 
-        public Config setEdgeDriverUrl(System.Uri value)
+        public Config SetEdgeDriverUrl(System.Uri value)
         {
             this.edgeDriverUrl.SetValue(value);
             return this;
         }
 
-        public string getFirefoxDriverVersion()
+        public string GetFirefoxDriverVersion()
         {
             return resolve(firefoxDriverVersion);
         }
 
-        public Config setFirefoxDriverVersion(string value)
+        public Config SetFirefoxDriverVersion(string value)
         {
             this.firefoxDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getFirefoxDriverExport()
+        public string GetFirefoxDriverExport()
         {
             return resolve(firefoxDriverExport);
         }
 
-        public Config setFirefoxDriverExport(string value)
+        public Config SetFirefoxDriverExport(string value)
         {
             this.firefoxDriverExport.SetValue(value);
             return this;
         }
 
-        public System.Uri getFirefoxDriverUrl()
+        public Uri GetFirefoxDriverUrl()
         {
             return resolve(firefoxDriverUrl);
         }
 
-        public Config setFirefoxDriverUrl(System.Uri value)
+        public Config SetFirefoxDriverUrl(System.Uri value)
         {
             this.firefoxDriverUrl.SetValue(value);
             return this;
@@ -747,111 +747,111 @@ namespace WebDriverManagerSharp
             return this;
         }
 
-        public string getOperaDriverVersion()
+        public string GetOperaDriverVersion()
         {
             return resolve(operaDriverVersion);
         }
 
-        public Config setOperaDriverVersion(string value)
+        public Config SetOperaDriverVersion(string value)
         {
             this.operaDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getOperaDriverExport()
+        public string GetOperaDriverExport()
         {
             return resolve(operaDriverExport);
         }
 
-        public Config setOperaDriverExport(string value)
+        public Config SetOperaDriverExport(string value)
         {
             this.operaDriverExport.SetValue(value);
             return this;
         }
 
-        public System.Uri getOperaDriverUrl()
+        public Uri GetOperaDriverUrl()
         {
             return resolve(operaDriverUrl);
         }
 
-        public Config setOperaDriverUrl(System.Uri value)
+        public Config SetOperaDriverUrl(Uri value)
         {
             this.operaDriverUrl.SetValue(value);
             return this;
         }
 
-        public System.Uri getOperaDriverMirrorUrl()
+        public Uri GetOperaDriverMirrorUrl()
         {
             return resolve(operaDriverMirrorUrl);
         }
 
-        public Config setOperaDriverMirrorUrl(System.Uri value)
+        public Config SetOperaDriverMirrorUrl(Uri value)
         {
             this.operaDriverMirrorUrl.SetValue(value);
             return this;
         }
 
-        public string getPhantomjsDriverVersion()
+        public string GetPhantomjsDriverVersion()
         {
             return resolve(phantomjsDriverVersion);
         }
 
-        public Config setPhantomjsDriverVersion(string value)
+        public Config SetPhantomjsDriverVersion(string value)
         {
             this.phantomjsDriverVersion.SetValue(value);
             return this;
         }
 
-        public string getPhantomjsDriverExport()
+        public string GetPhantomjsDriverExport()
         {
             return resolve(phantomjsDriverExport);
         }
 
-        public Config setPhantomjsDriverExport(string value)
+        public Config SetPhantomjsDriverExport(string value)
         {
             this.phantomjsDriverExport.SetValue(value);
             return this;
         }
 
-        public System.Uri getPhantomjsDriverUrl()
+        public Uri GetPhantomjsDriverUrl()
         {
             return resolve(phantomjsDriverUrl);
         }
 
-        public Config setPhantomjsDriverUrl(System.Uri value)
+        public Config SetPhantomjsDriverUrl(Uri value)
         {
             this.phantomjsDriverUrl.SetValue(value);
             return this;
         }
 
-        public System.Uri getPhantomjsDriverMirrorUrl()
+        public Uri GetPhantomjsDriverMirrorUrl()
         {
             return resolve(phantomjsDriverMirrorUrl);
         }
 
-        public Config setPhantomjsDriverMirrorUrl(System.Uri value)
+        public Config SetPhantomjsDriverMirrorUrl(Uri value)
         {
             this.phantomjsDriverMirrorUrl.SetValue(value);
             return this;
         }
 
-        public string getSeleniumServerStandaloneVersion()
+        public string GetSeleniumServerStandaloneVersion()
         {
             return resolve(seleniumServerStandaloneVersion);
         }
 
-        public Config setSeleniumServerStandaloneVersion(string value)
+        public Config SetSeleniumServerStandaloneVersion(string value)
         {
             this.seleniumServerStandaloneVersion.SetValue(value);
             return this;
         }
 
-        public System.Uri getSeleniumServerStandaloneUrl()
+        public Uri GetSeleniumServerStandaloneUrl()
         {
             return resolve(seleniumServerStandaloneUrl);
         }
 
-        public Config setSeleniumServerStandaloneUrl(System.Uri value)
+        public Config SetSeleniumServerStandaloneUrl(Uri value)
         {
             this.seleniumServerStandaloneUrl.SetValue(value);
             return this;
