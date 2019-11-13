@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Target folder test.
      *
@@ -29,7 +29,6 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class TargetTest
     {
-
         private readonly ILogger log = Logger.GetLogger();
 
         [TestCase("2.21",
@@ -77,7 +76,7 @@ namespace WebDriverManagerSharp.Tests.Test
                             "https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-0.8.0-linux64.gz",
                             "geckodriver/linux64/0.8.0/geckodriver-0.8.0-linux64.gz",
                             DriverManagerType.FIREFOX)]
-        public void testTarget(string version, string url, string target, DriverManagerType driverManagerType)
+        public void TestTarget(string version, string url, string target, DriverManagerType driverManagerType)
         {
             Downloader downloader = new Downloader(driverManagerType);
             string targetPath = downloader.GetTargetPath();

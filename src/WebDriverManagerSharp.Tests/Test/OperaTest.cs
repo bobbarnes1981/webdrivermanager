@@ -15,14 +15,14 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Opera;
-using System.IO;
-using System.Runtime.InteropServices;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using NUnit.Framework;
+    using OpenQA.Selenium.Opera;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test with Opera browser.
      *
@@ -31,21 +31,19 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class OperaTest : BrowserTestParent
     {
-
         [OneTimeSetUp]
-        public static void setupClass()
+        public void SetupClass()
         {
             WebDriverManager.OperaDriver().Setup();
         }
 
         [SetUp]
-        public void setupTest()
+        public void SetupTest()
         {
             string operaBinary = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                     ? Path.Combine(System.Environment.ExpandEnvironmentVariables("%LocalAppData%"), @"Programs\Opera\64.0.3417.92\opera.exe")
                     : RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/Applications/Opera.app/Contents/MacOS/Opera"
                             : "/usr/bin/opera";
-
 
             OperaOptions options = new OperaOptions()
             {

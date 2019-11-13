@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test with PhantomJS.
      *
@@ -28,15 +28,14 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class PhantomJsTest : BrowserTestParent
     {
-
         [OneTimeSetUp]
-        public static void setupClass()
+        public void SetupClass()
         {
             WebDriverManager.PhantomJS().Setup();
         }
 
         [SetUp]
-        public void setupTest()
+        public void SetupTest()
         {
             Assert.Ignore("Not currently supported");
             //driver = new PhantomJsDriver();

@@ -15,14 +15,13 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using System;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using NUnit.Framework;
+    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.Firefox;
+
     /**
      * Test with incorrect version numbers.
      *
@@ -36,8 +35,6 @@ namespace WebDriverManagerSharp.Tests.Test
         public void testWrongVersion(Type driverClass, string version)
         {
             WebDriverManagerException exception = Assert.Throws<WebDriverManagerException>(WebDriverManager.GetInstance(driverClass).Version(version).Setup);
-            //FileInfo binary = new FileInfo(WebDriverManager.getInstance(driverClass).getBinaryPath());
-            //Assert.That(binary.Exists);
         }
     }
 }

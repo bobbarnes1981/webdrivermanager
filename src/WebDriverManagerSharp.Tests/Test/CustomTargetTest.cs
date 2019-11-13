@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
-{ 
+{
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Test for custom target.
      *
@@ -30,7 +30,7 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        DirectoryInfo tmpFolder;
+        private DirectoryInfo tmpFolder;
 
         [SetUp]
         public void setup()

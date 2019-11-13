@@ -15,11 +15,11 @@
  *
  */
 
-using System;
-using System.Runtime.Serialization;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Runtime.Serialization;
+
     [Serializable]
     public class IllegalStateException : Exception
     {

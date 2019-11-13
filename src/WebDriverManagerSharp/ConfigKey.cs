@@ -17,7 +17,6 @@
 
 namespace WebDriverManagerSharp
 {
-
     /**
      * Configuration key class.
      *
@@ -27,8 +26,8 @@ namespace WebDriverManagerSharp
     public class ConfigKey<T>
     {
         private readonly string name;
-        private T value;
         private readonly T defaultValue;
+        private T value;
 
         public ConfigKey(string name)
         {

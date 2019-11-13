@@ -15,13 +15,12 @@
  *
  */
 
-using Nancy;
-using Nancy.Responses;
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System.IO;
+    using Nancy;
+    using Nancy.Responses;
+
     /**
      * WebDriverManager server.
      *
@@ -30,7 +29,6 @@ namespace WebDriverManagerSharp
      */
     public class Server : NancyModule
     {
-
         private readonly ILogger log = Logger.GetLogger();
 
         public Server()
@@ -42,7 +40,9 @@ namespace WebDriverManagerSharp
         /// 
         /// </summary>
         /// <exception cref="IOException" />
-        /// <param name="ctx"></param>
+        /// <param name="requestMethod"></param>
+        /// <param name="driverName"></param>
+        /// <returns></returns>
         private Response handleRequest(string requestMethod, string driverName)
         {
             log.Info("Server request: {0} {1}", requestMethod, driverName);
@@ -90,14 +90,15 @@ namespace WebDriverManagerSharp
                     outDriver = null;
                     break;
             }
+
             return outDriver;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ctx"></param>
         /// <param name="driverManager"></param>
+        /// <returns></returns>
         /// <exception cref="IOException" />
         private Response resolveDriver(WebDriverManager driverManager)
         {

@@ -15,14 +15,13 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using System;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.IO;
+    using NUnit.Framework;
+    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.Firefox;
 
     /**
      * Parameterized test with several browsers.

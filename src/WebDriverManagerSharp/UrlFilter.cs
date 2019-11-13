@@ -15,12 +15,12 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /**
      * System.Uri filtering logic.
      *
@@ -33,6 +33,11 @@ namespace WebDriverManagerSharp
 
         public List<Uri> FilterByOs(List<Uri> list, string osName)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             log.Trace("System.Uris before filtering by OS ({0}): {1}", osName, list);
             List<Uri> outList = new List<Uri>();
 
@@ -57,6 +62,11 @@ namespace WebDriverManagerSharp
 
         public List<Uri> FilterByArch(List<Uri> list, Architecture arch, bool forcedArch)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             log.Trace("System.Uris before filtering by architecture ({0}): {1}", arch, list);
             List<Uri> outList = new List<Uri>(list);
 
@@ -86,6 +96,7 @@ namespace WebDriverManagerSharp
                 outList = new List<System.Uri>() { list[list.Count - 1] };
                 log.Trace("Empty System.Uri list after filtering by architecture ... using last candidate: {0}", outList);
             }
+
             return outList;
         }
 
@@ -98,6 +109,11 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         public List<Uri> FilterByDistro(List<Uri> list, string version)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             string distro = getDistroName();
             log.Trace("System.Uris before filtering by Linux distribution ({0}): {1}", distro, list);
             List<Uri> outList = new List<Uri>(list);
@@ -116,10 +132,16 @@ namespace WebDriverManagerSharp
 
         public List<Uri> FilterByIgnoredVersions(List<Uri> list, params string[] ignoredVersions)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             if (log.IsTraceEnabled())
             {
                 log.Trace("System.Uris before filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), list);
             }
+
             List<Uri> outList = new List<Uri>(list);
 
             foreach (Uri url in list)
@@ -138,6 +160,7 @@ namespace WebDriverManagerSharp
             {
                 log.Trace("System.Uris after filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), outList);
             }
+
             return outList;
         }
 
@@ -148,7 +171,7 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         private static string getDistroName()
         {
-            string outString = "";
+            string outString = string.Empty;
             string key = "UBUNTU_CODENAME";
             DirectoryInfo dir = new DirectoryInfo(Path.DirectorySeparatorChar + "etc");
             FileInfo[] fileList = new FileInfo[0];
@@ -156,17 +179,19 @@ namespace WebDriverManagerSharp
             {
                 fileList = dir.GetFiles("*-release");
             }
+
             FileInfo fileVersion = new FileInfo(Path.Combine(Path.DirectorySeparatorChar + "proc", "version"));
             if (fileVersion.Exists)
             {
                 fileList = fileList.CopyOf(fileList.Length + 1);
                 fileList[fileList.Length - 1] = fileVersion;
             }
+
             foreach (FileInfo f in fileList)
             {
-                //if (f.isDirectory()) {
-                //    continue;
-                //}
+                ////if (f.isDirectory()) {
+                ////    continue;
+                ////}
                 string[] lines = File.ReadAllLines(f.FullName);
                 foreach (string line in lines)
                 {
@@ -177,6 +202,7 @@ namespace WebDriverManagerSharp
                     }
                 }
             }
+
             return outString;
         }
     }

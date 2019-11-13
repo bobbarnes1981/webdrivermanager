@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Edge;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+    using OpenQA.Selenium.Edge;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test asserting Edge driver versions.
      *

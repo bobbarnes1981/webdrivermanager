@@ -15,10 +15,10 @@
  *
  */
 
-using System.ComponentModel;
-
 namespace WebDriverManagerSharp
 {
+    using System.ComponentModel;
+
     /**
      * Supported architecture enumeration (32/64 bits).
      *

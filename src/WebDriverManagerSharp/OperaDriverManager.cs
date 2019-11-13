@@ -15,11 +15,12 @@
  *
  */
 
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /**
      * Manager for Opera.
      *
@@ -85,17 +86,22 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Get the driver Uris for Opera
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
+        protected override List<Uri> GetDrivers()
         {
             return getDriversFromGitHub();
         }
 
         public override FileInfo PostDownload(FileInfo archive)
         {
+            if (archive == null)
+            {
+                throw new ArgumentNullException(nameof(archive));
+            }
+
             Log.Trace("Post processing for Opera: {0}", archive);
 
             DirectoryInfo[] folders = GetFolderFilter(archive.Directory);
@@ -114,14 +120,15 @@ namespace WebDriverManagerSharp
                     {
                         if (i >= listFiles.Length)
                         {
-                            throw new WebDriverManagerException(
-                                    "Driver binary for Opera not found in zip file");
+                            throw new WebDriverManagerException("Driver binary for Opera not found in zip file");
                         }
+
                         operadriver = listFiles[i];
                         isOperaDriver = Config().IsExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
                         i++;
                         Log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
                     } while (!isOperaDriver);
+
                     Log.Info("Operadriver binary: {0}", operadriver);
 
                     target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
@@ -133,6 +140,7 @@ namespace WebDriverManagerSharp
                 {
                     Downloader.DeleteFolder(extractFolder);
                 }
+
                 return target;
             }
             else
@@ -144,7 +152,7 @@ namespace WebDriverManagerSharp
         protected override string GetBrowserVersion()
         {
             string[] programFilesEnvs = { "PROGRAMFILES" };
-            return GetDefaultBrowserVersion(programFilesEnvs, "\\\\Opera\\\\launcher.exe", "opera", "/Applications/Opera.app/Contents/MacOS/Opera", "--version", "");
+            return GetDefaultBrowserVersion(programFilesEnvs, "\\\\Opera\\\\launcher.exe", "opera", "/Applications/Opera.app/Contents/MacOS/Opera", "--version", string.Empty);
         }
     }
 }

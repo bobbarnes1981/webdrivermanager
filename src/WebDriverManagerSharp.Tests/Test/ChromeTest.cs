@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Chrome;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+    using OpenQA.Selenium.Chrome;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test with Google Chrome browser.
      *
@@ -30,13 +30,13 @@ namespace WebDriverManagerSharp.Tests.Test
     public class ChromeTest : BrowserTestParent
     {
         [OneTimeSetUp]
-        public static void setupClass()
+        public void SetupClass()
         {
             WebDriverManager.ChromeDriver().Setup();
         }
 
         [SetUp]
-        public void setupTest()
+        public void SetupTest()
         {
             driver = new ChromeDriver();
         }

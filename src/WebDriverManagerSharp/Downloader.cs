@@ -15,12 +15,12 @@
  *
  */
 
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
 
     /**
      * Downloader class.
@@ -46,14 +46,14 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Download the driver from the provided Uri
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="version"></param>
-        /// <param name="driverName"></param>
+        /// <param name="url">Url of driver to download</param>
+        /// <param name="version">Required driver version</param>
+        /// <param name="driverName">Required driver name</param>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        public FileInfo Download(System.Uri url, string version, string driverName)
+        public FileInfo Download(Uri url, string version, string driverName)
         {
             FileInfo targetFile = GetTarget(version, url);
             FileInfo binary = checkBinary(driverName, targetFile);
@@ -61,10 +61,11 @@ namespace WebDriverManagerSharp
             {
                 binary = downloadAndExtract(url, targetFile);
             }
+
             return binary;
         }
 
-        public FileInfo GetTarget(string version, System.Uri url)
+        public FileInfo GetTarget(string version, Uri url)
         {
             log.Trace("getTarget {0} {1}", version, url);
             string zip = url.GetFile().SubstringJava(url.GetFile().LastIndexOf('/'));
@@ -81,9 +82,9 @@ namespace WebDriverManagerSharp
                 iLast = iSecond;
             }
 
-            string folder = zip.SubstringJava(0, iLast).Replace(".zip", "")
-                    .Replace(".tar.bz2", "").Replace(".tar.gz", "")
-                    .Replace(".msi", "").Replace(".exe", "")
+            string folder = zip.SubstringJava(0, iLast).Replace(".zip", string.Empty)
+                    .Replace(".tar.bz2", string.Empty).Replace(".tar.gz", string.Empty)
+                    .Replace(".msi", string.Empty).Replace(".exe", string.Empty)
                     .Replace('_', Path.DirectorySeparatorChar);
             string path = config.IsAvoidOutputTree() ? GetTargetPath() + zip
                     : GetTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
@@ -105,18 +106,18 @@ namespace WebDriverManagerSharp
             {
                 repository.Create();
             }
+
             return targetPath;
         }
 
         /// <summary>
-        /// 
+        /// Download driver from the provided Uri and extract it to the provided target file
         /// </summary>
         /// <param name="url"></param>
         /// <param name="targetFile"></param>
         /// <exception cref="IOException"/>
         /// <returns></returns>
-        /// //InterruptedException
-        private FileInfo downloadAndExtract(System.Uri url, FileInfo targetFile)
+        private FileInfo downloadAndExtract(Uri url, FileInfo targetFile)
         {
             log.Info("Downloading {0}", url);
             DirectoryInfo targetFolder = targetFile.Directory;
@@ -141,16 +142,20 @@ namespace WebDriverManagerSharp
                     log.Info("Overriding former binary {0}", resultingBinary);
                     File.Delete(resultingBinary.FullName);
                 }
+
                 if (!resultingBinary.Directory.Exists)
                 {
                     resultingBinary.Directory.Create();
                 }
+
                 extractedFile.MoveTo(Path.Combine(resultingBinary.FullName));
             }
+
             if (!config.IsExecutable(resultingBinary))
             {
                 setFileExecutable(resultingBinary);
             }
+
             Directory.Delete(tempDir, true);
             log.Trace("Binary driver after extraction {0}", resultingBinary);
 
@@ -173,17 +178,18 @@ namespace WebDriverManagerSharp
                         return new FileInfo(file.FullName);
                     }
                 }
+
                 log.Trace("{0} does not exist in cache", driverName);
             }
+
             return null;
         }
 
         /// <summary>
-        /// 
+        /// Extract the provided file and return the FileInfo of the extracted driver binary
         /// </summary>
         /// <param name="compressedFile"></param>
         /// <exception cref="IOException"/>
-        /// //InterruptedException
         /// <returns></returns>
         private FileInfo extract(FileInfo compressedFile)
         {
@@ -194,6 +200,7 @@ namespace WebDriverManagerSharp
             {
                 log.Info("Extracting binary from compressed file {0}", fileName);
             }
+
             if (fileName.EndsWith("tar.bz2"))
             {
                 unBZip2(compressedFile);
@@ -227,7 +234,7 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Un Zip the provided file
         /// </summary>
         /// <param name="compressedFile"></param>
         /// <exception cref="IOException"/>
@@ -277,115 +284,125 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Un GZip the provided file
         /// </summary>
         /// <param name="archive"></param>
         /// <exception cref="IOException"/>
         private void unGzip(FileInfo archive)
         {
             log.Trace("UnGzip {0}", archive);
-            //string fileName = archive.FullName;
-            //    int iDash = fileName.IndexOf('-');
-            //    if (iDash != -1)
-            //    {
-            //        fileName = fileName.SubstringJava(0, iDash);
-            //    }
-            //    int iDot = fileName.IndexOf('.');
-            //    if (iDot != -1) {
-            //        fileName = fileName.SubstringJava(0, iDot);
-            //    }
-            //    FileInfo target = new File(archive.getParentFile(), fileName);
+            ////string fileName = archive.FullName;
+            ////    int iDash = fileName.IndexOf('-');
+            ////    if (iDash != -1)
+            ////    {
+            ////        fileName = fileName.SubstringJava(0, iDash);
+            ////    }
+            ////    int iDot = fileName.IndexOf('.');
+            ////    if (iDot != -1) {
+            ////        fileName = fileName.SubstringJava(0, iDot);
+            ////    }
+            ////    FileInfo target = new File(archive.getParentFile(), fileName);
 
-            //    try (GZIPInputStream in = new GZIPInputStream(
-            //            new FileInputStream(archive))) {
-            //        try (FileOutputStream out = new FileOutputStream(target)) {
-            //            for (int c = in.read(); c != -1; c = in.read()) {
-            //                out.write(c);
-            //            }
-            //        }
-            //    }
+            ////    try (GZIPInputStream in = new GZIPInputStream(
+            ////            new FileInputStream(archive))) {
+            ////        try (FileOutputStream out = new FileOutputStream(target)) {
+            ////            for (int c = in.read(); c != -1; c = in.read()) {
+            ////                out.write(c);
+            ////            }
+            ////        }
+            ////    }
 
-            //    if (!target.getName().ToLower().contains(".exe")
-            //            && target.exists()) {
-            //        setFileExecutable(target);
-            //    }
-            throw new System.NotImplementedException("extract gzip not implemented");
+            ////    if (!target.getName().ToLower().contains(".exe")
+            ////            && target.exists()) {
+            ////        setFileExecutable(target);
+            ////    }
+            throw new NotImplementedException("extract gzip not implemented");
         }
+
         /// <summary>
-        /// 
+        /// Un TarGz the provided file
         /// </summary>
         /// <param name="archive"></param>
         /// <exception cref="IOException"/>
-
         private void unTarGz(FileInfo archive)
         {
             log.Trace("unTarGz {0}", archive);
-            //Archiver archiver = createArchiver(TAR, GZIP);
-            //archiver.extract(archive, archive.getParentFile());
+            ////Archiver archiver = createArchiver(TAR, GZIP);
+            ////archiver.extract(archive, archive.getParentFile());
             throw new System.NotImplementedException("extract tar.gz not implemented");
         }
 
         /// <summary>
-        /// 
+        /// Un BZip2 the provided file
         /// </summary>
         /// <param name="archive"></param>
         /// <exception cref="IOException"/>
         private void unBZip2(FileInfo archive)
         {
             log.Trace("Unbzip2 {0}", archive);
-            //Archiver archiver = createArchiver(TAR, BZIP2);
-            //archiver.extract(archive, archive.getParentFile());
+            ////Archiver archiver = createArchiver(TAR, BZIP2);
+            ////archiver.extract(archive, archive.getParentFile());
             throw new System.NotImplementedException("extract bzip2 not implemented");
         }
 
         /// <summary>
-        /// 
+        /// Extract the provided MSI
         /// </summary>
-        /// <param name="archive"></param>
+        /// <param name="msi"></param>
         /// <exception cref="IOException"/>
-        /// //InterruptedException
         private void extractMsi(FileInfo msi)
         {
             log.Trace("Extract MSI {0}", msi);
-            //        File tmpMsi = new File(
-            //                createTempDirectory("").toFile().getAbsoluteFile() + separator
-            //                        + msi.getName());
-            //move(msi.toPath(), tmpMsi.toPath());
-            //log.trace("Temporal msi file: {}", tmpMsi);
+            ////        File tmpMsi = new File(
+            ////                createTempDirectory("").toFile().getAbsoluteFile() + separator
+            ////                        + msi.getName());
+            ////move(msi.toPath(), tmpMsi.toPath());
+            ////log.trace("Temporal msi file: {}", tmpMsi);
 
-            //        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
-            //                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
-            //        try {
-            //            process.waitFor();
-            //        } finally {
-            //            process.destroy();
-            //        }
+            ////        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
+            ////                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
+            ////        try {
+            ////            process.waitFor();
+            ////        } finally {
+            ////            process.destroy();
+            ////        }
 
-            //        deleteFolder(tmpMsi.getParentFile());
+            ////        deleteFolder(tmpMsi.getParentFile());
             throw new System.NotImplementedException("extract msi not implemented");
         }
 
         protected void setFileExecutable(FileInfo file)
         {
             log.Trace("Setting file {0} as executable", file);
-            //if (!file.setExecutable(true))
-            //{
-            //    log.warn("Error setting file {} as executable", file);
-            //}
+            ////if (!file.setExecutable(true))
+            ////{
+            ////    log.warn("Error setting file {} as executable", file);
+            ////}
         }
 
         public void RenameFile(FileInfo from, FileInfo to)
         {
+            if (from == null)
+            {
+                throw new ArgumentNullException(nameof(from));
+            }
+
+            if (to == null)
+            {
+                throw new ArgumentNullException(nameof(to));
+            }
+
             log.Trace("Renaming file from {0} to {1}", from, to);
             if (to.Exists)
             {
                 deleteFile(to);
             }
+
             try
             {
                 from.MoveTo(to.FullName);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 log.Warn("Error renaming file from {0} to {1}", from, to);
             }
@@ -393,6 +410,11 @@ namespace WebDriverManagerSharp
 
         protected void deleteFile(FileInfo file)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             log.Trace("Deleting file {0}", file);
             try
             {
@@ -406,6 +428,11 @@ namespace WebDriverManagerSharp
 
         public void DeleteFolder(DirectoryInfo folder)
         {
+            if (folder == null)
+            {
+                throw new ArgumentNullException(nameof(folder));
+            }
+
             log.Trace("Deleting folder {0}", folder);
             try
             {

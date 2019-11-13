@@ -15,14 +15,15 @@
  *
  */
 
-using HtmlAgilityPack;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using HtmlAgilityPack;
+
     /**
      * Manager for Microsoft Edge.
      *
@@ -72,7 +73,7 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Get the driver Uris for Edge
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
@@ -98,7 +99,7 @@ namespace WebDriverManagerSharp
 
                 // Remove non-necessary paragraphs and links elements
                 List<HtmlNode> versionParagraphClean = new List<HtmlNode>();
-                for (int i = 0; i < versionParagraph.Count(); i++)
+                for (int i = 0; i < versionParagraph.Count; i++)
                 {
                     HtmlNode element = versionParagraph[i];
                     if (element.InnerText.ToLower().StartsWith("version"))
@@ -110,10 +111,10 @@ namespace WebDriverManagerSharp
                 Log.Trace("[Clean] Download links:\n{0}", downloadLink);
                 Log.Trace("[Clean] Version paragraphs:\n{0}", versionParagraphClean);
 
-                int shiftLinks = versionParagraphClean.Count() - downloadLink.Count();
+                int shiftLinks = versionParagraphClean.Count - downloadLink.Count;
                 Log.Trace("The difference between the size of versions and links is {0}", shiftLinks);
 
-                for (int i = 0; i < versionParagraphClean.Count(); i++)
+                for (int i = 0; i < versionParagraphClean.Count; i++)
                 {
                     HtmlNode paragraph = versionParagraphClean[i];
                     string[] version = paragraph.InnerText.Split(' ');
@@ -132,6 +133,7 @@ namespace WebDriverManagerSharp
                         {
                             childIndex = 1;
                         }
+
                         urlList.Add(new System.Uri(paragraph.SelectNodes("a")[childIndex].Attributes["href"].Value));
                     }
                     else
@@ -176,6 +178,16 @@ namespace WebDriverManagerSharp
 
         public override string PreDownload(string target, string version)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (version == null)
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+
             if (isChromiumBased(version))
             {
                 int iVersion = target.IndexOf(version);
@@ -186,13 +198,18 @@ namespace WebDriverManagerSharp
                             + Path.DirectorySeparatorChar + target.SubstringJava(iVersion);
                 }
             }
-            Log.Trace("Pre-download in EdgeDriver -- target={0}, version={1}", target,
-                    version);
+
+            Log.Trace("Pre-download in EdgeDriver -- target={0}, version={1}", target, version);
             return target;
         }
 
         public override FileInfo PostDownload(FileInfo archive)
         {
+            if (archive == null)
+            {
+                throw new ArgumentNullException(nameof(archive));
+            }
+
             List<FileInfo> listFiles = archive.Directory.GetFiles().ToList();
             List<FileInfo>.Enumerator iterator = listFiles.GetEnumerator();
             FileInfo file = null;
@@ -204,6 +221,7 @@ namespace WebDriverManagerSharp
                     return file;
                 }
             }
+
             return file;
         }
 
@@ -212,7 +230,7 @@ namespace WebDriverManagerSharp
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 string[] programFilesEnvs = { getProgramFilesEnv() };
-                string msedgeVersion = GetDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", "", "", "--version", GetDriverManagerType().ToString());
+                string msedgeVersion = GetDefaultBrowserVersion(programFilesEnvs, "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe", string.Empty, string.Empty, "--version", GetDriverManagerType().ToString());
                 string browserVersionOutput;
                 if (msedgeVersion != null)
                 {
@@ -229,6 +247,7 @@ namespace WebDriverManagerSharp
                     }
                 }
             }
+
             return null;
         }
 

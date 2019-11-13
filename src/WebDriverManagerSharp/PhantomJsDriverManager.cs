@@ -14,11 +14,13 @@
  * limitations under the License..
  *
  */
-using System.Collections.Generic;
-using System.IO;
 
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /**
      * Manager for PhantomJs.
      *
@@ -42,9 +44,9 @@ namespace WebDriverManagerSharp
             return Config().GetPhantomjsDriverVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
-            return base.getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -67,15 +69,30 @@ namespace WebDriverManagerSharp
             Config().SetPhantomjsDriverUrl(url);
         }
 
-        protected override List<System.Uri> GetDrivers()// throws IOException
+        /// <summary>
+        /// Get the driver Uris for PhantomJS
+        /// </summary>
+        /// <exception cref="IOException" />
+        /// <returns></returns>
+        protected override List<Uri> GetDrivers()
         {
-            System.Uri driverUrl = GetDriverUrl();
+            Uri driverUrl = GetDriverUrl();
             Log.Info("Reading {0} to seek {1}", driverUrl, GetDriverName());
             return getDriversFromMirror(driverUrl);
         }
 
-        protected override string GetCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(Uri url, string driverName)
         {
+            if (url == null)
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
+            if (driverName == null)
+            {
+                throw new ArgumentNullException(nameof(driverName));
+            }
+
             string file = url.GetFile();
             file = url.GetFile().SubstringJava(file.LastIndexOf(SLASH), file.Length);
             int matchIndex = file.IndexOf(driverName);
@@ -105,6 +122,16 @@ namespace WebDriverManagerSharp
 
         public override string PreDownload(string target, string version)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (version == null)
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+
             int iSeparator = target.IndexOf(version) - 1;
             int iDash = target.LastIndexOf(version) + version.Length;
             int iPoint = target.LastIndexOf(".tar") != -1
@@ -119,6 +146,11 @@ namespace WebDriverManagerSharp
 
         public override FileInfo PostDownload(FileInfo archive)
         {
+            if (archive == null)
+            {
+                throw new ArgumentNullException(nameof(archive));
+            }
+
             Log.Trace("PhantomJS package name: {0}", archive);
 
             DirectoryInfo extractFolder = GetFolderFilter(archive.Directory)[0];

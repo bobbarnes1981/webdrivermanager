@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Test with Microsoft Edge using pre-installed version.
      *
@@ -30,17 +30,17 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%SystemRoot%"), "System32", "MicrosoftWebDriver.exe"));
+        private FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%SystemRoot%"), "System32", "MicrosoftWebDriver.exe"));
 
         [Test]
-        public void testInsiderExists()
+        public void TestInsiderExists()
         {
             Assume.That(microsoftWebDriverFile.Exists);
             exerciseEdgeInsider();
         }
 
         [Test]
-        public void testInsiderNotExists()
+        public void TestInsiderNotExists()
         {
             Assume.That(!microsoftWebDriverFile.Exists);
 

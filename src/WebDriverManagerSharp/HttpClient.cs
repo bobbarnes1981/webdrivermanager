@@ -15,16 +15,15 @@
  *
  */
 
-using Microsoft.Win32.SafeHandles;
-using System;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Net;
+    using System.Net.Http.Headers;
+    using System.Runtime.InteropServices;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using Microsoft.Win32.SafeHandles;
 
     /**
      * HTTP Client.
@@ -36,14 +35,20 @@ namespace WebDriverManagerSharp
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        private bool disposed = false;
         private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
         private readonly Config config;
         private readonly System.Net.Http.HttpClient closeableHttpClient;
 
+        private bool disposed = false;
+
         public HttpClient(Config config)
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
             this.config = config;
 
             System.Net.Http.HttpClientHandler handler = new System.Net.Http.HttpClientHandler();
@@ -58,7 +63,7 @@ namespace WebDriverManagerSharp
                     handler.Proxy = proxyHost;
                     handler.UseProxy = true;
 
-                    ICredentials credentialsProvider = createBasicCredentialsProvider(proxy, config.GetProxyUser(), config.GetProxyPass(), proxyHost);
+                    ICredentials credentialsProvider = createBasicCredentialsProvider(proxy, config.GetProxyUser(), config.GetProxyPass());
                     if (credentialsProvider != null)
                     {
                         handler.Proxy.Credentials = credentialsProvider;
@@ -75,12 +80,13 @@ namespace WebDriverManagerSharp
                 }
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 // TODO: this handler requires .NET 4.7.1
-                //handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
-                //handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
-                //{
-                //    return true;
-                //};
+                ////handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
+                ////handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
+                ////{
+                ////    return true;
+                ////};
             }
             catch (Exception e)
             {
@@ -102,6 +108,7 @@ namespace WebDriverManagerSharp
                 // TODO: can this be simplified to new System.Net.WebProxy(url);
                 return new WebProxy(proxyHost, proxyPort);
             }
+
             return null;
         }
 
@@ -111,6 +118,7 @@ namespace WebDriverManagerSharp
             {
                 closeableHttpClient.DefaultRequestHeaders.Authorization = authHeader;
             }
+
             Task<System.Net.Http.HttpResponseMessage> responseTask = closeableHttpClient.GetAsync(url);
             responseTask.Wait(System.TimeSpan.FromSeconds(config.GetTimeout()).Milliseconds);
             System.Net.Http.HttpResponseMessage response = responseTask.Result;
@@ -122,6 +130,7 @@ namespace WebDriverManagerSharp
                 log.Error(errorMessage);
                 throw new WebDriverManagerException(errorMessage);
             }
+
             return response;
         }
 
@@ -133,19 +142,20 @@ namespace WebDriverManagerSharp
             if (!string.IsNullOrEmpty(proxyInput))
             {
                 Regex rx = new Regex("^http[s]?://.*$");
-                new Uri(rx.IsMatch(proxyInput) ? proxyInput : "http://" + proxyInput);
+                return new Uri(rx.IsMatch(proxyInput) ? proxyInput : "http://" + proxyInput);
             }
 
             return null;
         }
 
-        private ICredentials createBasicCredentialsProvider(string proxy, string proxyUser, string proxyPass, IWebProxy proxyHost)
+        private ICredentials createBasicCredentialsProvider(string proxy, string proxyUser, string proxyPass)
         {
             Uri proxyUrl = determineProxyUrl(proxy);
             if (proxyUrl == null)
             {
                 return null;
             }
+
             string username = null;
             string password = null;
 
@@ -157,6 +167,7 @@ namespace WebDriverManagerSharp
                 username = st[0];
                 password = st[1];
             }
+
             string envProxyUser = Environment.GetEnvironmentVariable("HTTPS_PROXY_USER");
             string envProxyPass = Environment.GetEnvironmentVariable("HTTPS_PROXY_PASS");
             username = envProxyUser ?? username;

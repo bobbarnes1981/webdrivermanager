@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Test for taobao.org mirror.
      *
@@ -29,7 +29,6 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class TaobaoTest
     {
-
         [Test]
         public void TestTaobao()
         {
@@ -59,8 +58,6 @@ namespace WebDriverManagerSharp.Tests.Test
         public void TestTaobaoException()
         {
             Assert.Throws<WebDriverManagerException>(() => WebDriverManager.EdgeDriver().UseMirror());
-            //FileInfo binary = new FileInfo(WebDriverManager.EdgeDriver().getBinaryPath());
-            //Assert.True(binary.Exists);
         }
     }
 }

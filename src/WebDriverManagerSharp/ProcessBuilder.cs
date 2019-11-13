@@ -15,13 +15,13 @@
  *
  */
 
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-
 namespace WebDriverManagerSharp
 {
-    class ProcessBuilder
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+
+    public class ProcessBuilder
     {
         private readonly string[] command;
 

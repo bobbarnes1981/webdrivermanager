@@ -15,10 +15,10 @@
  *
  */
 
-using NUnit.Framework;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+
     /**
      * Force download test.
      *
@@ -27,13 +27,13 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class ForceError403Test
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private const int NUM = 40;
 
-        private static readonly int NUM = 40;
+        private readonly ILogger log = Logger.GetLogger();
 
         [Ignore("")]
         [Test]
-        public void test403()
+        public void Test403()
         {
             for (int i = 0; i < NUM; i++)
             {

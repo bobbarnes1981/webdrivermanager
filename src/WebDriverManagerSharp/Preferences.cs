@@ -15,11 +15,10 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
 
     /**
      * Preferences class.
@@ -29,12 +28,10 @@ namespace WebDriverManagerSharp
      */
     public class Preferences
     {
+        private const string TTL = "-ttl";
 
         private readonly ILogger log = Logger.GetLogger();
 
-        private const string TTL = "-ttl";
-
-        //java.util.prefs.Preferences prefs = userNodeForPackage(WebDriverManager.class);
         private readonly Dictionary<string, string> prefs = new Dictionary<string, string>();
 
         private readonly string dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -51,6 +48,7 @@ namespace WebDriverManagerSharp
             {
                 return null;
             }
+
             return prefs[key];
         }
 
@@ -102,6 +100,7 @@ namespace WebDriverManagerSharp
                 log.Debug("Removing preference {0}={1} (expired on {2})", key, value, expirationDate);
                 clearFromPreferences(key);
             }
+
             return isValid;
         }
 
@@ -129,8 +128,8 @@ namespace WebDriverManagerSharp
                     log.Debug("Preference {0}={1} (valid until {2})", key, valueFromPreferences, expirationDate);
                 }
             }
+
             return valueInPreferences;
         }
-
     }
 }

@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium;
-using System;
-
 namespace WebDriverManagerSharp.Tests.Base
 {
+    using System;
+    using NUnit.Framework;
+    using OpenQA.Selenium;
+
     /**
      * Parent class for browser based tests.
      *

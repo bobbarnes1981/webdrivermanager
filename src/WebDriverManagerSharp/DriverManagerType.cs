@@ -14,10 +14,11 @@
  * limitations under the License.
  *
  */
-using System.ComponentModel;
 
 namespace WebDriverManagerSharp
 {
+    using System.ComponentModel;
+
     /**
      * Types for driver managers.
      *

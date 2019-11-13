@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Test for preferences.
      *

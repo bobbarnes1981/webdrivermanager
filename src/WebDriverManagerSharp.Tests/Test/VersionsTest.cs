@@ -15,18 +15,17 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Opera;
-using System;
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using NUnit.Framework;
+    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.Edge;
+    using OpenQA.Selenium.Firefox;
+    using OpenQA.Selenium.IE;
+    using OpenQA.Selenium.Opera;
+
     /**
      * Test getting all versions.
      *

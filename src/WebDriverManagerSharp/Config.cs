@@ -15,13 +15,13 @@
  *
  */
 
-using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+
     /**
      * Configuration class.
      *
@@ -30,9 +30,9 @@ namespace WebDriverManagerSharp
      */
     public class Config
     {
-        private readonly ILogger log = Logger.GetLogger();
-
         private const string HOME = "~";
+
+        private readonly ILogger log = Logger.GetLogger();
 
         private readonly ConfigKey<string> properties = new ConfigKey<string>("wdm.properties", "webdrivermanager.properties");
 
@@ -112,14 +112,17 @@ namespace WebDriverManagerSharp
             {
                 strValue = Environment.GetEnvironmentVariable(name);
             }
+
             if (strValue == null && value != null)
             {
                 return value;
             }
+
             if (strValue == null)
             {
                 strValue = getProperty(name);
             }
+
             return (T)parse<T>(strValue);
         }
 
@@ -138,7 +141,7 @@ namespace WebDriverManagerSharp
             {
                 output = bool.Parse(strValue);
             }
-            else if (typeof(T).Equals(typeof(System.Uri)))
+            else if (typeof(T).Equals(typeof(Uri)))
             {
                 try
                 {
@@ -153,6 +156,7 @@ namespace WebDriverManagerSharp
             {
                 throw new WebDriverManagerException("Type " + typeof(T).FullName + " cannot be parsed");
             }
+
             return output;
         }
 
@@ -175,9 +179,10 @@ namespace WebDriverManagerSharp
                 if (value == null)
                 {
                     log.Trace("Property {0} not found in {1}, using blank value", key, defaultProperties);
-                    value = "";
+                    value = string.Empty;
                 }
             }
+
             return value;
         }
 
@@ -196,6 +201,7 @@ namespace WebDriverManagerSharp
             {
                 log.Trace("Property {0} not found in {1}", key, properties);
             }
+
             return props.GetProperty(key);
         }
 
@@ -237,17 +243,28 @@ namespace WebDriverManagerSharp
 
         private static string defaultArchitecture()
         {
-            //RuntimeInformation.OSArchitecture ?
+            // RuntimeInformation.OSArchitecture ?
             System.Runtime.InteropServices.Architecture arch = RuntimeInformation.ProcessArchitecture;
             if (arch == System.Runtime.InteropServices.Architecture.X86)
+            {
                 return "X32";
+            }
+
             if (arch == System.Runtime.InteropServices.Architecture.X64)
+            {
                 return "X64";
+            }
+            
             throw new Exception(string.Format("Unhandled architecture {0}", arch));
         }
 
         public bool IsExecutable(FileInfo file)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             if (resolve(os).ToLower().Equals("win"))
             {
                 return file.Extension.Equals(".exe");
@@ -285,15 +302,17 @@ namespace WebDriverManagerSharp
                     }
                     else
                     {
-                        //path = path.Replace(HOME, getSystemProperty("user.home"));
+                        // TODO: path = path.Replace(HOME, getSystemProperty("user.home"));
                         throw new NotImplementedException(string.Format("Replacement of home ({0}) on non-windows is not implemented", HOME));
                     }
                 }
+
                 if (path.Equals("."))
                 {
                     path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                 }
             }
+
             return path;
         }
 
@@ -442,10 +461,12 @@ namespace WebDriverManagerSharp
             {
                 return Architecture.X32;
             }
+
             if ("64".Equals(architectureString))
             {
                 return Architecture.X64;
             }
+
             return (Architecture)Enum.Parse(typeof(Architecture), architectureString);
         }
 
@@ -507,6 +528,7 @@ namespace WebDriverManagerSharp
             {
                 output = ignored.Split(',');
             }
+
             return output;
         }
 
@@ -856,6 +878,5 @@ namespace WebDriverManagerSharp
             this.seleniumServerStandaloneUrl.SetValue(value);
             return this;
         }
-
     }
 }

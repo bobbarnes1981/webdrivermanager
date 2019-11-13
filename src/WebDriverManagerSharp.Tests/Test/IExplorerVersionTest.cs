@@ -15,12 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.IE;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+    using OpenQA.Selenium.IE;
+    using WebDriverManagerSharp.Tests.Base;
 
     /**
      * Test asserting IEDriverServer versions.
@@ -33,7 +32,6 @@ namespace WebDriverManagerSharp.Tests.Test
         public IExplorerVersionTest(Architecture architecture)
             : base(architecture)
         {
-
         }
 
         [SetUp]

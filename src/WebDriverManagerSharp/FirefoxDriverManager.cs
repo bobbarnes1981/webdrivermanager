@@ -15,11 +15,11 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+
     /**
      * Manager for Firefox.
      *
@@ -69,7 +69,7 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Get the driver Uris for Firefox
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
@@ -86,11 +86,22 @@ namespace WebDriverManagerSharp
             {
                 currentVersion = currentVersion.SubstringJava(1);
             }
+
             return currentVersion;
         }
 
         public override string PreDownload(string target, string version)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (version == null)
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+
             int iSeparator = target.IndexOf(version) - 1;
             int iDash = target.LastIndexOf(version) + version.Length;
             int iPoint = target.LastIndexOf(".zip");

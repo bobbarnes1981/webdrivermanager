@@ -15,12 +15,12 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /**
      * Manager for Chrome.
      *
@@ -46,7 +46,7 @@ namespace WebDriverManagerSharp
 
         protected override Uri GetDriverUrl()
         {
-            return base.getDriverUrlCheckingMirror(Config().GetChromeDriverUrl());
+            return getDriverUrlCheckingMirror(Config().GetChromeDriverUrl());
         }
 
         protected override Uri GetMirrorUrl()
@@ -70,7 +70,7 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Get the driver Uris for Chrome
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
@@ -114,6 +114,7 @@ namespace WebDriverManagerSharp
             {
                 url = Config().GetChromeDriverMirrorUrl() + "LATEST_RELEASE";
             }
+
             string version = null;
             try
             {
@@ -127,6 +128,7 @@ namespace WebDriverManagerSharp
             {
                 Log.Warn("Exception reading {0} to get latest version of {1}", url, GetDriverName(), e);
             }
+
             if (version != null)
             {
                 Log.Debug("Latest version of {0} according to {1} is {2}", GetDriverName(), url, version);

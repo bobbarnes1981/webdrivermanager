@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using NUnit.Framework;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test with HtmlUnit browser (which uses void driver manager).
      *
@@ -29,7 +29,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class HtmlUnitTest : BrowserTestParent
     {
-        private readonly static Type webDriverClass;
+        private static readonly Type webDriverClass;
 
         [OneTimeSetUp]
         public static void SetupClass()

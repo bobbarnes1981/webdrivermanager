@@ -15,13 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using NUnit.Framework;
 
     /**
      * Filter verifications for phantomjs.
@@ -31,15 +30,14 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class PhantomJsFilterTest
     {
-
         private readonly ILogger log = Logger.GetLogger();
 
         protected WebDriverManager phantomJsManager;
         protected List<Uri> driversUrls;
-        protected string phantomJsBinaryName = "phantomjs";
+        private const string phantomJsBinaryName = "phantomjs";
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
             phantomJsManager = WebDriverManager.PhantomJS();
             FieldInfo field = typeof(WebDriverManager).GetField("httpClient", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -50,32 +48,28 @@ namespace WebDriverManagerSharp.Tests.Test
         }
 
         [Test]
-        public void testFilterPhantomJs()
+        public void TestFilterPhantomJs()
         {
             MethodInfo method = typeof(WebDriverManager).GetMethod("checkLatest", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> latestUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName });
 
             List<Uri> filteredLatestUrls = new UrlFilter().FilterByArch(latestUrls, Architecture.X64, false);
 
-            log.Info("Filtered UriS for LATEST version {} : {}", phantomJsBinaryName, filteredLatestUrls);
+            log.Info("Filtered UriS for LATEST version {0} : {1}", phantomJsBinaryName, filteredLatestUrls);
 
             Assert.That(filteredLatestUrls, Is.Not.Empty);
         }
 
         [Test]
-        public void testFilterVersionPhantomJs()
+        public void TestFilterVersionPhantomJs()
         {
-            String specificVersion = "1.9.6";
+            string specificVersion = "1.9.6";
             MethodInfo method = typeof(WebDriverManager).GetMethod("getVersion", BindingFlags.Instance | BindingFlags.NonPublic);
-            List<Uri> specificVersionUrls = (List<Uri>)method.Invoke(
-                    phantomJsManager, new object[] { driversUrls, phantomJsBinaryName,
-                    specificVersion });
+            List<Uri> specificVersionUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName, specificVersion });
 
-            List<Uri> filteredVersionUrls = new UrlFilter()
-                    .FilterByArch(specificVersionUrls, Architecture.X64, false);
+            List<Uri> filteredVersionUrls = new UrlFilter().FilterByArch(specificVersionUrls, Architecture.X64, false);
 
-            log.Info("Filtered UriS for {} version {}: {}", phantomJsBinaryName,
-                            specificVersion, filteredVersionUrls);
+            log.Info("Filtered UriS for {0} version {1}: {2}", phantomJsBinaryName, specificVersion, filteredVersionUrls);
 
             Assert.That(filteredVersionUrls, Is.Not.Empty);
         }

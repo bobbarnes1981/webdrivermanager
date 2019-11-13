@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp
 {
+    using NUnit.Framework;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test asserting PhantomJS versions.
      *

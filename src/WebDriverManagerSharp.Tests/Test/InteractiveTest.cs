@@ -15,13 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using NUnit.Framework;
 
     /**
      * Test using wdm in interactive mode (from the shell).
@@ -31,9 +30,9 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class InteractiveTest
     {
-        private readonly static ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Logger.GetLogger();
 
-        public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
+        private static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
 
         [TestCase("chrome", "chromedriver")]
         [TestCase("firefox", "geckodriver")]

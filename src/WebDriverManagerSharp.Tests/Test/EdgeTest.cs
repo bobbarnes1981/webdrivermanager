@@ -15,13 +15,13 @@
  *
  */
 
-using NUnit.Framework;
-using OpenQA.Selenium.Edge;
-using System.Runtime.InteropServices;
-using WebDriverManagerSharp.Tests.Base;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.Runtime.InteropServices;
+    using NUnit.Framework;
+    using OpenQA.Selenium.Edge;
+    using WebDriverManagerSharp.Tests.Base;
+
     /**
      * Test with Microsoft Edge.
      *
@@ -30,19 +30,18 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class EdgeTest : BrowserTestParent
     {
-
         [OneTimeSetUp]
-        public static void setupClass()
+        public void SetupClass()
         {
             Assume.That(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
             WebDriverManager.EdgeDriver().AvoidPreferences().Setup();
         }
 
         [SetUp]
-        public void setupTest()
+        public void SetupTest()
         {
             EdgeOptions edgeOptions = new EdgeOptions();
-            //"C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe";
+            ////"C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe";
             driver = new EdgeDriver(edgeOptions);
         }
     }

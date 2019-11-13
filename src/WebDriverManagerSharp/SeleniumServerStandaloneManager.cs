@@ -14,11 +14,12 @@
  * limitations under the License.
  *
  */
-using System.Collections.Generic;
-using System.IO;
 
 namespace WebDriverManagerSharp
 {
+    using System.Collections.Generic;
+    using System.IO;
+
     /**
      * Manager for selenium-server-standalone.
      *
@@ -56,7 +57,6 @@ namespace WebDriverManagerSharp
         {
             return null;
         }
-
 
         protected override void SetDriverVersion(string version)
         {

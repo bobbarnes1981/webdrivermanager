@@ -15,10 +15,10 @@
  *
  */
 
-using NUnit.Framework;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using NUnit.Framework;
+
     /**
      * Test latest version of chromedriver.
      *

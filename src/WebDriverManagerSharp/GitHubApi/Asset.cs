@@ -15,10 +15,10 @@
  *
  */
 
-using Newtonsoft.Json;
-
 namespace WebDriverManagerSharp.GitHubApi
 {
+    using Newtonsoft.Json;
+
     public class Asset
     {
         // url

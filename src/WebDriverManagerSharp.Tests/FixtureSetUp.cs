@@ -1,14 +1,14 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
-namespace WebDriverManagerSharp.Tests
+﻿namespace WebDriverManagerSharp.Tests
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using NUnit.Framework;
+
     [SetUpFixture]
-    class FixtureSetUp
+    public class FixtureSetUp
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()

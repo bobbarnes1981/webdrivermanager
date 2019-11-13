@@ -15,10 +15,9 @@
  *
  */
 
-using NUnit.Framework;
-
 namespace WebDriverManagerSharp.Tests.Base
 {
+    using NUnit.Framework;
 
     /**
      * Parent class for version based tests.
@@ -51,6 +50,7 @@ namespace WebDriverManagerSharp.Tests.Base
             {
                 browserManager.OperatingSystem(os.Value);
             }
+
             switch (architecture)
             {
                 case Architecture.X32:
@@ -77,15 +77,16 @@ namespace WebDriverManagerSharp.Tests.Base
                 {
                     browserManager.Architecture(architecture);
                 }
+
                 if (os != null)
                 {
                     browserManager.OperatingSystem(os.Value);
                 }
+
                 browserManager.Version(specificVersion).Setup();
 
                 Assert.That(browserManager.GetDownloadedVersion(), Is.EqualTo(specificVersion));
             }
         }
-
     }
 }

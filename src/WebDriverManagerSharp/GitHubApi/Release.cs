@@ -15,11 +15,11 @@
  *
  */
 
-using Newtonsoft.Json;
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp.GitHubApi
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     /**
      * Plain-Old Java Object to parse JSON GitHub API (e.g.
      * https://api.github.com/repos/operasoftware/operachromiumdriver/releases) by
@@ -31,12 +31,12 @@ namespace WebDriverManagerSharp.GitHubApi
     public class Release
     {
         [JsonProperty("tag_name")]
-        public string TagName;
+        public string TagName { get; set; }
 
         [JsonProperty("name")]
-        public string Name;
+        public string Name { get; set; }
 
         [JsonProperty("assets")]
-        public List<Asset> Assets;
+        public List<Asset> Assets { get; set; }
     }
 }

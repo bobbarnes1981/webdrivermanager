@@ -1,6 +1,6 @@
-﻿/*		
- * (C) Copyright 2017 Boni Garcia (http://bonigarcia.github.io/)		
- *		
+﻿/*
+ * (C) Copyright 2017 Boni Garcia (http://bonigarcia.github.io/)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *		
+ *
  */
-
-using NUnit.Framework;
-using System.IO;
 
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Test for ignore versions.
      * 
@@ -29,18 +29,15 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        //@InjectMocks
-        public Downloader downloader;
-
         [SetUp]
         [TearDown]
-        public void cleanCache()
+        public void CleanCache()
         {
             new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [Test]
-        public void testIgnoreVersions()
+        public void TestIgnoreVersions()
         {
             string[] ignoredVersions = { "2.33", "2.32" };
             WebDriverManager.ChromeDriver().IgnoreVersions(ignoredVersions).Setup();

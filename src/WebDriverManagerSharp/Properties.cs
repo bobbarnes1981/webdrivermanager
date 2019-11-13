@@ -15,11 +15,12 @@
  *
  */
 
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System.Collections.Generic;
+    using System.IO;
+
+    // TODO: Convert to app.config
     public class Properties
     {
         private readonly Dictionary<string, string> dict;
@@ -34,27 +35,31 @@ namespace WebDriverManagerSharp
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line;
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     if (line.StartsWith("#"))
                     {
                         continue;
                     }
+
                     if (string.IsNullOrEmpty(line))
                     {
                         continue;
                     }
+
                     string[] parts = line.Split('=');
                     dict.Add(parts[0], parts[1]);
                 }
             }
         }
+
         public string GetProperty(string name)
         {
             if (!dict.ContainsKey(name))
             {
                 return null;
             }
+
             return dict[name];
         }
     }

@@ -15,11 +15,12 @@
  *
  */
 
-using System.Diagnostics;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+
     /**
      * Command line executor.
      *
@@ -28,7 +29,7 @@ namespace WebDriverManagerSharp
      */
     public static class Shell
     {
-        private readonly static ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Logger.GetLogger();
 
         public static string runAndWait(params string[] command)
         {
@@ -51,7 +52,7 @@ namespace WebDriverManagerSharp
 
         public static string runAndWaitNoLog(DirectoryInfo folder, params string[] command)
         {
-            string output = "";
+            string output = string.Empty;
             try
             {
                 using (Process process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start())
@@ -67,11 +68,17 @@ namespace WebDriverManagerSharp
                     log.Debug("There was a problem executing command <{0}> on the shell: {1}", string.Join(" ", command), e.Message);
                 }
             }
+
             return output.Trim();
         }
 
         public static string getVersionFromWmicOutput(string output)
         {
+            if (output == null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
             int i = output.IndexOf('=');
             int j = output.IndexOf('.');
             return i != -1 && j != -1 ? output.SubstringJava(i + 1, j) : output;
@@ -79,11 +86,22 @@ namespace WebDriverManagerSharp
 
         public static string getVersionFromPosixOutput(string output, string driverType)
         {
+            if (output == null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
+            if (driverType == null)
+            {
+                throw new ArgumentNullException(nameof(driverType));
+            }
+
             // Special case: using Chromium as Chrome
             if (output.Contains("Chromium"))
             {
                 driverType = "Chromium";
             }
+
             int i = output.ToLower().IndexOf(driverType.ToLower());
             int j = output.IndexOf('.');
             return i != -1 && j != -1 ? output.SubstringJava(i + driverType.Length, j).Trim() : output;
@@ -91,6 +109,11 @@ namespace WebDriverManagerSharp
 
         public static string getVersionFromPowerShellOutput(string output)
         {
+            if (output == null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
             int i = output.IndexOf("Version");
             int j = output.IndexOf(':', i);
             int k = output.IndexOf('.', j);

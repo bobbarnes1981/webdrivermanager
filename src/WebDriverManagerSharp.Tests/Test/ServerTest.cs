@@ -15,14 +15,14 @@
  *
  */
 
-using NUnit.Framework;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Runtime.InteropServices;
+    using NUnit.Framework;
+
     /**
      * Test using wdm server.
      *
@@ -33,17 +33,23 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private static ILogger log = Logger.GetLogger();
 
-        public static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
+        private static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
 
-        public static int serverPort;
+        private static int serverPort;
 
         [OneTimeSetUp]
-        public static void StartServer()
+        public void OneTimeSetUp()
         {
             serverPort = GetFreePort();
             log.Debug("Test is starting WebDriverManager server at port {0}", serverPort);
 
             WebDriverManager.main(new string[] { "server", serverPort.ToString() });
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            WebDriverManager.GlobalConfig().Reset();
         }
 
         [TestCase("chromedriver", "chromedriver.exe")]

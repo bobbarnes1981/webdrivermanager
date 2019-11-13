@@ -15,39 +15,80 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     public static class Extensions
     {
+        private static readonly DateTime unixEpoch = new DateTime(1970, 1, 1);
+
+        private static readonly Dictionary<Architecture, string> architectureStrings = new Dictionary<Architecture, string>
+        {
+            { Architecture.DEFAULT, "DEFAULT" },
+            { Architecture.X32, "32" },
+            { Architecture.X64, "64" },
+        };
+
         public static string GetFile(this Uri uri)
         {
+            if (uri == null)
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
+
             return uri.PathAndQuery;
         }
+
         public static string SubstringJava(this string str, int startIndex)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return str.Substring(startIndex);
         }
+
         public static string SubstringJava(this string str, int startIndex, int endIndex)
         {
-            if (startIndex < 0 || startIndex > endIndex || endIndex > str.Length)
+            if (str == null)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentNullException(nameof(str));
             }
+
+            if (endIndex > str.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(endIndex));
+            }
+
+            if (startIndex < 0 || startIndex > endIndex)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
             return str.Substring(startIndex, endIndex - startIndex);
         }
+
         public static void CreateFromStream(this FileInfo fileInfo, Stream source)
         {
+            if (fileInfo == null)
+            {
+                throw new ArgumentNullException(nameof(fileInfo));
+            }
+
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             using (Stream stream = fileInfo.OpenWrite())
             {
                 source.CopyTo(stream);
             }
         }
-
-        private readonly static DateTime unixEpoch = new DateTime(1970, 1, 1);
         
         public static long UnixTime(this DateTime dateTime)
         {
@@ -66,17 +107,15 @@ namespace WebDriverManagerSharp
 
         public static T[] CopyOf<T>(this T[] source, int newLength)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             T[] newArray = new T[newLength];
             Array.Copy(source, 0, newArray, 0, source.Length);
             return newArray;
         }
-
-        private static readonly Dictionary<Architecture, string> architectureStrings = new Dictionary<Architecture, string>
-        {
-            { Architecture.DEFAULT, "DEFAULT" },
-            { Architecture.X32, "32" },
-            { Architecture.X64, "64" },
-        };
 
         public static string GetString(this Architecture architecture)
         {

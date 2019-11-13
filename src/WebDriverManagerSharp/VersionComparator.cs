@@ -15,11 +15,10 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp
 {
+    using System;
+    using System.Collections.Generic;
 
     /**
      * Version comparator.
@@ -33,6 +32,16 @@ namespace WebDriverManagerSharp
 
         public int Compare(string v1, string v2)
         {
+            if (v1 == null)
+            {
+                throw new ArgumentNullException(nameof(v1));
+            }
+
+            if (v2 == null)
+            {
+                throw new ArgumentNullException(nameof(v2));
+            }
+
             string[] v1split = v1.Split(new string[] { "." }, StringSplitOptions.None);
             string[] v2split = v2.Split(new string[] { "." }, StringSplitOptions.None);
             int length = Math.Max(v1split.Length, v2split.Length);
@@ -46,6 +55,7 @@ namespace WebDriverManagerSharp
                     {
                         return -1;
                     }
+
                     if (v1Part > v2Part)
                     {
                         return 1;
@@ -56,6 +66,7 @@ namespace WebDriverManagerSharp
                     log.Trace("Exception comparing {0} with {1} ({2})", v1, v2, e.Message);
                 }
             }
+
             return 0;
         }
     }

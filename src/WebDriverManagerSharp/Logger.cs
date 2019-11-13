@@ -15,20 +15,27 @@
  *
  */
 
-using Serilog;
-
 namespace WebDriverManagerSharp
 {
+    using Serilog;
+
     public interface ILogger
     {
         void Trace(string format, params object[] parameters);
+
         void Warn(string format, params object[] parameters);
+
         void Debug(string format, params object[] parameters);
+
         void Info(string format, params object[] parameters);
+
         void Error(string format, params object[] parameters);
+
         bool IsDebugEnabled();
+
         bool IsTraceEnabled();
     }
+
     public class Logger : ILogger
     {
         private readonly Serilog.ILogger logger;
@@ -42,30 +49,37 @@ namespace WebDriverManagerSharp
         {
             return new Logger();
         }
+
         public void Trace(string format, params object[] parameters)
         {
             logger.Verbose(format, parameters);
         }
+
         public void Warn(string format, params object[] parameters)
         {
             logger.Warning(format, parameters);
         }
+
         public void Debug(string format, params object[] parameters)
         {
             logger.Debug(format, parameters);
         }
+
         public void Info(string format, params object[] parameters)
         {
             logger.Information(format, parameters);
         }
+
         public void Error(string format, params object[] parameters)
         {
             logger.Error(format, parameters);
         }
+
         public bool IsDebugEnabled()
         {
             return true;
         }
+
         public bool IsTraceEnabled()
         {
             return true;

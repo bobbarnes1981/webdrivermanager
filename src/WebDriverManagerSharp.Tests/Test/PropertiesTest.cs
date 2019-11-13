@@ -15,11 +15,11 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using NUnit.Framework;
+
     /**
      * Using different properties.
      *
@@ -42,7 +42,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testEmptyProperties()
         {
-            WebDriverManager.ChromeDriver().Properties("").Setup();
+            WebDriverManager.ChromeDriver().Properties(string.Empty).Setup();
         }
     }
 }

@@ -15,10 +15,10 @@
  *
  */
 
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp
 {
+    using System.Collections.Generic;
+
     /**
      * Void manager.
      *
@@ -44,7 +44,7 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverVersion()
         {
-            return "";
+            return string.Empty;
         }
 
         protected override System.Uri GetDriverUrl()
@@ -69,7 +69,7 @@ namespace WebDriverManagerSharp
 
         protected override string GetDriverName()
         {
-            return "";
+            return string.Empty;
         }
 
         protected override void SetDriverVersion(string version)
@@ -81,6 +81,5 @@ namespace WebDriverManagerSharp
         {
             // Nothing required
         }
-
     }
 }

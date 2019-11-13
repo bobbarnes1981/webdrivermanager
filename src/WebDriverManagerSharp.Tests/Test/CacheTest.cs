@@ -15,12 +15,12 @@
  *
  */
 
-using NUnit.Framework;
-using System.IO;
-using System.Reflection;
-
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System.IO;
+    using System.Reflection;
+    using NUnit.Framework;
+
     /**
      * Test for driver cache.
      *

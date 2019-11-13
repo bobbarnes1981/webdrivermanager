@@ -15,10 +15,10 @@
  *
  */
 
-using System.Collections.Generic;
-
 namespace WebDriverManagerSharp
 {
+    using System.Collections.Generic;
+
     /**
      * Manager for Internet Explorer.
      *
@@ -27,7 +27,6 @@ namespace WebDriverManagerSharp
      */
     public class InternetExplorerDriverManager : WebDriverManager
     {
-
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.IEXPLORER;
@@ -69,7 +68,7 @@ namespace WebDriverManagerSharp
         }
 
         /// <summary>
-        /// 
+        /// Get the driver Uris for Internet Explorer
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
