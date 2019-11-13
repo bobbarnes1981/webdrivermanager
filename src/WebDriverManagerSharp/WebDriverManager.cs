@@ -67,7 +67,7 @@ namespace WebDriverManagerSharp
         private string preferenceKey;
         private Properties versionsProperties;
 
-        protected ILogger Log { get { return log; } }
+        protected static ILogger Log { get { return log; } }
 
         protected WebDriverManager()
         {
