@@ -15,14 +15,18 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using HtmlAgilityPack;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Manager for Microsoft Edge.
@@ -67,7 +71,7 @@ namespace WebDriverManagerSharp
             Config().SetEdgeDriverVersion(version);
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             Config().SetEdgeDriverUrl(url);
         }
@@ -77,22 +81,22 @@ namespace WebDriverManagerSharp
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
+        protected override List<Uri> GetDrivers()
         {
             ListVersions = new List<string>();
-            List<System.Uri> urlList = new List<System.Uri>();
+            List<Uri> urlList = new List<Uri>();
 
-            System.Uri driverUrl = GetDriverUrl();
+            Uri driverUrl = GetDriverUrl();
             Log.Debug("Reading {0} to find out the latest version of Edge driver", driverUrl);
 
-            using (StreamReader inStream = new StreamReader(HttpClient.ExecuteHttpGet(driverUrl).Content.ReadAsStreamAsync().Result))
+            using (StreamReader inStream = new StreamReader(HttpClient.ExecuteHttpGet(driverUrl)))
             {
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(inStream.ReadToEnd());
 
                 string baseXPath = "//ul[contains(@class, 'driver-downloads')]/li[@class='driver-download']/";
-                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::a[@aria-label]", baseXPath));
-                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes(string.Format("{0}descendant::p[contains(@class, 'driver-download__meta')]", baseXPath));
+                HtmlNodeCollection downloadLink = doc.DocumentNode.SelectNodes(string.Format(CultureInfo.InvariantCulture, "{0}descendant::a[@aria-label]", baseXPath));
+                HtmlNodeCollection versionParagraph = doc.DocumentNode.SelectNodes(string.Format(CultureInfo.InvariantCulture, "{0}descendant::p[contains(@class, 'driver-download__meta')]", baseXPath));
 
                 Log.Trace("[Original] Download links:\n{0}", downloadLink);
                 Log.Trace("[Original] Version paragraphs:\n{0}", versionParagraph);
@@ -102,7 +106,7 @@ namespace WebDriverManagerSharp
                 for (int i = 0; i < versionParagraph.Count; i++)
                 {
                     HtmlNode element = versionParagraph[i];
-                    if (element.InnerText.ToLower().StartsWith("version"))
+                    if (element.InnerText.StartsWith("version", StringComparison.OrdinalIgnoreCase))
                     {
                         versionParagraphClean.Add(element);
                     }
@@ -125,23 +129,23 @@ namespace WebDriverManagerSharp
                     {
                         // Edge driver version 75 and above
                         int childIndex = 0;
-                        if (Config().GetOs().Equals(WebDriverManagerSharp.OperatingSystem.MAC.ToString()))
+                        if (Config().GetOs().Equals(WebDriverManagerSharp.Enums.OperatingSystem.MAC.ToString(), StringComparison.OrdinalIgnoreCase))
                         {
                             childIndex = 2;
                         }
-                        else if (Config().GetArchitecture() == WebDriverManagerSharp.Architecture.X64)
+                        else if (Config().GetArchitecture() == WebDriverManagerSharp.Enums.Architecture.X64)
                         {
                             childIndex = 1;
                         }
 
-                        urlList.Add(new System.Uri(paragraph.SelectNodes("a")[childIndex].Attributes["href"].Value));
+                        urlList.Add(new Uri(paragraph.SelectNodes("a")[childIndex].Attributes["href"].Value));
                     }
                     else
                     {
                         // Older versions
-                        if (!v.Equals("version", System.StringComparison.InvariantCultureIgnoreCase))
+                        if (!v.Equals("version", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            urlList.Add(new System.Uri(downloadLink[i - shiftLinks].Attributes["href"].Value));
+                            urlList.Add(new Uri(downloadLink[i - shiftLinks].Attributes["href"].Value));
                         }
                     }
                 }
@@ -166,10 +170,10 @@ namespace WebDriverManagerSharp
             }
         }
 
-        protected override List<System.Uri> checkLatest(List<System.Uri> list, string driver)
+        protected override List<Uri> checkLatest(List<Uri> list, string driver)
         {
             Log.Trace("Checking the lastest version of {0} with System.Uri list {1}", driver, list);
-            List<System.Uri> outList = new List<System.Uri>();
+            List<Uri> outList = new List<Uri>();
             VersionToDownload = ListVersions.First();
             outList.Add(list.First());
             Log.Info("Latest version of Edge driver is {0}", VersionToDownload);
@@ -190,11 +194,11 @@ namespace WebDriverManagerSharp
 
             if (isChromiumBased(version))
             {
-                int iVersion = target.IndexOf(version);
+                int iVersion = target.IndexOf(version, StringComparison.OrdinalIgnoreCase);
                 if (iVersion != -1)
                 {
                     target = target.SubstringJava(0, iVersion)
-                            + Config().GetArchitecture().ToString().ToLower()
+                            + Config().GetArchitecture().ToString().ToLower(CultureInfo.InvariantCulture)
                             + Path.DirectorySeparatorChar + target.SubstringJava(iVersion);
                 }
             }

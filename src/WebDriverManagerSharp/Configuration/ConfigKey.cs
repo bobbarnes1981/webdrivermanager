@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Configuration
 {
     /**
      * Configuration key class.

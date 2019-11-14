@@ -15,11 +15,12 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using WebDriverManagerSharp.Enums;
 
     /**
      * Manager for Chrome.
@@ -91,8 +92,8 @@ namespace WebDriverManagerSharp
         {
             if (Config().IsUseMirror())
             {
-                int i = url.GetFile().LastIndexOf(SLASH);
-                int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH) + 1;
+                int i = url.GetFile().LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase);
+                int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase) + 1;
                 return url.GetFile().SubstringJava(j, i);
             }
             else
@@ -109,16 +110,16 @@ namespace WebDriverManagerSharp
 
         protected override string getLatestVersion()
         {
-            string url = Config().GetChromeDriverUrl() + "LATEST_RELEASE";
+            string url = Config().GetChromeDriverUrl().Append("LATEST_RELEASE").ToString();
             if (Config().IsUseMirror())
             {
-                url = Config().GetChromeDriverMirrorUrl() + "LATEST_RELEASE";
+                url = Config().GetChromeDriverMirrorUrl().Append("LATEST_RELEASE").ToString();
             }
 
             string version = null;
             try
             {
-                Stream response = HttpClient.ExecuteHttpGet(new Uri(url)).Content.ReadAsStreamAsync().Result;
+                Stream response = HttpClient.ExecuteHttpGet(new Uri(url));
                 using (StreamReader reader = new StreamReader(response))
                 {
                     version = reader.ReadToEnd();

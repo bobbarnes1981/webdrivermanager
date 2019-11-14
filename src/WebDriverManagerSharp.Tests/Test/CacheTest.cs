@@ -20,6 +20,9 @@ namespace WebDriverManagerSharp.Tests.Test
     using System.IO;
     using System.Reflection;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Test for driver cache.

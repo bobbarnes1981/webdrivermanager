@@ -15,10 +15,12 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Configuration
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Preferences class.
@@ -26,7 +28,7 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.0.0
      */
-    public class Preferences
+    public class Preferences : IPreferences
     {
         private const string TTL = "-ttl";
 
@@ -35,9 +37,9 @@ namespace WebDriverManagerSharp
         private readonly Dictionary<string, string> prefs = new Dictionary<string, string>();
 
         private readonly string dateFormat = "yyyy-MM-dd HH:mm:ss";
-        private readonly Config config;
+        private readonly IConfig config;
 
-        public Preferences(Config config)
+        public Preferences(IConfig config)
         {
             this.config = config;
         }
@@ -54,7 +56,7 @@ namespace WebDriverManagerSharp
 
         private long getExpirationTimeFromPreferences(string key)
         {
-            return long.Parse(prefs[getExpirationKey(key)]); //default 0
+            return long.Parse(prefs[getExpirationKey(key)], CultureInfo.InvariantCulture); //default 0
         }
 
         public void PutValueInPreferencesIfEmpty(string key, string value)
@@ -63,7 +65,7 @@ namespace WebDriverManagerSharp
             {
                 prefs[key] = value;
                 long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.GetTtl()).TotalMilliseconds);
-                prefs[getExpirationKey(key)] = expirationTime.ToString();
+                prefs[getExpirationKey(key)] = expirationTime.ToString(CultureInfo.InvariantCulture);
                 if (log.IsDebugEnabled())
                 {
                     log.Debug("Storing preference {0}={1} (valid until {2})", key, value, formatTime(expirationTime));

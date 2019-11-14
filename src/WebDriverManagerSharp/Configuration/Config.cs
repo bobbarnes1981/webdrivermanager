@@ -15,12 +15,15 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Configuration
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Runtime.InteropServices;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Configuration class.
@@ -28,7 +31,7 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 2.2.0
      */
-    public class Config
+    public class Config : IConfig
     {
         private const string HOME = "~";
 
@@ -50,7 +53,7 @@ namespace WebDriverManagerSharp
         private readonly ConfigKey<bool> versionsPropertiesOnlineFirst = new ConfigKey<bool>("wdm.versionsPropertiesOnlineFirst");
         private readonly ConfigKey<Uri> versionsPropertiesUrl = new ConfigKey<Uri>("wdm.versionsPropertiesUrl");
 
-        private readonly ConfigKey<string> architecture = new ConfigKey<string>("wdm.architecture", defaultArchitecture());
+        private readonly ConfigKey<string> architecture = new ConfigKey<string>("wdm.architecture", defaultArchitecture().ToString());
         private readonly ConfigKey<string> os = new ConfigKey<string>("wdm.os", defaultOsName());
         private readonly ConfigKey<string> proxy = new ConfigKey<string>("wdm.proxy");
         private readonly ConfigKey<string> proxyUser = new ConfigKey<string>("wdm.proxyUser");
@@ -107,7 +110,7 @@ namespace WebDriverManagerSharp
         private T resolver<T>(string name, T value)
         {
             string strValue;
-            strValue = Environment.GetEnvironmentVariable(name.ToUpper().Replace(".", "_"));
+            strValue = Environment.GetEnvironmentVariable(name.ToUpper(CultureInfo.InvariantCulture).Replace(".", "_"));
             if (strValue == null)
             {
                 strValue = Environment.GetEnvironmentVariable(name);
@@ -135,7 +138,7 @@ namespace WebDriverManagerSharp
             }
             else if (typeof(T).Equals(typeof(int)))
             {
-                output = int.Parse(strValue);
+                output = int.Parse(strValue, CultureInfo.InvariantCulture);
             }
             else if (typeof(T).Equals(typeof(bool)))
             {
@@ -189,17 +192,17 @@ namespace WebDriverManagerSharp
         private string getPropertyFrom(string properties, string key)
         {
             Properties props = new Properties();
-            try
+            if (File.Exists(properties))
             {
-                if (File.Exists(properties))
+                try
                 {
                     Stream inputStream = File.OpenRead(properties);
                     props.Load(inputStream);
                 }
-            }
-            catch (IOException)
-            {
-                log.Trace("Property {0} not found in {1}", key, properties);
+                catch (IOException)
+                {
+                    log.Trace("Property {0} not found in {1}", key, properties);
+                }
             }
 
             return props.GetProperty(key);
@@ -225,15 +228,15 @@ namespace WebDriverManagerSharp
 
         private static string defaultOsName()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
             {
                 return "WIN";
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
             {
                 return "LINUX";
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
             {
                 return "MAC";
             }
@@ -241,21 +244,21 @@ namespace WebDriverManagerSharp
             throw new Exception("Could not determine operating system");
         }
 
-        private static string defaultArchitecture()
+        private static Architecture defaultArchitecture()
         {
             // RuntimeInformation.OSArchitecture ?
-            System.Runtime.InteropServices.Architecture arch = RuntimeInformation.ProcessArchitecture;
+            System.Runtime.InteropServices.Architecture arch = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture;
             if (arch == System.Runtime.InteropServices.Architecture.X86)
             {
-                return "X32";
+                return Architecture.X32;
             }
 
             if (arch == System.Runtime.InteropServices.Architecture.X64)
             {
-                return "X64";
+                return Architecture.X64;
             }
             
-            throw new Exception(string.Format("Unhandled architecture {0}", arch));
+            throw new Exception(string.Format(CultureInfo.InvariantCulture, "Unhandled architecture {0}", arch));
         }
 
         public bool IsExecutable(FileInfo file)
@@ -265,9 +268,9 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (resolve(os).ToLower().Equals("win"))
+            if (resolve(os).Equals(Enums.OperatingSystem.WIN.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                return file.Extension.Equals(".exe");
+                return file.Extension.Equals(Constants.EXE, StringComparison.OrdinalIgnoreCase);
             }
 
             throw new NotImplementedException("Detection of executable files on non-windows is not implemented");
@@ -280,7 +283,7 @@ namespace WebDriverManagerSharp
             return resolve(properties);
         }
 
-        public Config SetProperties(string properties)
+        public IConfig SetProperties(string properties)
         {
             this.properties.SetValue(properties);
             return this;
@@ -296,18 +299,18 @@ namespace WebDriverManagerSharp
                 path = resolved;
                 if (path.Contains(HOME))
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                     {
                         path = path.Replace(HOME, Environment.ExpandEnvironmentVariables("%userprofile%"));
                     }
                     else
                     {
                         // TODO: path = path.Replace(HOME, getSystemProperty("user.home"));
-                        throw new NotImplementedException(string.Format("Replacement of home ({0}) on non-windows is not implemented", HOME));
+                        throw new NotImplementedException(string.Format(CultureInfo.InvariantCulture, "Replacement of home ({0}) on non-windows is not implemented", HOME));
                     }
                 }
 
-                if (path.Equals("."))
+                if (path.Equals(".", StringComparison.OrdinalIgnoreCase))
                 {
                     path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                 }
@@ -316,7 +319,7 @@ namespace WebDriverManagerSharp
             return path;
         }
 
-        public Config SetTargetPath(string value)
+        public IConfig SetTargetPath(string value)
         {
             this.targetPath.SetValue(value);
             return this;
@@ -327,7 +330,7 @@ namespace WebDriverManagerSharp
             return resolve(forceCache);
         }
 
-        public Config SetForceCache(bool value)
+        public IConfig SetForceCache(bool value)
         {
             this.forceCache.SetValue(value);
             return this;
@@ -338,7 +341,7 @@ namespace WebDriverManagerSharp
             return resolve(over_ride);
         }
 
-        public Config SetOverride(bool value)
+        public IConfig SetOverride(bool value)
         {
             this.over_ride.SetValue(value);
             return this;
@@ -349,7 +352,7 @@ namespace WebDriverManagerSharp
             return resolve(useMirror);
         }
 
-        public Config SetUseMirror(bool value)
+        public IConfig SetUseMirror(bool value)
         {
             this.useMirror.SetValue(value);
             return this;
@@ -360,7 +363,7 @@ namespace WebDriverManagerSharp
             return resolve(useBetaVersions);
         }
 
-        public Config SetUseBetaVersions(bool value)
+        public IConfig SetUseBetaVersions(bool value)
         {
             this.useBetaVersions.SetValue(value);
             return this;
@@ -371,7 +374,7 @@ namespace WebDriverManagerSharp
             return resolve(avoidExport);
         }
 
-        public Config SetAvoidExport(bool value)
+        public IConfig SetAvoidExport(bool value)
         {
             this.avoidExport.SetValue(value);
             return this;
@@ -382,7 +385,7 @@ namespace WebDriverManagerSharp
             return resolve(avoidOutputTree);
         }
 
-        public Config SetAvoidOutputTree(bool value)
+        public IConfig SetAvoidOutputTree(bool value)
         {
             this.avoidOutputTree.SetValue(value);
             return this;
@@ -393,7 +396,7 @@ namespace WebDriverManagerSharp
             return resolve(avoidAutoVersion);
         }
 
-        public Config SetAvoidAutoVersion(bool value)
+        public IConfig SetAvoidAutoVersion(bool value)
         {
             this.avoidAutoVersion.SetValue(value);
             return this;
@@ -404,7 +407,7 @@ namespace WebDriverManagerSharp
             return resolve(avoidAutoReset);
         }
 
-        public Config SetAvoidAutoReset(bool value)
+        public IConfig SetAvoidAutoReset(bool value)
         {
             this.avoidAutoReset.SetValue(value);
             return this;
@@ -415,7 +418,7 @@ namespace WebDriverManagerSharp
             return resolve(avoidPreferences);
         }
 
-        public Config SetAvoidPreferences(bool value)
+        public IConfig SetAvoidPreferences(bool value)
         {
             this.avoidPreferences.SetValue(value);
             return this;
@@ -426,7 +429,7 @@ namespace WebDriverManagerSharp
             return resolve(timeout);
         }
 
-        public Config SetTimeout(int value)
+        public IConfig SetTimeout(int value)
         {
             this.timeout.SetValue(value);
             return this;
@@ -437,7 +440,7 @@ namespace WebDriverManagerSharp
             return resolve(versionsPropertiesOnlineFirst);
         }
 
-        public Config SetVersionsPropertiesOnlineFirst(bool value)
+        public IConfig SetVersionsPropertiesOnlineFirst(bool value)
         {
             this.versionsPropertiesOnlineFirst.SetValue(value);
             return this;
@@ -448,7 +451,7 @@ namespace WebDriverManagerSharp
             return resolve(versionsPropertiesUrl);
         }
 
-        public Config SetVersionsPropertiesUrl(System.Uri value)
+        public IConfig SetVersionsPropertiesUrl(System.Uri value)
         {
             this.versionsPropertiesUrl.SetValue(value);
             return this;
@@ -457,12 +460,12 @@ namespace WebDriverManagerSharp
         public Architecture GetArchitecture()
         {
             string architectureString = resolve(architecture);
-            if ("32".Equals(architectureString))
+            if (architectureString.Equals("32", StringComparison.OrdinalIgnoreCase))
             {
                 return Architecture.X32;
             }
 
-            if ("64".Equals(architectureString))
+            if (architectureString.Equals("64", StringComparison.OrdinalIgnoreCase))
             {
                 return Architecture.X64;
             }
@@ -470,7 +473,7 @@ namespace WebDriverManagerSharp
             return (Architecture)Enum.Parse(typeof(Architecture), architectureString);
         }
 
-        public Config SetArchitecture(Architecture value)
+        public IConfig SetArchitecture(Architecture value)
         {
             this.architecture.SetValue(value.ToString());
             return this;
@@ -481,7 +484,7 @@ namespace WebDriverManagerSharp
             return resolve(os);
         }
 
-        public Config SetOs(string value)
+        public IConfig SetOs(string value)
         {
             this.os.SetValue(value);
             return this;
@@ -492,7 +495,7 @@ namespace WebDriverManagerSharp
             return resolve(proxy);
         }
 
-        public Config SetProxy(string value)
+        public IConfig SetProxy(string value)
         {
             this.proxy.SetValue(value);
             return this;
@@ -503,7 +506,7 @@ namespace WebDriverManagerSharp
             return resolve(proxyUser);
         }
 
-        public Config SetProxyUser(string value)
+        public IConfig SetProxyUser(string value)
         {
             this.proxyUser.SetValue(value);
             return this;
@@ -514,7 +517,7 @@ namespace WebDriverManagerSharp
             return resolve(proxyPass);
         }
 
-        public Config SetProxyPass(string value)
+        public IConfig SetProxyPass(string value)
         {
             this.proxyPass.SetValue(value);
             return this;
@@ -532,7 +535,7 @@ namespace WebDriverManagerSharp
             return output;
         }
 
-        public Config SetIgnoreVersions(params string[] value)
+        public IConfig SetIgnoreVersions(params string[] value)
         {
             this.ignoreVersions.SetValue(string.Join(",", value));
             return this;
@@ -543,7 +546,7 @@ namespace WebDriverManagerSharp
             return resolve(gitHubTokenName);
         }
 
-        public Config SetGitHubTokenName(string value)
+        public IConfig SetGitHubTokenName(string value)
         {
             this.gitHubTokenName.SetValue(value);
             return this;
@@ -554,7 +557,7 @@ namespace WebDriverManagerSharp
             return resolve(gitHubTokenSecret);
         }
 
-        public Config SetGitHubTokenSecret(string value)
+        public IConfig SetGitHubTokenSecret(string value)
         {
             this.gitHubTokenSecret.SetValue(value);
             return this;
@@ -565,7 +568,7 @@ namespace WebDriverManagerSharp
             return resolve(localRepositoryUser);
         }
 
-        public Config SetLocalRepositoryUser(string value)
+        public IConfig SetLocalRepositoryUser(string value)
         {
             this.localRepositoryUser.SetValue(value);
             return this;
@@ -576,7 +579,7 @@ namespace WebDriverManagerSharp
             return resolve(localRepositoryPassword);
         }
 
-        public Config SetLocalRepositoryPassword(string value)
+        public IConfig SetLocalRepositoryPassword(string value)
         {
             this.localRepositoryPassword.SetValue(value);
             return this;
@@ -587,7 +590,7 @@ namespace WebDriverManagerSharp
             return resolve(serverPort);
         }
 
-        public Config SetServerPort(int value)
+        public IConfig SetServerPort(int value)
         {
             this.serverPort.SetValue(value);
             return this;
@@ -598,7 +601,7 @@ namespace WebDriverManagerSharp
             return resolve(ttl);
         }
 
-        public Config SetTtl(int value)
+        public IConfig SetTtl(int value)
         {
             this.ttl.SetValue(value);
             return this;
@@ -609,7 +612,7 @@ namespace WebDriverManagerSharp
             return resolve(binaryPath);
         }
 
-        public Config SetBinaryPath(string value)
+        public IConfig SetBinaryPath(string value)
         {
             this.binaryPath.SetValue(value);
             return this;
@@ -620,7 +623,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverVersion);
         }
 
-        public Config SetChromeDriverVersion(string value)
+        public IConfig SetChromeDriverVersion(string value)
         {
             this.chromeDriverVersion.SetValue(value);
             return this;
@@ -631,7 +634,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverExport);
         }
 
-        public Config SetChromeDriverExport(string value)
+        public IConfig SetChromeDriverExport(string value)
         {
             this.chromeDriverExport.SetValue(value);
             return this;
@@ -642,7 +645,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverUrl);
         }
 
-        public Config SetChromeDriverUrl(Uri value)
+        public IConfig SetChromeDriverUrl(Uri value)
         {
             this.chromeDriverUrl.SetValue(value);
             return this;
@@ -653,7 +656,7 @@ namespace WebDriverManagerSharp
             return resolve(chromeDriverMirrorUrl);
         }
 
-        public Config SetChromeDriverMirrorUrl(System.Uri value)
+        public IConfig SetChromeDriverMirrorUrl(System.Uri value)
         {
             this.chromeDriverMirrorUrl.SetValue(value);
             return this;
@@ -664,7 +667,7 @@ namespace WebDriverManagerSharp
             return resolve(edgeDriverVersion);
         }
 
-        public Config SetEdgeDriverVersion(string value)
+        public IConfig SetEdgeDriverVersion(string value)
         {
             this.edgeDriverVersion.SetValue(value);
             return this;
@@ -675,7 +678,7 @@ namespace WebDriverManagerSharp
             return resolve(edgeDriverExport);
         }
 
-        public Config SetEdgeDriverExport(string value)
+        public IConfig SetEdgeDriverExport(string value)
         {
             this.edgeDriverExport.SetValue(value);
             return this;
@@ -686,7 +689,7 @@ namespace WebDriverManagerSharp
             return resolve(edgeDriverUrl);
         }
 
-        public Config SetEdgeDriverUrl(Uri value)
+        public IConfig SetEdgeDriverUrl(Uri value)
         {
             this.edgeDriverUrl.SetValue(value);
             return this;
@@ -697,7 +700,7 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverVersion);
         }
 
-        public Config SetFirefoxDriverVersion(string value)
+        public IConfig SetFirefoxDriverVersion(string value)
         {
             this.firefoxDriverVersion.SetValue(value);
             return this;
@@ -708,7 +711,7 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverExport);
         }
 
-        public Config SetFirefoxDriverExport(string value)
+        public IConfig SetFirefoxDriverExport(string value)
         {
             this.firefoxDriverExport.SetValue(value);
             return this;
@@ -719,7 +722,7 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverUrl);
         }
 
-        public Config SetFirefoxDriverUrl(Uri value)
+        public IConfig SetFirefoxDriverUrl(Uri value)
         {
             this.firefoxDriverUrl.SetValue(value);
             return this;
@@ -730,7 +733,7 @@ namespace WebDriverManagerSharp
             return resolve(firefoxDriverMirrorUrl);
         }
 
-        public Config SetFirefoxDriverMirrorUrl(Uri value)
+        public IConfig SetFirefoxDriverMirrorUrl(Uri value)
         {
             this.firefoxDriverMirrorUrl.SetValue(value);
             return this;
@@ -741,7 +744,7 @@ namespace WebDriverManagerSharp
             return resolve(internetExplorerDriverVersion);
         }
 
-        public Config SetInternetExplorerDriverVersion(string value)
+        public IConfig SetInternetExplorerDriverVersion(string value)
         {
             this.internetExplorerDriverVersion.SetValue(value);
             return this;
@@ -752,7 +755,7 @@ namespace WebDriverManagerSharp
             return resolve(internetExplorerDriverExport);
         }
 
-        public Config SetInternetExplorerDriverExport(string value)
+        public IConfig SetInternetExplorerDriverExport(string value)
         {
             this.internetExplorerDriverExport.SetValue(value);
             return this;
@@ -763,7 +766,7 @@ namespace WebDriverManagerSharp
             return resolve(internetExplorerDriverUrl);
         }
 
-        public Config SetInternetExplorerDriverUrl(Uri value)
+        public IConfig SetInternetExplorerDriverUrl(Uri value)
         {
             this.internetExplorerDriverUrl.SetValue(value);
             return this;
@@ -774,7 +777,7 @@ namespace WebDriverManagerSharp
             return resolve(operaDriverVersion);
         }
 
-        public Config SetOperaDriverVersion(string value)
+        public IConfig SetOperaDriverVersion(string value)
         {
             this.operaDriverVersion.SetValue(value);
             return this;
@@ -785,7 +788,7 @@ namespace WebDriverManagerSharp
             return resolve(operaDriverExport);
         }
 
-        public Config SetOperaDriverExport(string value)
+        public IConfig SetOperaDriverExport(string value)
         {
             this.operaDriverExport.SetValue(value);
             return this;
@@ -796,7 +799,7 @@ namespace WebDriverManagerSharp
             return resolve(operaDriverUrl);
         }
 
-        public Config SetOperaDriverUrl(Uri value)
+        public IConfig SetOperaDriverUrl(Uri value)
         {
             this.operaDriverUrl.SetValue(value);
             return this;
@@ -807,7 +810,7 @@ namespace WebDriverManagerSharp
             return resolve(operaDriverMirrorUrl);
         }
 
-        public Config SetOperaDriverMirrorUrl(Uri value)
+        public IConfig SetOperaDriverMirrorUrl(Uri value)
         {
             this.operaDriverMirrorUrl.SetValue(value);
             return this;
@@ -818,7 +821,7 @@ namespace WebDriverManagerSharp
             return resolve(phantomjsDriverVersion);
         }
 
-        public Config SetPhantomjsDriverVersion(string value)
+        public IConfig SetPhantomjsDriverVersion(string value)
         {
             this.phantomjsDriverVersion.SetValue(value);
             return this;
@@ -829,7 +832,7 @@ namespace WebDriverManagerSharp
             return resolve(phantomjsDriverExport);
         }
 
-        public Config SetPhantomjsDriverExport(string value)
+        public IConfig SetPhantomjsDriverExport(string value)
         {
             this.phantomjsDriverExport.SetValue(value);
             return this;
@@ -840,7 +843,7 @@ namespace WebDriverManagerSharp
             return resolve(phantomjsDriverUrl);
         }
 
-        public Config SetPhantomjsDriverUrl(Uri value)
+        public IConfig SetPhantomjsDriverUrl(Uri value)
         {
             this.phantomjsDriverUrl.SetValue(value);
             return this;
@@ -851,7 +854,7 @@ namespace WebDriverManagerSharp
             return resolve(phantomjsDriverMirrorUrl);
         }
 
-        public Config SetPhantomjsDriverMirrorUrl(Uri value)
+        public IConfig SetPhantomjsDriverMirrorUrl(Uri value)
         {
             this.phantomjsDriverMirrorUrl.SetValue(value);
             return this;
@@ -862,7 +865,7 @@ namespace WebDriverManagerSharp
             return resolve(seleniumServerStandaloneVersion);
         }
 
-        public Config SetSeleniumServerStandaloneVersion(string value)
+        public IConfig SetSeleniumServerStandaloneVersion(string value)
         {
             this.seleniumServerStandaloneVersion.SetValue(value);
             return this;
@@ -873,7 +876,7 @@ namespace WebDriverManagerSharp
             return resolve(seleniumServerStandaloneUrl);
         }
 
-        public Config SetSeleniumServerStandaloneUrl(Uri value)
+        public IConfig SetSeleniumServerStandaloneUrl(Uri value)
         {
             this.seleniumServerStandaloneUrl.SetValue(value);
             return this;

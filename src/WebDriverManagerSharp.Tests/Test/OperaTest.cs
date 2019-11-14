@@ -53,7 +53,7 @@ namespace WebDriverManagerSharp.Tests.Test
             FileInfo opera = new FileInfo(operaBinary);
             Assume.That(opera.Exists);
 
-            driver = new OperaDriver(options);
+            Driver = new OperaDriver(options);
         }
     }
 }

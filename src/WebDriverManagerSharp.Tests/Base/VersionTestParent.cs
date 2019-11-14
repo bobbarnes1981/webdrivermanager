@@ -18,6 +18,8 @@
 namespace WebDriverManagerSharp.Tests.Base
 {
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Parent class for version based tests.
@@ -30,12 +32,11 @@ namespace WebDriverManagerSharp.Tests.Base
     [TestFixture(Architecture.X64)]
     public abstract class VersionTestParent
     {
-        public Architecture architecture;
-
         protected WebDriverManager browserManager;
         protected string[] specificVersions;
         protected OperatingSystem? os;
 
+        private readonly Architecture architecture;
         private readonly ILogger log = Logger.GetLogger();
 
         protected VersionTestParent(Architecture architecture)

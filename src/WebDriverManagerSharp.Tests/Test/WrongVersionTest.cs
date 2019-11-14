@@ -21,6 +21,7 @@ namespace WebDriverManagerSharp.Tests.Test
     using NUnit.Framework;
     using OpenQA.Selenium.Chrome;
     using OpenQA.Selenium.Firefox;
+    using WebDriverManagerSharp.Exceptions;
 
     /**
      * Test with incorrect version numbers.

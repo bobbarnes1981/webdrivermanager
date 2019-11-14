@@ -19,6 +19,9 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Test for ignore versions.

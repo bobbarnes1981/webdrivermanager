@@ -38,7 +38,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void SetupTest()
         {
-            driver = new FirefoxDriver();
+            Driver = new FirefoxDriver();
         }
     }
 }

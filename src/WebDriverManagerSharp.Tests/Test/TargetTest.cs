@@ -20,6 +20,9 @@ namespace WebDriverManagerSharp.Tests.Test
     using System;
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Target folder test.

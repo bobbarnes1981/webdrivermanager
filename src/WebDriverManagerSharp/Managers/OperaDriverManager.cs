@@ -15,11 +15,14 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Manager for Opera.
@@ -73,15 +76,15 @@ namespace WebDriverManagerSharp
         {
             if (Config().IsUseMirror())
             {
-                int i = url.GetFile().LastIndexOf(SLASH);
-                int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH) + 1;
+                int i = url.GetFile().LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase);
+                int j = url.GetFile().SubstringJava(0, i).LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase) + 1;
                 return url.GetFile().SubstringJava(j, i);
             }
             else
             {
                 return url.GetFile().SubstringJava(
-                        url.GetFile().IndexOf(SLASH + "v") + 2,
-                        url.GetFile().LastIndexOf(SLASH));
+                        url.GetFile().IndexOf(SLASH + "v", StringComparison.OrdinalIgnoreCase) + 2,
+                        url.GetFile().LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -127,7 +130,8 @@ namespace WebDriverManagerSharp
                         isOperaDriver = Config().IsExecutable(operadriver) && operadriver.FullName.Contains(GetDriverName());
                         i++;
                         Log.Trace("{0} is valid: {1}", operadriver, isOperaDriver);
-                    } while (!isOperaDriver);
+                    }
+                    while (!isOperaDriver);
 
                     Log.Info("Operadriver binary: {0}", operadriver);
 

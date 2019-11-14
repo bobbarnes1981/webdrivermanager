@@ -25,6 +25,7 @@ namespace WebDriverManagerSharp.Tests.Test
     using OpenQA.Selenium.Firefox;
     using OpenQA.Selenium.IE;
     using OpenQA.Selenium.Opera;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test getting all versions.

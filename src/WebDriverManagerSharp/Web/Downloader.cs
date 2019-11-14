@@ -15,12 +15,18 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Web
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.IO.Compression;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Downloader class.
@@ -28,13 +34,13 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 1.0.0
      */
-    public class Downloader
+    public class Downloader : IDownloader
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Logger.GetLogger();
 
         private readonly DriverManagerType driverManagerType;
-        private readonly HttpClient httpClient;
-        private readonly Config config;
+        private readonly IHttpClient httpClient;
+        private readonly IConfig config;
 
         public Downloader(DriverManagerType driverManagerType)
         {
@@ -42,7 +48,7 @@ namespace WebDriverManagerSharp
 
             WebDriverManager webDriverManager = WebDriverManager.GetInstance(driverManagerType);
             config = webDriverManager.Config();
-            httpClient = webDriverManager.GetHttpClient();
+            httpClient = webDriverManager.HttpClient;
         }
 
         /// <summary>
@@ -129,7 +135,7 @@ namespace WebDriverManagerSharp
             }
 
             log.Trace("Target folder {0} ... using temporal file {1}", targetFolder, temporaryFile);
-            temporaryFile.CreateFromStream(httpClient.ExecuteHttpGet(url).Content.ReadAsStreamAsync().Result);
+            temporaryFile.CreateFromStream(httpClient.ExecuteHttpGet(url));
 
             FileInfo extractedFile = extract(temporaryFile);
             FileInfo resultingBinary = new FileInfo(Path.Combine(targetFolder.FullName, extractedFile.Name));
@@ -153,7 +159,7 @@ namespace WebDriverManagerSharp
 
             if (!config.IsExecutable(resultingBinary))
             {
-                setFileExecutable(resultingBinary);
+                SetFileExecutable(resultingBinary);
             }
 
             Directory.Delete(tempDir, true);
@@ -172,7 +178,7 @@ namespace WebDriverManagerSharp
                 FileInfo[] listFiles = parentFolder.GetFiles();
                 foreach (FileInfo file in listFiles)
                 {
-                    if (file.FullName.StartsWith(driverName) && config.IsExecutable(file))
+                    if (file.FullName.StartsWith(driverName, StringComparison.OrdinalIgnoreCase) && config.IsExecutable(file))
                     {
                         log.Info("Using binary driver previously downloaded");
                         return new FileInfo(file.FullName);
@@ -193,31 +199,31 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         private FileInfo extract(FileInfo compressedFile)
         {
-            string fileName = compressedFile.FullName.ToLower();
+            string fileName = compressedFile.FullName;
 
-            bool extractFile = !fileName.EndsWith("exe") && !fileName.EndsWith("jar");
+            bool extractFile = !fileName.EndsWith(Constants.EXE, StringComparison.OrdinalIgnoreCase) && !fileName.EndsWith(Constants.JAR, StringComparison.OrdinalIgnoreCase);
             if (extractFile)
             {
                 log.Info("Extracting binary from compressed file {0}", fileName);
             }
 
-            if (fileName.EndsWith("tar.bz2"))
+            if (fileName.EndsWith("tar.bz2", StringComparison.OrdinalIgnoreCase))
             {
                 unBZip2(compressedFile);
             }
-            else if (fileName.EndsWith("tar.gz"))
+            else if (fileName.EndsWith("tar.gz", StringComparison.OrdinalIgnoreCase))
             {
                 unTarGz(compressedFile);
             }
-            else if (fileName.EndsWith("gz"))
+            else if (fileName.EndsWith("gz", StringComparison.OrdinalIgnoreCase))
             {
                 unGzip(compressedFile);
             }
-            else if (fileName.EndsWith("msi"))
+            else if (fileName.EndsWith("msi", StringComparison.OrdinalIgnoreCase))
             {
-                extractMsi(compressedFile);
+                ExtractMsi(compressedFile);
             }
-            else if (fileName.EndsWith("zip"))
+            else if (fileName.EndsWith("zip", StringComparison.OrdinalIgnoreCase))
             {
                 unZip(compressedFile);
             }
@@ -246,7 +252,7 @@ namespace WebDriverManagerSharp
 
                 while (enu.MoveNext())
                 {
-                    ZipArchiveEntry zipEntry = (ZipArchiveEntry)enu.Current;
+                    ZipArchiveEntry zipEntry = enu.Current;
 
                     string name = zipEntry.FullName;
                     long size = zipEntry.Length;
@@ -254,7 +260,7 @@ namespace WebDriverManagerSharp
                     log.Trace("Unzipping {0} (size: {1} KB, compressed size: {2} KB)", name, size, compressedSize);
 
                     // TODO: handle more than one file
-                    if (name.EndsWith("/"))
+                    if (name.EndsWith("/", StringComparison.OrdinalIgnoreCase))
                     {
                         DirectoryInfo dir = new DirectoryInfo(Path.Combine(compressedFile.Directory.FullName, name));
                         if (!dir.Exists || config.IsOverride())
@@ -272,7 +278,7 @@ namespace WebDriverManagerSharp
                         if (!file.Exists || config.IsOverride())
                         {
                             zipEntry.ExtractToFile(file.FullName);
-                            setFileExecutable(file);
+                            SetFileExecutable(file);
                         }
                         else
                         {
@@ -291,32 +297,35 @@ namespace WebDriverManagerSharp
         private void unGzip(FileInfo archive)
         {
             log.Trace("UnGzip {0}", archive);
-            ////string fileName = archive.FullName;
-            ////    int iDash = fileName.IndexOf('-');
-            ////    if (iDash != -1)
-            ////    {
-            ////        fileName = fileName.SubstringJava(0, iDash);
-            ////    }
-            ////    int iDot = fileName.IndexOf('.');
-            ////    if (iDot != -1) {
-            ////        fileName = fileName.SubstringJava(0, iDot);
-            ////    }
-            ////    FileInfo target = new File(archive.getParentFile(), fileName);
+            string fileName = archive.FullName;
+            int iDash = fileName.IndexOf('-');
+            if (iDash != -1)
+            {
+                fileName = fileName.SubstringJava(0, iDash);
+            }
+            int iDot = fileName.IndexOf('.');
+            if (iDot != -1)
+            {
+                fileName = fileName.SubstringJava(0, iDot);
+            }
+            FileInfo target = new FileInfo(Path.Combine(archive.DirectoryName, fileName));
 
-            ////    try (GZIPInputStream in = new GZIPInputStream(
-            ////            new FileInputStream(archive))) {
-            ////        try (FileOutputStream out = new FileOutputStream(target)) {
-            ////            for (int c = in.read(); c != -1; c = in.read()) {
-            ////                out.write(c);
-            ////            }
-            ////        }
-            ////    }
+            using (GZipStream inStream = new GZipStream(new FileStream(archive.FullName, FileMode.Open), CompressionLevel.Optimal))
+            {
+                using (FileStream outStream = new FileStream(target.FullName, FileMode.Create))
+                {
+                    throw new NotImplementedException();
+                    //for (int c = inStream.read(); c != -1; c = inStream.read())
+                    //{
+                    //        outStream.write(c);
+                    //}
+                }
+            }
 
-            ////    if (!target.getName().ToLower().contains(".exe")
-            ////            && target.exists()) {
-            ////        setFileExecutable(target);
-            ////    }
-            throw new NotImplementedException("extract gzip not implemented");
+            if (!target.FullName.ToLower().Contains(Constants.EXE) && target.Exists)
+            {
+                SetFileExecutable(target);
+            }
         }
 
         /// <summary>
@@ -329,7 +338,7 @@ namespace WebDriverManagerSharp
             log.Trace("unTarGz {0}", archive);
             ////Archiver archiver = createArchiver(TAR, GZIP);
             ////archiver.extract(archive, archive.getParentFile());
-            throw new System.NotImplementedException("extract tar.gz not implemented");
+            throw new NotImplementedException("extract tar.gz not implemented");
         }
 
         /// <summary>
@@ -342,7 +351,7 @@ namespace WebDriverManagerSharp
             log.Trace("Unbzip2 {0}", archive);
             ////Archiver archiver = createArchiver(TAR, BZIP2);
             ////archiver.extract(archive, archive.getParentFile());
-            throw new System.NotImplementedException("extract bzip2 not implemented");
+            throw new NotImplementedException("extract bzip2 not implemented");
         }
 
         /// <summary>
@@ -350,28 +359,23 @@ namespace WebDriverManagerSharp
         /// </summary>
         /// <param name="msi"></param>
         /// <exception cref="IOException"/>
-        private void extractMsi(FileInfo msi)
+        private void ExtractMsi(FileInfo msi)
         {
             log.Trace("Extract MSI {0}", msi);
-            ////        File tmpMsi = new File(
-            ////                createTempDirectory("").toFile().getAbsoluteFile() + separator
-            ////                        + msi.getName());
-            ////move(msi.toPath(), tmpMsi.toPath());
-            ////log.trace("Temporal msi file: {}", tmpMsi);
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            FileInfo tmpMsi = new FileInfo(Path.Combine(tempDir, msi.Name));
+            msi.MoveTo(tmpMsi.FullName);
+            log.Trace("Temporal msi file: {0}", tmpMsi);
 
-            ////        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
-            ////                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
-            ////        try {
-            ////            process.waitFor();
-            ////        } finally {
-            ////            process.destroy();
-            ////        }
+            using (Process process = new ProcessBuilder(new string[] { "msiexec", "/a", tmpMsi.FullName, "/qb", "TARGETDIR=" + msi.DirectoryName }).Start())
+            {
+                process.WaitForExit();
+            }
 
-            ////        deleteFolder(tmpMsi.getParentFile());
-            throw new System.NotImplementedException("extract msi not implemented");
+            tmpMsi.Directory.Delete(true);
         }
 
-        protected void setFileExecutable(FileInfo file)
+        protected void SetFileExecutable(FileInfo file)
         {
             log.Trace("Setting file {0} as executable", file);
             ////if (!file.setExecutable(true))
@@ -380,7 +384,7 @@ namespace WebDriverManagerSharp
             ////}
         }
 
-        public void RenameFile(FileInfo from, FileInfo to)
+        public static void RenameFile(FileInfo from, FileInfo to)
         {
             if (from == null)
             {
@@ -408,7 +412,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        protected void deleteFile(FileInfo file)
+        protected static void deleteFile(FileInfo file)
         {
             if (file == null)
             {
@@ -426,7 +430,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        public void DeleteFolder(DirectoryInfo folder)
+        public static void DeleteFolder(DirectoryInfo folder)
         {
             if (folder == null)
             {

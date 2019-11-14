@@ -19,6 +19,8 @@ namespace WebDriverManagerSharp
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Version comparator.
@@ -49,8 +51,8 @@ namespace WebDriverManagerSharp
             {
                 try
                 {
-                    int v1Part = i < v1split.Length ? int.Parse(v1split[i]) : 0;
-                    int v2Part = i < v2split.Length ? int.Parse(v2split[i]) : 0;
+                    int v1Part = i < v1split.Length ? int.Parse(v1split[i], CultureInfo.InvariantCulture) : 0;
+                    int v2Part = i < v2split.Length ? int.Parse(v2split[i], CultureInfo.InvariantCulture) : 0;
                     if (v1Part < v2Part)
                     {
                         return -1;

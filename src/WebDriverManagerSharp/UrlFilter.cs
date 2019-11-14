@@ -20,6 +20,8 @@ namespace WebDriverManagerSharp
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * System.Uri filtering logic.
@@ -43,12 +45,12 @@ namespace WebDriverManagerSharp
 
             foreach (Uri url in list)
             {
-                foreach (OperatingSystem os in System.Enum.GetValues(typeof(OperatingSystem)))
+                foreach (Enums.OperatingSystem os in Enum.GetValues(typeof(Enums.OperatingSystem)))
                 {
                     if (((osName.Contains(os.ToString())
-                            && url.GetFile().ToUpper().Contains(os.ToString()))
+                            && url.GetFile().IndexOf(os.ToString(), StringComparison.OrdinalIgnoreCase) != -1)
                             || (osName.Equals("mac", StringComparison.InvariantCultureIgnoreCase)
-                                    && url.GetFile().ToLower().Contains("osx")))
+                            && url.GetFile().IndexOf("osx", StringComparison.OrdinalIgnoreCase) != -1))
                             && !outList.Contains(url))
                     {
                         outList.Add(url);

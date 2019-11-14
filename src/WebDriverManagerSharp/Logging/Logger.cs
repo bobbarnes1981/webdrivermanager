@@ -15,39 +15,28 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Logging
 {
+    using System;
     using Serilog;
-
-    public interface ILogger
-    {
-        void Trace(string format, params object[] parameters);
-
-        void Warn(string format, params object[] parameters);
-
-        void Debug(string format, params object[] parameters);
-
-        void Info(string format, params object[] parameters);
-
-        void Error(string format, params object[] parameters);
-
-        bool IsDebugEnabled();
-
-        bool IsTraceEnabled();
-    }
 
     public class Logger : ILogger
     {
         private readonly Serilog.ILogger logger;
 
-        private Logger()
+        public Logger(LoggerConfiguration configuration)
         {
-            logger = new LoggerConfiguration().WriteTo.Console().WriteTo.Debug().CreateLogger();
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            logger = configuration.CreateLogger();
         }
 
         public static ILogger GetLogger()
         {
-            return new Logger();
+            return new Logger(new LoggerConfiguration().WriteTo.Console().WriteTo.Debug());
         }
 
         public void Trace(string format, params object[] parameters)

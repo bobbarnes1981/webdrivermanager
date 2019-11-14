@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2019 Robert barnes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,25 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Web
 {
-    using System.ComponentModel;
+    using System;
+    using System.IO;
 
-    /**
-     * Supported architecture enumeration (32/64 bits).
-     *
-     * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.0.0
-     */
-    public enum Architecture
+    public interface IDownloader
     {
         /// <summary>
-        /// Default Architecture
+        /// Download the driver from the provided Uri
         /// </summary>
-        [Description("DEFAULT")]
-        DEFAULT,
+        /// <param name="url">Url of driver to download</param>
+        /// <param name="version">Required driver version</param>
+        /// <param name="driverName">Required driver name</param>
+        /// <exception cref="IOException" />
+        /// <returns></returns>
+        FileInfo Download(Uri url, string version, string driverName);
 
-        /// <summary>
-        /// 32 Bit Architecture
-        /// </summary>
-        [Description("32")]
-        X32,
+        FileInfo GetTarget(string version, Uri url);
 
-        /// <summary>
-        /// 64 Bit Architecture
-        /// </summary>
-        [Description("64")]
-        X64
+        string GetTargetPath();
     }
 }

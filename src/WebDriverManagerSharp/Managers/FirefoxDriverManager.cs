@@ -15,10 +15,12 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using WebDriverManagerSharp.Enums;
 
     /**
      * Manager for Firefox.
@@ -82,7 +84,7 @@ namespace WebDriverManagerSharp
         {
             string currentVersion = url.GetFile().SubstringJava(
                     url.GetFile().IndexOf('-') + 1, url.GetFile().LastIndexOf('-'));
-            if (currentVersion.StartsWith("v"))
+            if (currentVersion.StartsWith("v", StringComparison.OrdinalIgnoreCase))
             {
                 currentVersion = currentVersion.SubstringJava(1);
             }
@@ -102,11 +104,11 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(version));
             }
 
-            int iSeparator = target.IndexOf(version) - 1;
-            int iDash = target.LastIndexOf(version) + version.Length;
-            int iPoint = target.LastIndexOf(".zip");
-            int iPointTazGz = target.LastIndexOf(".tar.gz");
-            int iPointGz = target.LastIndexOf(".gz");
+            int iSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
+            int iDash = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
+            int iPoint = target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
+            int iPointTazGz = target.LastIndexOf(".tar.gz", StringComparison.OrdinalIgnoreCase);
+            int iPointGz = target.LastIndexOf(".gz", StringComparison.OrdinalIgnoreCase);
 
             if (iPointTazGz != -1)
             {
@@ -118,7 +120,7 @@ namespace WebDriverManagerSharp
             }
 
             target = target.SubstringJava(0, iSeparator + 1)
-                    + target.SubstringJava(iDash + 1, iPoint).ToLower()
+                    + target.SubstringJava(iDash + 1, iPoint).ToLower(CultureInfo.InvariantCulture)
                     + target.SubstringJava(iSeparator);
             return target;
         }

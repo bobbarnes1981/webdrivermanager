@@ -19,6 +19,9 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Test for ignore versions.
@@ -32,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        private OperatingSystem operatingSystem;
+        private readonly OperatingSystem operatingSystem;
 
         public ForceOsTest(OperatingSystem operatingSystem)
         {

@@ -15,15 +15,19 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Web
 {
     using System;
+    using System.IO;
     using System.Net;
     using System.Net.Http.Headers;
     using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Microsoft.Win32.SafeHandles;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * HTTP Client.
@@ -31,18 +35,18 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia
      * @since 2.1.0
      */
-    public class HttpClient : IDisposable
+    public class HttpClient : IHttpClient
     {
         private readonly ILogger log = Logger.GetLogger();
 
         private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-        private readonly Config config;
+        private readonly IConfig config;
         private readonly System.Net.Http.HttpClient closeableHttpClient;
 
         private bool disposed = false;
 
-        public HttpClient(Config config)
+        public HttpClient(IConfig config)
         {
             if (config == null)
             {
@@ -112,7 +116,7 @@ namespace WebDriverManagerSharp
             return null;
         }
 
-        public System.Net.Http.HttpResponseMessage ExecuteHttpGet(Uri url, AuthenticationHeaderValue authHeader = null)
+        public Stream ExecuteHttpGet(Uri url, AuthenticationHeaderValue authHeader = null)
         {
             if (authHeader != null)
             {
@@ -131,7 +135,7 @@ namespace WebDriverManagerSharp
                 throw new WebDriverManagerException(errorMessage);
             }
 
-            return response;
+            return response.Content.ReadAsStreamAsync().Result;
         }
 
         private static Uri determineProxyUrl(string proxy)

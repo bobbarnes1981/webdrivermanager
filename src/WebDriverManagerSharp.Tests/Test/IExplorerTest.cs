@@ -19,6 +19,8 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test with Internet Explorer browser.

@@ -15,8 +15,9 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -37,7 +38,7 @@ namespace WebDriverManagerSharp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.StartsWith("#"))
+                    if (line.StartsWith("#", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }

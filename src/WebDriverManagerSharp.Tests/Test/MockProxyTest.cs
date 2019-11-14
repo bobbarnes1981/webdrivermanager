@@ -22,6 +22,8 @@ namespace WebDriverManagerSharp.Tests.Test
     using System.Net;
     using System.Net.Sockets;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Test for proxy with mock server.
@@ -33,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         private readonly ILogger log = Logger.GetLogger();
 
         //@InjectMocks
-        private Downloader downloader;
+        private IDownloader downloader;
 
         //private ClientAndProxy proxy;
         private int proxyPort;

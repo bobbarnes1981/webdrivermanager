@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Enums
 {
     using System.ComponentModel;
 

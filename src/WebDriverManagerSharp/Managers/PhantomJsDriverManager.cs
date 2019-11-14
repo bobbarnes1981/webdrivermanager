@@ -15,11 +15,13 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Manager for PhantomJs.
@@ -94,8 +96,8 @@ namespace WebDriverManagerSharp
             }
 
             string file = url.GetFile();
-            file = url.GetFile().SubstringJava(file.LastIndexOf(SLASH), file.Length);
-            int matchIndex = file.IndexOf(driverName);
+            file = url.GetFile().SubstringJava(file.LastIndexOf(SLASH, StringComparison.OrdinalIgnoreCase), file.Length);
+            int matchIndex = file.IndexOf(driverName, StringComparison.OrdinalIgnoreCase);
             string currentVersion = file
                     .SubstringJava(matchIndex + driverName.Length + 1, file.Length);
             int dashIndex = currentVersion.IndexOf('-');
@@ -103,7 +105,7 @@ namespace WebDriverManagerSharp
             if (dashIndex != -1)
             {
                 string beta = currentVersion.SubstringJava(dashIndex + 1, dashIndex + 1 + BETA.Length);
-                if (beta.Equals(BETA, System.StringComparison.InvariantCultureIgnoreCase))
+                if (beta.Equals(BETA, StringComparison.InvariantCultureIgnoreCase))
                 {
                     dashIndex = currentVersion.IndexOf('-', dashIndex + 1);
                 }
@@ -132,11 +134,11 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(version));
             }
 
-            int iSeparator = target.IndexOf(version) - 1;
-            int iDash = target.LastIndexOf(version) + version.Length;
-            int iPoint = target.LastIndexOf(".tar") != -1
-                    ? target.LastIndexOf(".tar")
-                    : target.LastIndexOf(".zip");
+            int iSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
+            int iDash = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
+            int iPoint = target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase) != -1
+                    ? target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase)
+                    : target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
             target = target.SubstringJava(0, iSeparator + 1)
                     + target.SubstringJava(iDash + 1, iPoint)
                     + target.SubstringJava(iSeparator);

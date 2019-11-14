@@ -18,6 +18,7 @@
 namespace WebDriverManagerSharp.Tests.Test
 {
     using NUnit.Framework;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Force download test.

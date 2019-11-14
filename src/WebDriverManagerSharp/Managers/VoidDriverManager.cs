@@ -15,9 +15,10 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System.Collections.Generic;
+    using WebDriverManagerSharp.Enums;
 
     /**
      * Void manager.

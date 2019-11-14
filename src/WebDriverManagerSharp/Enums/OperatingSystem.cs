@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,29 @@
  *
  */
 
-namespace WebDriverManagerSharp.Tests.Test
+namespace WebDriverManagerSharp.Enums
 {
-    using NUnit.Framework;
-    using WebDriverManagerSharp.Enums;
-    using WebDriverManagerSharp.Tests.Base;
-
     /**
-     * Test asserting Firefox versions.
+     * Supported operative system enumeration.
      *
      * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.5.0
+     * @since 1.0.0
      */
-    public class FirefoxVersionTest : VersionTestParent
+    public enum OperatingSystem
     {
-        public FirefoxVersionTest(Architecture architecture)
-            : base(architecture)
-        {
-        }
+        /// <summary>
+        /// Microsoft Windows
+        /// </summary>
+        WIN,
 
-        [SetUp]
-        public void setup()
-        {
-            browserManager = WebDriverManager.FirefoxDriver();
-            specificVersions = new string[] { "0.8.0", "0.19.1" };
-        }
+        /// <summary>
+        /// GNU/Linux
+        /// </summary>
+        LINUX,
+
+        /// <summary>
+        /// Mac OS
+        /// </summary>
+        MAC
     }
 }

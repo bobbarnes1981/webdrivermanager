@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2018 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,37 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Managers
 {
     using System.Collections.Generic;
-    using System.IO;
+    using WebDriverManagerSharp.Enums;
 
     /**
-     * Manager for selenium-server-standalone.
+     * Manager for Internet Explorer.
      *
      * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 3.0.1
+     * @since 1.0.0
      */
-    public class SeleniumServerStandaloneManager : WebDriverManager
+    public class InternetExplorerDriverManager : WebDriverManager
     {
         protected override DriverManagerType? GetDriverManagerType()
         {
-            return DriverManagerType.SELENIUM_SERVER_STANDALONE;
+            return DriverManagerType.IEXPLORER;
         }
 
         protected override string GetDriverName()
         {
-            return "selenium-server-standalone";
+            return "IEDriverServer";
         }
 
         protected override string GetDriverVersion()
         {
-            return Config().GetSeleniumServerStandaloneVersion();
+            return Config().GetInternetExplorerDriverVersion();
         }
 
         protected override System.Uri GetDriverUrl()
         {
-            return Config().GetSeleniumServerStandaloneUrl();
+            return Config().GetInternetExplorerDriverUrl();
         }
 
         protected override System.Uri GetMirrorUrl()
@@ -55,37 +55,32 @@ namespace WebDriverManagerSharp
 
         protected override string GetExportParameter()
         {
-            return null;
+            return Config().GetInternetExplorerDriverExport();
         }
 
         protected override void SetDriverVersion(string version)
         {
-            Config().SetSeleniumServerStandaloneVersion(version);
+            Config().SetInternetExplorerDriverVersion(version);
         }
 
         protected override void SetDriverUrl(System.Uri url)
         {
-            Config().SetSeleniumServerStandaloneUrl(url);
+            Config().SetInternetExplorerDriverUrl(url);
         }
 
-        public override FileInfo PostDownload(FileInfo archive)
+        /// <summary>
+        /// Get the driver Uris for Internet Explorer
+        /// </summary>
+        /// <exception cref="IOException" />
+        /// <returns></returns>
+        protected override List<System.Uri> GetDrivers()
         {
-            return archive;
+            return getDriversFromXml(GetDriverUrl());
         }
 
         protected override string GetBrowserVersion()
         {
             return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <exception cref="IOException"/>
-        /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
-        {
-            return getDriversFromXml(GetDriverUrl());
         }
     }
 }

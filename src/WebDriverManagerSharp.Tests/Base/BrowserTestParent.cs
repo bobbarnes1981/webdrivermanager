@@ -29,24 +29,24 @@ namespace WebDriverManagerSharp.Tests.Base
      */
     public abstract class BrowserTestParent
     {
-        protected IWebDriver driver;
+        protected IWebDriver Driver { get; set; }
 
         [TearDown]
         public void teardown()
         {
-            if (driver != null)
+            if (Driver != null)
             {
-                driver.Quit();
+                Driver.Quit();
             }
         }
 
         [Test]
         public void test()
         {
-            driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, 30);
-            driver.Url = "https://bonigarcia.github.io/selenium-jupiter/";
-            driver.Navigate();
-            Assert.That(driver.Title, Contains.Substring("JUnit 5 extension for Selenium"));
+            Driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, 30);
+            Driver.Url = "https://bonigarcia.github.io/selenium-jupiter/";
+            Driver.Navigate();
+            Assert.That(Driver.Title, Contains.Substring("JUnit 5 extension for Selenium"));
         }
     }
 }

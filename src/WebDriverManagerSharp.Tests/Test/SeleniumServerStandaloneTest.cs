@@ -19,6 +19,7 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test with Selenium Server.

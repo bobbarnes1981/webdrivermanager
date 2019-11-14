@@ -38,7 +38,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void SetupTest()
         {
-            driver = new ChromeDriver();
+            Driver = new ChromeDriver();
         }
     }
 }

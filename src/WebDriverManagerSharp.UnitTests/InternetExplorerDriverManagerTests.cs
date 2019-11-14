@@ -18,35 +18,35 @@
 namespace WebDriverManagerSharp.UnitTests
 {
     using NUnit.Framework;
-    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.IE;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Managers;
 
     [TestFixture]
-    public class ChromeDriverManagerTests
+    public class InternetExplorerDriverManagerTests
     {
         [Test]
         public void GetDriverManager()
         {
-            WebDriverManager manager = WebDriverManager.ChromeDriver();
+            WebDriverManager manager = WebDriverManager.IEDriver();
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
         }
 
         [Test]
         public void GetInstanceType()
         {
-            WebDriverManager manager = WebDriverManager.GetInstance(typeof(ChromeDriver));
+            WebDriverManager manager = WebDriverManager.GetInstance(typeof(InternetExplorerDriver));
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
         }
 
         [Test]
         public void GetInstanceEnum()
         {
-            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.CHROME);
+            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.IEXPLORER);
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
         }
     }
 }

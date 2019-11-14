@@ -17,29 +17,9 @@
 
 namespace WebDriverManagerSharp
 {
-    using System;
-    using System.Runtime.Serialization;
-
-    [Serializable]
-    public class IllegalStateException : Exception
+    public static class Constants
     {
-        public IllegalStateException(string message)
-            : base(message)
-        {
-        }
-
-        public IllegalStateException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        public IllegalStateException()
-        {
-        }
-
-        protected IllegalStateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            throw new NotImplementedException();
-        }
+        public const string EXE = ".exe";
+        public const string JAR = ".jar";
     }
 }

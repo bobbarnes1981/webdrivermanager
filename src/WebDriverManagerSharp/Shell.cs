@@ -20,6 +20,7 @@ namespace WebDriverManagerSharp
     using System;
     using System.Diagnostics;
     using System.IO;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Command line executor.
@@ -102,7 +103,7 @@ namespace WebDriverManagerSharp
                 driverType = "Chromium";
             }
 
-            int i = output.ToLower().IndexOf(driverType.ToLower());
+            int i = output.IndexOf(driverType, StringComparison.OrdinalIgnoreCase);
             int j = output.IndexOf('.');
             return i != -1 && j != -1 ? output.SubstringJava(i + driverType.Length, j).Trim() : output;
         }
@@ -114,7 +115,7 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(output));
             }
 
-            int i = output.IndexOf("Version");
+            int i = output.IndexOf("Version", StringComparison.OrdinalIgnoreCase);
             int j = output.IndexOf(':', i);
             int k = output.IndexOf('.', j);
             return i != -1 && j != -1 && k != -1 ? output.SubstringJava(j + 1, k).Trim() : output;

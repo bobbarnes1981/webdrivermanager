@@ -17,11 +17,14 @@
 
 namespace WebDriverManagerSharp.Tests.Test
 {
+    using System;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
     using System.Runtime.InteropServices;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test using wdm server.
@@ -31,9 +34,9 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class ServerTest
     {
-        private static ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Logger.GetLogger();
 
-        private static string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
+        private static readonly string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
 
         private static int serverPort;
 
@@ -43,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
             serverPort = GetFreePort();
             log.Debug("Test is starting WebDriverManager server at port {0}", serverPort);
 
-            WebDriverManager.main(new string[] { "server", serverPort.ToString() });
+            WebDriverManager.main(new string[] { "server", serverPort.ToString(CultureInfo.InvariantCulture) });
         }
 
         [OneTimeTearDown]
@@ -62,7 +65,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true", "chromedriver")]
         public void TestServer(string path, string driver)
         {
-            string serverUrl = string.Format("http://localhost:{0}/{1}", serverPort, path);
+            Uri serverUrl = new Uri(string.Format(CultureInfo.InvariantCulture, "http://localhost:{0}/{1}", serverPort, path));
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverUrl);
 
             // Assert response
@@ -70,7 +73,7 @@ namespace WebDriverManagerSharp.Tests.Test
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
             // Assert attachment
-            string attachment = string.Format("attachment; filename=\"{0}\"", driver);
+            string attachment = string.Format(CultureInfo.InvariantCulture, "attachment; filename=\"{0}\"", driver);
 
             string[] headers = response.Headers.GetValues("Content-Disposition");
             log.Debug("Assessing {0} ... {1} should contain {2}", driver, headers, attachment);

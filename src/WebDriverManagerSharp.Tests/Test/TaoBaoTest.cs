@@ -20,6 +20,7 @@ namespace WebDriverManagerSharp.Tests.Test
     using System;
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Exceptions;
 
     /**
      * Test for taobao.org mirror.

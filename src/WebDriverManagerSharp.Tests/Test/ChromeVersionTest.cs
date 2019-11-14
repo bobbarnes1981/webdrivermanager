@@ -18,6 +18,8 @@
 namespace WebDriverManagerSharp.Tests.Test
 {
     using NUnit.Framework;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Tests.Base;
 
     /**

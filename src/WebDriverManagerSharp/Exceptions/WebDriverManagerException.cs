@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Exceptions
 {
     using System;
     using System.Runtime.Serialization;

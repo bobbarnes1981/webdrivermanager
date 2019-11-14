@@ -19,6 +19,9 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.IO;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test with Microsoft Edge using pre-installed version.
@@ -30,7 +33,7 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private readonly ILogger log = Logger.GetLogger();
 
-        private FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%SystemRoot%"), "System32", "MicrosoftWebDriver.exe"));
+        private readonly FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%SystemRoot%"), "System32", "MicrosoftWebDriver.exe"));
 
         [Test]
         public void TestInsiderExists()

@@ -19,6 +19,7 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using System.Collections.Generic;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Test asserting Edge driver versions.

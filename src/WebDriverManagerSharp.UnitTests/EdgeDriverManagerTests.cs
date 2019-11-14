@@ -18,35 +18,35 @@
 namespace WebDriverManagerSharp.UnitTests
 {
     using NUnit.Framework;
-    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.Edge;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Managers;
 
     [TestFixture]
-    public class ChromeDriverManagerTests
+    public class EdgeDriverManagerTests
     {
         [Test]
         public void GetDriverManager()
         {
-            WebDriverManager manager = WebDriverManager.ChromeDriver();
+            WebDriverManager manager = WebDriverManager.EdgeDriver();
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
         }
 
         [Test]
         public void GetInstanceType()
         {
-            WebDriverManager manager = WebDriverManager.GetInstance(typeof(ChromeDriver));
+            WebDriverManager manager = WebDriverManager.GetInstance(typeof(EdgeDriver));
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
         }
 
         [Test]
         public void GetInstanceEnum()
         {
-            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.CHROME);
+            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.EDGE);
 
-            Assert.That(manager, Is.InstanceOf<ChromeDriverManager>());
+            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
         }
     }
 }

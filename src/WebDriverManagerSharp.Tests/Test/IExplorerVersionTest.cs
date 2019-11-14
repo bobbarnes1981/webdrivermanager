@@ -19,6 +19,7 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using NUnit.Framework;
     using OpenQA.Selenium.IE;
+    using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Tests.Base;
 
     /**

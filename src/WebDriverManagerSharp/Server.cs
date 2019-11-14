@@ -17,9 +17,11 @@
 
 namespace WebDriverManagerSharp
 {
+    using System.Globalization;
     using System.IO;
     using Nancy;
     using Nancy.Responses;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * WebDriverManager server.
@@ -123,7 +125,7 @@ namespace WebDriverManagerSharp
             FileInfo binary = new FileInfo(driverManager.GetBinaryPath());
             string binaryVersion = driverManager.GetDownloadedVersion();
             string binaryName = binary.Name;
-            string binaryLength = binary.Length.ToString();
+            string binaryLength = binary.Length.ToString(CultureInfo.InvariantCulture);
 
             // Clear configuration
             foreach (string key in queryParamMap.Keys)

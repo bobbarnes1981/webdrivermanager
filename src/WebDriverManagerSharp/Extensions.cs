@@ -19,7 +19,9 @@ namespace WebDriverManagerSharp
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
+    using WebDriverManagerSharp.Enums;
 
     public static class Extensions
     {
@@ -97,7 +99,7 @@ namespace WebDriverManagerSharp
 
         public static string FormatUnixTime(this long unixTime, string format)
         {
-            return unixEpoch.AddMilliseconds(unixTime).ToString(format);
+            return unixEpoch.AddMilliseconds(unixTime).ToString(format, CultureInfo.InvariantCulture);
         }
 
         public static string ToStringJava<T>(this T[] array)
@@ -120,6 +122,27 @@ namespace WebDriverManagerSharp
         public static string GetString(this Architecture architecture)
         {
             return architectureStrings[architecture];
+        }
+
+        public static Uri Append(this Uri uri, string uriPart)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
+
+            if (uriPart == null)
+            {
+                throw new ArgumentNullException(nameof(uriPart));
+            }
+
+            string uriString = uri.ToString();
+            if (!uriString.EndsWith("/", StringComparison.OrdinalIgnoreCase) && !uriPart.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            {
+                uriString += '/';
+            }
+
+            return new Uri(uriString + uriPart);
         }
     }
 }

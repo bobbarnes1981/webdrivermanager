@@ -42,7 +42,7 @@ namespace WebDriverManagerSharp.Tests.Test
         {
             EdgeOptions edgeOptions = new EdgeOptions();
             ////"C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe";
-            driver = new EdgeDriver(edgeOptions);
+            Driver = new EdgeDriver(edgeOptions);
         }
     }
 }

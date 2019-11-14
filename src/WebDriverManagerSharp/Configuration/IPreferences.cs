@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2019 Robert barnes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,16 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Configuration
 {
-    /**
-     * Supported operative system enumeration.
-     *
-     * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.0.0
-     */
-    public enum OperatingSystem
+    public interface IPreferences
     {
-        /// <summary>
-        /// Windows
-        /// </summary>
-        WIN,
+        string GetValueFromPreferences(string key);
 
-        /// <summary>
-        /// Linux
-        /// </summary>
-        LINUX,
+        void PutValueInPreferencesIfEmpty(string key, string value);
 
-        /// <summary>
-        /// Mac
-        /// </summary>
-        MAC
+        void Clear();
+
+        bool CheckKeyInPreferences(string key);
     }
 }

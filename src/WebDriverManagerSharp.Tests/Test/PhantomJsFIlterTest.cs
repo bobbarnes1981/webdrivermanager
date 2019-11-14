@@ -21,6 +21,10 @@ namespace WebDriverManagerSharp.Tests.Test
     using System.Collections.Generic;
     using System.Reflection;
     using NUnit.Framework;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Web;
 
     /**
      * Filter verifications for phantomjs.
@@ -30,10 +34,10 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class PhantomJsFilterTest
     {
-        private readonly ILogger log = Logger.GetLogger();
-
         protected WebDriverManager phantomJsManager;
         protected List<Uri> driversUrls;
+
+        private readonly ILogger log = Logger.GetLogger();
         private const string phantomJsBinaryName = "phantomjs";
 
         [SetUp]

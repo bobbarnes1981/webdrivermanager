@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,34 @@
  *
  */
 
-namespace WebDriverManagerSharp.Tests.Test
+namespace WebDriverManagerSharp.Enums
 {
-    using NUnit.Framework;
-    using WebDriverManagerSharp.Enums;
-    using WebDriverManagerSharp.Tests.Base;
+    using System.ComponentModel;
 
     /**
-     * Test asserting Firefox versions.
+     * Supported architecture enumeration (32/64 bits).
      *
      * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.5.0
+     * @since 1.0.0
      */
-    public class FirefoxVersionTest : VersionTestParent
+    public enum Architecture
     {
-        public FirefoxVersionTest(Architecture architecture)
-            : base(architecture)
-        {
-        }
+        /// <summary>
+        /// Default Architecture
+        /// </summary>
+        [Description("DEFAULT")]
+        DEFAULT,
 
-        [SetUp]
-        public void setup()
-        {
-            browserManager = WebDriverManager.FirefoxDriver();
-            specificVersions = new string[] { "0.8.0", "0.19.1" };
-        }
+        /// <summary>
+        /// 32 Bit Architecture
+        /// </summary>
+        [Description("32")]
+        X32,
+
+        /// <summary>
+        /// 64 Bit Architecture
+        /// </summary>
+        [Description("64")]
+        X64
     }
 }
