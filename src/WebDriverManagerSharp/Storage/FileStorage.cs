@@ -15,31 +15,20 @@
  *
  */
 
-namespace WebDriverManagerSharp.Exceptions
+using System.IO;
+
+namespace WebDriverManagerSharp.Storage
 {
-    using System;
-    using System.Runtime.Serialization;
-
-    [Serializable]
-    public class IllegalStateException : Exception
+    public class FileStorage : IFileStorage
     {
-        public IllegalStateException(string message)
-            : base(message)
+        public bool Exists(string file)
         {
+            return File.Exists(file);
         }
 
-        public IllegalStateException(string message, Exception innerException)
-            : base(message, innerException)
+        public Stream OpenRead(string file)
         {
-        }
-
-        public IllegalStateException()
-        {
-        }
-
-        protected IllegalStateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
+            return File.OpenRead(file);
         }
     }
 }

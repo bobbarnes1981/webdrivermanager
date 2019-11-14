@@ -24,6 +24,7 @@ namespace WebDriverManagerSharp.Tests.Test
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     /**
@@ -45,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
         {
             phantomJsManager = WebDriverManager.PhantomJS();
             FieldInfo field = typeof(WebDriverManager).GetField("httpClient", BindingFlags.Instance | BindingFlags.NonPublic);
-            field.SetValue(phantomJsManager, new HttpClient(new Config()));
+            field.SetValue(phantomJsManager, new HttpClient(new Config(Logger.GetLogger(), new SystemInformation(), new FileStorage())));
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("GetDrivers", BindingFlags.Instance | BindingFlags.NonPublic);
             driversUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[0]);
@@ -57,7 +58,7 @@ namespace WebDriverManagerSharp.Tests.Test
             MethodInfo method = typeof(WebDriverManager).GetMethod("checkLatest", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> latestUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName });
 
-            List<Uri> filteredLatestUrls = new UrlFilter().FilterByArch(latestUrls, Architecture.X64, false);
+            List<Uri> filteredLatestUrls = new UrlFilter(Logger.GetLogger()).FilterByArch(latestUrls, Architecture.X64, false);
 
             log.Info("Filtered UriS for LATEST version {0} : {1}", phantomJsBinaryName, filteredLatestUrls);
 
@@ -71,7 +72,7 @@ namespace WebDriverManagerSharp.Tests.Test
             MethodInfo method = typeof(WebDriverManager).GetMethod("getVersion", BindingFlags.Instance | BindingFlags.NonPublic);
             List<Uri> specificVersionUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[] { driversUrls, phantomJsBinaryName, specificVersion });
 
-            List<Uri> filteredVersionUrls = new UrlFilter().FilterByArch(specificVersionUrls, Architecture.X64, false);
+            List<Uri> filteredVersionUrls = new UrlFilter(Logger.GetLogger()).FilterByArch(specificVersionUrls, Architecture.X64, false);
 
             log.Info("Filtered UriS for {0} version {1}: {2}", phantomJsBinaryName, specificVersion, filteredVersionUrls);
 

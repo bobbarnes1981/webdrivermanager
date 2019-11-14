@@ -24,6 +24,7 @@ namespace WebDriverManagerSharp.Configuration
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Exceptions;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * Configuration class.
@@ -35,7 +36,9 @@ namespace WebDriverManagerSharp.Configuration
     {
         private const string HOME = "~";
 
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger logger;
+        private readonly ISystemInformation systemInformation;
+        private readonly IFileStorage fileStorage;
 
         private readonly ConfigKey<string> properties = new ConfigKey<string>("wdm.properties", "webdrivermanager.properties");
 
@@ -53,8 +56,8 @@ namespace WebDriverManagerSharp.Configuration
         private readonly ConfigKey<bool> versionsPropertiesOnlineFirst = new ConfigKey<bool>("wdm.versionsPropertiesOnlineFirst");
         private readonly ConfigKey<Uri> versionsPropertiesUrl = new ConfigKey<Uri>("wdm.versionsPropertiesUrl");
 
-        private readonly ConfigKey<string> architecture = new ConfigKey<string>("wdm.architecture", defaultArchitecture().ToString());
-        private readonly ConfigKey<string> os = new ConfigKey<string>("wdm.os", defaultOsName());
+        private readonly ConfigKey<string> architecture;
+        private readonly ConfigKey<string> os;
         private readonly ConfigKey<string> proxy = new ConfigKey<string>("wdm.proxy");
         private readonly ConfigKey<string> proxyUser = new ConfigKey<string>("wdm.proxyUser");
         private readonly ConfigKey<string> proxyPass = new ConfigKey<string>("wdm.proxyPass");
@@ -99,6 +102,21 @@ namespace WebDriverManagerSharp.Configuration
         private readonly ConfigKey<string> binaryPath = new ConfigKey<string>("wdm.binaryPath");
         private readonly ConfigKey<int> ttl = new ConfigKey<int>("wdm.ttl");
 
+        public Config(ILogger logger, ISystemInformation systemInformation, IFileStorage fileStorage)
+        {
+            if (systemInformation == null)
+            {
+                throw new ArgumentNullException(nameof(systemInformation));
+            }
+
+            this.logger = logger;
+            this.systemInformation = systemInformation;
+            this.fileStorage = fileStorage;
+
+            architecture = new ConfigKey<string>("wdm.architecture", systemInformation.Architecture.ToString());
+            os = new ConfigKey<string>("wdm.os", systemInformation.OperatingSystem.ToString());
+        }
+
         private T resolve<T>(ConfigKey<T> configKey)
         {
             string name = configKey.GetName();
@@ -142,7 +160,13 @@ namespace WebDriverManagerSharp.Configuration
             }
             else if (typeof(T).Equals(typeof(bool)))
             {
-                output = bool.Parse(strValue);
+                bool boolOut;
+                if (!bool.TryParse(strValue, out boolOut))
+                {
+                    throw new WebDriverManagerException("Failed to parse '" + strValue + "' as bool");
+                }
+
+                output = boolOut;
             }
             else if (typeof(T).Equals(typeof(Uri)))
             {
@@ -173,7 +197,7 @@ namespace WebDriverManagerSharp.Configuration
                 value = getPropertyFrom(propertiesValue, key);
                 if (value == null)
                 {
-                    log.Trace("Property {0} not found in {1}, using default values (in {2})", key, propertiesValue, defaultProperties);
+                    logger.Trace("Property {0} not found in {1}, using default values (in {2})", key, propertiesValue, defaultProperties);
                     value = getPropertyFrom(defaultProperties, key);
                 }
             }
@@ -181,7 +205,7 @@ namespace WebDriverManagerSharp.Configuration
             {
                 if (value == null)
                 {
-                    log.Trace("Property {0} not found in {1}, using blank value", key, defaultProperties);
+                    logger.Trace("Property {0} not found in {1}, using blank value", key, defaultProperties);
                     value = string.Empty;
                 }
             }
@@ -189,19 +213,21 @@ namespace WebDriverManagerSharp.Configuration
             return value;
         }
 
-        private string getPropertyFrom(string properties, string key)
+        private string getPropertyFrom(string propertiesFile, string key)
         {
             Properties props = new Properties();
-            if (File.Exists(properties))
+            if (fileStorage.Exists(propertiesFile))
             {
                 try
                 {
-                    Stream inputStream = File.OpenRead(properties);
-                    props.Load(inputStream);
+                    using (Stream inputStream = fileStorage.OpenRead(propertiesFile))
+                    {
+                        props.Load(inputStream);
+                    }
                 }
                 catch (IOException)
                 {
-                    log.Trace("Property {0} not found in {1}", key, properties);
+                    logger.Trace("Property {0} not found in {1}", key, properties);
                 }
             }
 
@@ -220,45 +246,10 @@ namespace WebDriverManagerSharp.Configuration
                     }
                     catch (Exception)
                     {
-                        log.Warn("Exception resetting {0}", field.Name);
+                        logger.Warn("Exception resetting {0}", field.Name);
                     }
                 }
             }
-        }
-
-        private static string defaultOsName()
-        {
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-            {
-                return "WIN";
-            }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-            {
-                return "LINUX";
-            }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
-            {
-                return "MAC";
-            }
-
-            throw new Exception("Could not determine operating system");
-        }
-
-        private static Architecture defaultArchitecture()
-        {
-            // RuntimeInformation.OSArchitecture ?
-            System.Runtime.InteropServices.Architecture arch = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture;
-            if (arch == System.Runtime.InteropServices.Architecture.X86)
-            {
-                return Architecture.X32;
-            }
-
-            if (arch == System.Runtime.InteropServices.Architecture.X64)
-            {
-                return Architecture.X64;
-            }
-            
-            throw new Exception(string.Format(CultureInfo.InvariantCulture, "Unhandled architecture {0}", arch));
         }
 
         public bool IsExecutable(FileInfo file)

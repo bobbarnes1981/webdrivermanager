@@ -32,15 +32,16 @@ namespace WebDriverManagerSharp.Configuration
     {
         private const string TTL = "-ttl";
 
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger logger;
+        private readonly IConfig config;
 
         private readonly Dictionary<string, string> prefs = new Dictionary<string, string>();
 
         private readonly string dateFormat = "yyyy-MM-dd HH:mm:ss";
-        private readonly IConfig config;
 
-        public Preferences(IConfig config)
+        public Preferences(ILogger logger, IConfig config)
         {
+            this.logger = logger;
             this.config = config;
         }
 
@@ -66,9 +67,9 @@ namespace WebDriverManagerSharp.Configuration
                 prefs[key] = value;
                 long expirationTime = (long)(DateTime.UtcNow.UnixTime() + TimeSpan.FromSeconds(config.GetTtl()).TotalMilliseconds);
                 prefs[getExpirationKey(key)] = expirationTime.ToString(CultureInfo.InvariantCulture);
-                if (log.IsDebugEnabled())
+                if (logger.IsDebugEnabled())
                 {
-                    log.Debug("Storing preference {0}={1} (valid until {2})", key, value, formatTime(expirationTime));
+                    logger.Debug("Storing preference {0}={1} (valid until {2})", key, value, formatTime(expirationTime));
                 }
             }
         }
@@ -83,12 +84,12 @@ namespace WebDriverManagerSharp.Configuration
         {
             try
             {
-                log.Info("Clearing WebDriverManager preferences");
+                logger.Info("Clearing WebDriverManager preferences");
                 prefs.Clear();
             }
             catch (Exception e)
             {
-                log.Warn("Exception clearing preferences ({0})", e);
+                logger.Warn("Exception clearing preferences ({0})", e);
             }
         }
 
@@ -99,7 +100,7 @@ namespace WebDriverManagerSharp.Configuration
             if (!isValid)
             {
                 string expirationDate = formatTime(expirationTime);
-                log.Debug("Removing preference {0}={1} (expired on {2})", key, value, expirationDate);
+                logger.Debug("Removing preference {0}={1} (expired on {2})", key, value, expirationDate);
                 clearFromPreferences(key);
             }
 
@@ -127,7 +128,7 @@ namespace WebDriverManagerSharp.Configuration
                 valueInPreferences &= checkValidity(key, valueFromPreferences, expirationTime);
                 if (valueInPreferences)
                 {
-                    log.Debug("Preference {0}={1} (valid until {2})", key, valueFromPreferences, expirationDate);
+                    logger.Debug("Preference {0}={1} (valid until {2})", key, valueFromPreferences, expirationDate);
                 }
             }
 

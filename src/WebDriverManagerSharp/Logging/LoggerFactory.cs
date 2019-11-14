@@ -15,31 +15,15 @@
  *
  */
 
-namespace WebDriverManagerSharp.Exceptions
+namespace WebDriverManagerSharp.Logging
 {
-    using System;
-    using System.Runtime.Serialization;
+    using Serilog;
 
-    [Serializable]
-    public class IllegalStateException : Exception
+    class LoggerFactory : ILoggerFactory
     {
-        public IllegalStateException(string message)
-            : base(message)
+        public ILogger Create()
         {
-        }
-
-        public IllegalStateException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        public IllegalStateException()
-        {
-        }
-
-        protected IllegalStateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
+            return new Logger();
         }
     }
 }

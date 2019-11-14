@@ -22,6 +22,8 @@ namespace WebDriverManagerSharp.Tests.Test
     using NUnit.Framework;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     /**
@@ -64,7 +66,7 @@ namespace WebDriverManagerSharp.Tests.Test
             browserManager.ForceCache().ForceDownload().Architecture(architecture).Version(driverVersion).Setup();
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDriverFromCache", BindingFlags.NonPublic | BindingFlags.Instance);
-            FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config().GetOs() });
+            FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config(Logger.GetLogger(), new SystemInformation(), new FileStorage()).GetOs() });
 
             Assert.That(driverInCachePath, Is.Not.Null);
         }

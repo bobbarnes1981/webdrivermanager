@@ -15,7 +15,7 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Web
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,12 @@ namespace WebDriverManagerSharp
      */
     public class UrlFilter
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger logger;
+
+        public UrlFilter(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public List<Uri> FilterByOs(List<Uri> list, string osName)
         {
@@ -40,25 +45,23 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(list));
             }
 
-            log.Trace("System.Uris before filtering by OS ({0}): {1}", osName, list);
+            logger.Trace("System.Uris before filtering by OS ({0}): {1}", osName, list);
             List<Uri> outList = new List<Uri>();
 
             foreach (Uri url in list)
             {
                 foreach (Enums.OperatingSystem os in Enum.GetValues(typeof(Enums.OperatingSystem)))
                 {
-                    if (((osName.Contains(os.ToString())
-                            && url.GetFile().IndexOf(os.ToString(), StringComparison.OrdinalIgnoreCase) != -1)
-                            || (osName.Equals("mac", StringComparison.InvariantCultureIgnoreCase)
-                            && url.GetFile().IndexOf("osx", StringComparison.OrdinalIgnoreCase) != -1))
-                            && !outList.Contains(url))
+                    if (((osName.Contains(os.ToString()) && url.GetFile().IndexOf(os.ToString(), StringComparison.OrdinalIgnoreCase) != -1)
+                        || (osName.Equals("mac", StringComparison.InvariantCultureIgnoreCase) && url.GetFile().IndexOf("osx", StringComparison.OrdinalIgnoreCase) != -1))
+                        && !outList.Contains(url))
                     {
                         outList.Add(url);
                     }
                 }
             }
 
-            log.Trace("System.Uris after filtering by OS ({0}): {1}", osName, outList);
+            logger.Trace("System.Uris after filtering by OS ({0}): {1}", osName, outList);
             return outList;
         }
 
@@ -69,7 +72,7 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(list));
             }
 
-            log.Trace("System.Uris before filtering by architecture ({0}): {1}", arch, list);
+            logger.Trace("System.Uris before filtering by architecture ({0}): {1}", arch, list);
             List<Uri> outList = new List<Uri>(list);
 
             if (forcedArch || outList.Count > 1)
@@ -77,9 +80,9 @@ namespace WebDriverManagerSharp
                 foreach (Uri url in list)
                 {
                     if (!url.GetFile().Contains("x86")
-                            && !url.GetFile().Contains("64")
-                            && !url.GetFile().Contains("i686")
-                            && !url.GetFile().Contains("32"))
+                        && !url.GetFile().Contains("64")
+                        && !url.GetFile().Contains("i686")
+                        && !url.GetFile().Contains("32"))
                     {
                         continue;
                     }
@@ -91,12 +94,12 @@ namespace WebDriverManagerSharp
                 }
             }
 
-            log.Trace("System.Uris after filtering by architecture ({0}): {1}", arch, outList);
+            logger.Trace("System.Uris after filtering by architecture ({0}): {1}", arch, outList);
 
             if (outList.Count == 0 && !forcedArch && list.Count != 0)
             {
-                outList = new List<System.Uri>() { list[list.Count - 1] };
-                log.Trace("Empty System.Uri list after filtering by architecture ... using last candidate: {0}", outList);
+                outList = new List<Uri>() { list[list.Count - 1] };
+                logger.Trace("Empty System.Uri list after filtering by architecture ... using last candidate: {0}", outList);
             }
 
             return outList;
@@ -117,7 +120,7 @@ namespace WebDriverManagerSharp
             }
 
             string distro = getDistroName();
-            log.Trace("System.Uris before filtering by Linux distribution ({0}): {1}", distro, list);
+            logger.Trace("System.Uris before filtering by Linux distribution ({0}): {1}", distro, list);
             List<Uri> outList = new List<Uri>(list);
 
             foreach (Uri url in list)
@@ -128,7 +131,7 @@ namespace WebDriverManagerSharp
                 }
             }
 
-            log.Trace("System.Uris after filtering by Linux distribution ({0}): {1}", distro, outList);
+            logger.Trace("System.Uris after filtering by Linux distribution ({0}): {1}", distro, outList);
             return outList;
         }
 
@@ -139,9 +142,9 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(list));
             }
 
-            if (log.IsTraceEnabled())
+            if (logger.IsTraceEnabled())
             {
-                log.Trace("System.Uris before filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), list);
+                logger.Trace("System.Uris before filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), list);
             }
 
             List<Uri> outList = new List<Uri>(list);
@@ -152,15 +155,15 @@ namespace WebDriverManagerSharp
                 {
                     if (url.GetFile().Contains(s))
                     {
-                        log.Info("Ignoring version {0}", s);
+                        logger.Info("Ignoring version {0}", s);
                         outList.Remove(url);
                     }
                 }
             }
 
-            if (log.IsTraceEnabled())
+            if (logger.IsTraceEnabled())
             {
-                log.Trace("System.Uris after filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), outList);
+                logger.Trace("System.Uris after filtering by ignored versions ({0}): {1}", ignoredVersions.ToStringJava(), outList);
             }
 
             return outList;

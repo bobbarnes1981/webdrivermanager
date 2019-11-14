@@ -20,6 +20,8 @@ namespace WebDriverManagerSharp.Tests.Test
     using NUnit.Framework;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Tests.Base;
 
     /**
@@ -33,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         public ChromeVersionTest(Architecture architecture)
             : base(architecture)
         {
-            if (architecture == Architecture.X64 && ((os != null && os == OperatingSystem.WIN) || new Config().GetOs() == OperatingSystem.WIN.ToString()))
+            if (architecture == Architecture.X64 && ((os != null && os == OperatingSystem.WIN) || new Config(Logger.GetLogger(), new SystemInformation(), new FileStorage()).GetOs() == OperatingSystem.WIN.ToString()))
             {
                 Assert.Ignore("No X64 driver for WIN chromedriver");
             }

@@ -80,14 +80,20 @@
   <ItemGroup>
     <Compile Include="Configuration\IConfig.cs" />
     <Compile Include="Configuration\IPreferences.cs" />
+    <Compile Include="Configuration\ISystemInformation.cs" />
+    <Compile Include="Configuration\SystemInformation.cs" />
     <Compile Include="Enums\Architecture.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GitHubApi\Asset.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILoggerFactory.cs" />
+    <Compile Include="Logging\LoggerFactory.cs" />
     <Compile Include="Managers\ChromeDriverManager.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigKey.cs" />
+    <Compile Include="Storage\FileStorage.cs" />
+    <Compile Include="Storage\IFileStorage.cs" />
     <Compile Include="Web\IDownloader.cs" />
     <Compile Include="Web\Downloader.cs" />
     <Compile Include="Enums\DriverManagerType.cs" />
@@ -109,7 +115,7 @@
     <Compile Include="Server.cs" />
     <Compile Include="Shell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UrlFilter.cs" />
+    <Compile Include="Web\UrlFilter.cs" />
     <Compile Include="VersionComparator.cs" />
     <Compile Include="Managers\VoidDriverManager.cs" />
     <Compile Include="WebDriverManager.cs" />

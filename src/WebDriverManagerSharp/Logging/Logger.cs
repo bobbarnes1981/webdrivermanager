@@ -17,26 +17,20 @@
 
 namespace WebDriverManagerSharp.Logging
 {
-    using System;
     using Serilog;
 
     public class Logger : ILogger
     {
         private readonly Serilog.ILogger logger;
 
-        public Logger(LoggerConfiguration configuration)
+        public Logger()
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            logger = configuration.CreateLogger();
+            logger = new LoggerConfiguration().WriteTo.Console().WriteTo.Debug().CreateLogger();
         }
 
         public static ILogger GetLogger()
         {
-            return new Logger(new LoggerConfiguration().WriteTo.Console().WriteTo.Debug());
+            return new Logger();
         }
 
         public void Trace(string format, params object[] parameters)

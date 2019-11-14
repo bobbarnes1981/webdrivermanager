@@ -35,6 +35,7 @@ namespace WebDriverManagerSharp
     using WebDriverManagerSharp.GitHubApi;
     using WebDriverManagerSharp.Logging;
     using WebDriverManagerSharp.Managers;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     /**
@@ -52,6 +53,8 @@ namespace WebDriverManagerSharp
         protected const string LOCAL = "local";
 
         private static readonly ILogger log = Logger.GetLogger();
+        private static readonly ISystemInformation systemInformation = new SystemInformation();
+        private static readonly IFileStorage fileStorage = new FileStorage();
 
         private static readonly Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
 
@@ -68,14 +71,14 @@ namespace WebDriverManagerSharp
         private bool forcedOs;
         private bool isLatest;
         private bool retry = true;
-        private IConfig config = new Config();
+        private IConfig config = new Config(log, systemInformation, fileStorage);
         private readonly IPreferences preferences;
         private string preferenceKey;
         private Properties versionsProperties;
 
         protected WebDriverManager()
         {
-            preferences = new Preferences(config);
+            preferences = new Preferences(log, config);
         }
 
         protected static ILogger Log { get { return log; } }
@@ -113,7 +116,7 @@ namespace WebDriverManagerSharp
 
         public static IConfig GlobalConfig()
         {
-            IConfig global = new Config();
+            IConfig global = new Config(log, systemInformation, fileStorage);
             global.SetAvoidAutoReset(true);
             foreach (DriverManagerType type in Enum.GetValues(typeof(DriverManagerType)))
             {
@@ -569,7 +572,7 @@ namespace WebDriverManagerSharp
             try
             {
                 downloader = new Downloader(GetDriverManagerType().Value);
-                urlFilter = new UrlFilter();
+                urlFilter = new UrlFilter(log);
 
                 bool getLatest = isVersionLatest(version);
                 bool cache = Config().IsForceCache();
@@ -1577,13 +1580,13 @@ namespace WebDriverManagerSharp
             else
             {
                 string arg = args[0];
-                if (arg.Equals("server", System.StringComparison.InvariantCultureIgnoreCase))
+                if (arg.Equals("server", StringComparison.InvariantCultureIgnoreCase))
                 {
                     startServer(args);
                 }
-                else if (arg.Equals("clear-preferences", System.StringComparison.InvariantCultureIgnoreCase))
+                else if (arg.Equals("clear-preferences", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    new Preferences(new Config()).Clear();
+                    new Preferences(log, new Config(log, systemInformation, fileStorage)).Clear();
                 }
                 else
                 {
@@ -1617,7 +1620,7 @@ namespace WebDriverManagerSharp
             int port;
             if (args.Length < 2 || !int.TryParse(args[1], out port))
             {
-                port = new Config().GetServerPort();
+                port = new Config(log, systemInformation, fileStorage).GetServerPort();
             }
 
             new NancyHost(
