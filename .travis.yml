@@ -4,4 +4,7 @@ install:
  - nuget restore src/WebDriverManagerSharp.sln
 script:
   - msbuild /p:Configuration=Release src/WebDriverManagerSharp.sln
-  - mono ./src/packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./src/WebDriverManagerSharp.UnitTests/bin/Release/WebDriverManagerSharp.UnitTests.dll
+  - mono src/packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./src/WebDriverManagerSharp.UnitTests/bin/Release/WebDriverManagerSharp.UnitTests.dll
+  - src/packages/OpenCover.4.7.922/tools/OpenCover.Console.exe -register:user -target:"src/packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe" -targetargs:"src\WebDriverManagerSharp.UnitTests\bin\Release\WebDriverManagerSharp.UnitTests.dll" -filter:"+[WebDriverManagerSharp*]* -[WebDriverManagerSharp.UnitTests*]*" -output:".\coverage.xml"
+  - src/packages/Codecov.1.9.0/tools/codecov.exe -f .\coverage.xml
+  
