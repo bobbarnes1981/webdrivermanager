@@ -1,6 +1,6 @@
 language: csharp
-solution: src/WebDriverManager.sln
+solution: src/WebDriverManagerSharp.sln
 install:
- - nuget restore src/WebDriverManager.sln
+ - nuget restore src/WebDriverManagerSharp.sln
 script:
- - xbuild /p:Configuration=Release src/WebDriverManager
+ - xbuild /p:Configuration=Release src/WebDriverManagerSharp
