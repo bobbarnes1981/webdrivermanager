@@ -41,9 +41,9 @@ namespace WebDriverManagerSharp.Tests.Test
         public void SetupTest()
         {
             string operaBinary = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? Path.Combine(System.Environment.ExpandEnvironmentVariables("%LocalAppData%"), @"Programs\Opera\64.0.3417.92\opera.exe")
-                    : RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/Applications/Opera.app/Contents/MacOS/Opera"
-                            : "/usr/bin/opera";
+                    ? getWindowsOperaExecutable()
+                    : RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? getOsxOperaExecutable()
+                            : getLinuxOperaExecutable();
 
             OperaOptions options = new OperaOptions()
             {
@@ -54,6 +54,29 @@ namespace WebDriverManagerSharp.Tests.Test
             Assume.That(opera.Exists);
 
             Driver = new OperaDriver(options);
+        }
+
+        private string getWindowsOperaExecutable()
+        {
+            DirectoryInfo installPath = new DirectoryInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%LocalAppData%"), @"Programs\Opera\"));
+
+            foreach (DirectoryInfo dir in installPath.GetDirectories("*.*.*.*"))
+            {
+                // return first directory
+                return dir.GetFiles("opera.exe")[0].FullName;
+            }
+
+            throw new System.Exception("Opera not found");
+        }
+
+        private string getOsxOperaExecutable()
+        {
+            return "/Applications/Opera.app/Contents/MacOS/Opera";
+        }
+
+        private string getLinuxOperaExecutable()
+        {
+            return "/usr/bin/opera";
         }
     }
 }
