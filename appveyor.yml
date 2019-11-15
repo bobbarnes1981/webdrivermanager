@@ -1,0 +1,6 @@
+before_build:
+- nuget restore
+
+build:
+  project: src\WebDriverManagerSharp.sln
+  verbosity: minimal
