@@ -1,37 +1,21 @@
 
-# Translated to C#
-
 [![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Build status](https://ci.appveyor.com/api/projects/status/33tk7qxa47ht03rb?svg=true)](https://ci.appveyor.com/project/bobbarnes1981/webdrivermanager-sharp)
 
-----------------------------------------------------------------------------------------------------------------------------------------
+# WebDriverManagerSharp
 
-# Java Readme
-
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.bonigarcia/webdrivermanager.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aio.github.bonigarcia%20a%3Awebdrivermanager)
-[![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.bonigarcia:webdrivermanager&metric=alert_status)](https://sonarcloud.io/dashboard/index/io.github.bonigarcia:webdrivermanager)
-[![codecov](https://codecov.io/gh/bonigarcia/webdrivermanager/branch/master/graph/badge.svg)](https://codecov.io/gh/bonigarcia/webdrivermanager)
-[![badge-jdk](https://img.shields.io/badge/jdk-8-green.svg)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-[![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Backers on Open Collective](https://opencollective.com/webdrivermanager/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/webdrivermanager/sponsors/badge.svg)](#sponsors)
-[![Support badge](https://img.shields.io/badge/stackoverflow-webdrivermanager_java-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
-[![Twitter Follow](https://img.shields.io/twitter/follow/boni_gg.svg?style=social)](https://twitter.com/boni_gg)
-
-# WebDriverManager [![][Logo]][GitHub Repository]
+This project is a translation of https://github.com/bonigarcia/webdrivermanager to C#.
 
 WebDriverManager allows to automate the management of the binary drivers (e.g. *chromedriver*, *geckodriver*, etc.) required by [Selenium WebDriver].
 
 ## Table of contents
 
 1. [Motivation](#motivation)
-2. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency)
+2. [WebDriverManager as a dependency](#webdrivermanager-as-a-dependency)
    1. [Basic usage](#basic-usage)
-   2. [Examples](#examples)
-   3. [Driver versions](#driver-versions)
-   4. [WebDriverManager API](#webdrivermanager-api)
-   5. [Configuration](#configuration)
+   2. [Driver versions](#driver-versions)
+   3. [WebDriverManager API](#webdrivermanager-api)
+   4. [Configuration](#configuration)
 3. [WebDriverManager CLI](#webdrivermanager-cli)
 4. [WebDriverManager server](#webdrivermanager-server)
 5. [Known issues](#known-issues)
@@ -42,81 +26,54 @@ WebDriverManager allows to automate the management of the binary drivers (e.g. *
 
 ## Motivation
 
-If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the path to this binary must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers.
 
-```java
-System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
-System.setProperty("webdriver.gecko.driver", "/path/to/binary/geckodriver");
-System.setProperty("webdriver.opera.driver", "/path/to/binary/operadriver");
-System.setProperty("phantomjs.binary.path", "/path/to/binary/phantomjs");
-System.setProperty("webdriver.edge.driver", "C:/path/to/binary/msedgedriver.exe");
-System.setProperty("webdriver.ie.driver", "C:/path/to/binary/IEDriverServer.exe");
-```
+This is quite annoying since it forces you to link directly this binary file into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you.
 
-This is quite annoying since it forces you to link directly this binary file into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in 3 different ways:
+## WebDriverManagerSharp as a dependency
 
-1. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency) (typically from test cases).
-2. [WebDriverManager as a Command Line Interface (CLI) tool](#webdrivermanager-cli) (from the shell).
-3. [WebDriverManager as a Server](#webdrivermanager-server) (using a REST-like API).
+### Basic Usage
 
-WebDriverManager is open source, released under the terms of [Apache 2.0 License].
+To use WebDrivermanagerSharp you will need to add the library as a reference once it is compiled from source as it is not yet built as a nuget package.
 
-## WebDriverManager as Java dependency
+Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this NUnit example.
 
-### Basic usage
-
-In order to use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
-
-```xml
-<dependency>
-    <groupId>io.github.bonigarcia</groupId>
-    <artifactId>webdrivermanager</artifactId>
-    <version>3.7.1</version>
-    <scope>test</scope>
-</dependency>
-```
-
-... or in Gradle project:
-
-```
-dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:3.7.1")
-}
-```
-
-Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
-
-```java
-public class ChromeTest {
-
+```C#
+[TestFixture]
+public class ChromeTest
+{
     private WebDriver driver;
 
-    @BeforeClass
-    public static void setupClass() {
+    [OneTimeSetUp]
+    public static void OneTimeSetUp()
+    {
         WebDriverManager.chromedriver().setup();
     }
 
-    @Before
-    public void setupTest() {
+    [SetUp]
+    public void SetUp()
+    {
         driver = new ChromeDriver();
     }
 
-    @After
-    public void teardown() {
+    [TearDown]
+    public void TearDown()
+    {
         if (driver != null) {
             driver.quit();
         }
     }
 
-    @Test
-    public void test() {
+    [Test]
+    public void Test()
+    {
         // Your test code here
     }
 
 }
 ```
 
-Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriverManager does magic for you:
+Notice that simply adding ``WebDriverManager.ChromeDriver().Setup();`` WebDriverManager does magic for you:
 
 1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
 2. It checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
@@ -125,49 +82,19 @@ Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriver
 
 WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
-```java
-WebDriverManager.chromedriver().setup();
-WebDriverManager.firefoxdriver().setup();
-WebDriverManager.operadriver().setup();
-WebDriverManager.phantomjs().setup();
-WebDriverManager.edgedriver().setup();
-WebDriverManager.iedriver().setup();
+```C#
+WebDriverManager.ChromeDriver().Setup();
+WebDriverManager.FirefoxDriver().Setup();
+WebDriverManager.OperaDriver().Setup();
+WebDriverManager.PhantomJS().Setup();
+WebDriverManager.EdgeDriver().Setup();
+WebDriverManager.IEDriver().Setup();
 ```
 
-**NOTE**: The old WebDriverManager API (version 1.x) has been deprecated as of version 3.x (`ChromeDriverManager.getInstance().setup();`, `FirefoxDriverManager.getInstance().setup();`, and so on).
+----------------------------------------------------------------------------------------------------------------------------------------
 
-Moreover, WebDriverManager provides a generic *driver manager*. This manager which can be parameterized using Selenium driver classes (e.g. `org.openqa.selenium.chrome.ChromeDriver`, `org.openqa.selenium.firefox.FirefoxDriver`, etc), as follows: 
 
-```java
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-// ...
-
-Class<? extends WebDriver> driverClass = ChromeDriver.class;
-WebDriverManager.getInstance(driverClass).setup();
-WebDriver driver = driverClass.newInstance();
-```
-
-This generic *driver manager* can be also parameterized using the enumeration `DriverManagerType`. For instance as follows:
-
-```java
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-// ...
-
-WebDriverManager.getInstance(CHROME).setup();
-WebDriver driver = new ChromeDriver();
-```
-
-### Examples
-
-Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
+# Old JAVA readme
 
 
 ### Driver versions
