@@ -1,5 +1,5 @@
 before_build:
-- nuget restore
+- nuget restore src\WebDriverManagerSharp.sln
 
 build:
   project: src\WebDriverManagerSharp.sln
