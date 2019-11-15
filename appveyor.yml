@@ -4,3 +4,8 @@ before_build:
 build:
   project: src\WebDriverManagerSharp.sln
   verbosity: minimal
+
+test:
+  assemblies:
+    only:
+      - WebDriverManagerSharp.UnitTests.dll
