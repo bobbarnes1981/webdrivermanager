@@ -3,4 +3,5 @@ solution: src/WebDriverManagerSharp.sln
 install:
  - nuget restore src/WebDriverManagerSharp.sln
 script:
- - xbuild /p:Configuration=Release src/WebDriverManagerSharp
+  - msbuild /p:Configuration=Release src/WebDriverManagerSharp.sln
+  - mono ./packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./src/WebDriverManagerSharp.UnitTests/bin/Release/WebDriverManagerSharp.UnitTests.dll
