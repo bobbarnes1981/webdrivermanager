@@ -1,6 +1,7 @@
 language: csharp
-solution: src/WebDriverManager.sln
+solution: src/WebDriverManagerSharp.sln
 install:
- - nuget restore src/WebDriverManager.sln
+ - nuget restore src/WebDriverManagerSharp.sln
 script:
- - xbuild /p:Configuration=Release src/WebDriverManager
+  - msbuild /p:Configuration=Release src/WebDriverManagerSharp.sln
+  - mono ./packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./src/WebDriverManagerSharp.UnitTests/bin/Release/WebDriverManagerSharp.UnitTests.dll

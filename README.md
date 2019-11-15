@@ -2,6 +2,7 @@
 # Translated to C#
 
 [![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Build Status](https://travis-ci.org/bobbarnes1981/webdrivermanager-sharp.svg?branch=master)](https://travis-ci.org/bobbarnes1981/webdrivermanager-sharp)
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
