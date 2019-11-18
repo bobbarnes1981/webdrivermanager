@@ -25,7 +25,7 @@ namespace WebDriverManagerSharp.Logging
 
         public Logger()
         {
-            logger = new LoggerConfiguration().WriteTo.Console().WriteTo.Debug().CreateLogger();
+            logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Console().WriteTo.Debug().CreateLogger();
         }
 
         public static ILogger GetLogger()

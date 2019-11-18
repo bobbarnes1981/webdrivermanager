@@ -1,5 +1,5 @@
 ﻿/*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2019 Robert Barnes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,40 +17,22 @@
 
 namespace WebDriverManagerSharp.Tests.Test
 {
-    using System.IO;
     using NUnit.Framework;
-    using WebDriverManagerSharp.Enums;
-    using WebDriverManagerSharp.Logging;
+    using OpenQA.Selenium.IE;
+    using WebDriverManagerSharp.Tests.Base;
 
-    /**
-     * Test with Internet Explorer browser.
-     *
-     * @author Boni Garcia (boni.gg@gmail.com)
-     * @since 1.0.0
-     */
-    public class IExplorerTest
+    public class IExplorerTest : BrowserTestParent
     {
-        private readonly ILogger log = Logger.GetLogger();
-
-        [Test]
-        public void testIExplorerLatest()
+        [OneTimeSetUp]
+        public void SetupClass()
         {
-            WebDriverManager.IEDriver().OperatingSystem(OperatingSystem.WIN).Setup();
-            assertIEDriverBinary();
+            WebDriverManager.IEDriver().Setup();
         }
 
-        [Test]
-        public void testIExplorerVersion()
+        [SetUp]
+        public void SetupTest()
         {
-            WebDriverManager.IEDriver().OperatingSystem(OperatingSystem.WIN).Version("3.11").Setup();
-            assertIEDriverBinary();
-        }
-
-        private void assertIEDriverBinary()
-        {
-            FileInfo binary = new FileInfo(WebDriverManager.IEDriver().GetBinaryPath());
-            log.Debug("Binary path for IEDriverServer {0}", binary);
-            Assert.True(binary.Exists);
+            Driver = new InternetExplorerDriver();
         }
     }
 }
