@@ -52,7 +52,7 @@ namespace WebDriverManagerSharp.Managers
 
         protected override Uri GetMirrorUrl()
         {
-            return Config().getFirefoxDriverMirrorUrl();
+            return Config().GetFirefoxDriverMirrorUrl();
         }
 
         protected override string GetExportParameter()

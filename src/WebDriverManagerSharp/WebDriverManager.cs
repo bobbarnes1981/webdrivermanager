@@ -748,7 +748,7 @@ namespace WebDriverManagerSharp
 
         private string getDriverVersionForBrowserFromProperties(string key)
         {
-            bool online = Config().GetVersionsPropertiesOnlineFirst();
+            bool online = Config().IsVersionsPropertiesOnlineFirst();
             string onlineMessage = online ? ONLINE : LOCAL;
             Log.Debug("Getting driver version for {0} from {1} versions.properties", key, onlineMessage);
             string value = getVersionFromProperties(online).GetProperty(key);

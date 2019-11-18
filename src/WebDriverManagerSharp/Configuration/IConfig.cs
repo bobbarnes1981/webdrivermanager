@@ -74,7 +74,7 @@ namespace WebDriverManagerSharp.Configuration
 
         IConfig SetTimeout(int value);
 
-        bool GetVersionsPropertiesOnlineFirst();
+        bool IsVersionsPropertiesOnlineFirst();
 
         IConfig SetVersionsPropertiesOnlineFirst(bool value);
 
@@ -174,7 +174,7 @@ namespace WebDriverManagerSharp.Configuration
 
         IConfig SetFirefoxDriverUrl(Uri value);
 
-        Uri getFirefoxDriverMirrorUrl();
+        Uri GetFirefoxDriverMirrorUrl();
 
         IConfig SetFirefoxDriverMirrorUrl(Uri value);
 

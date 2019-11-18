@@ -21,6 +21,7 @@ namespace WebDriverManager.UnitTests.Configuration
     using NUnit.Framework;
     using System;
     using System.IO;
+    using System.Reflection;
     using System.Text;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
@@ -41,6 +42,315 @@ namespace WebDriverManager.UnitTests.Configuration
             loggerMock = new Mock<ILogger>();
             systemInformationMock = new Mock<ISystemInformation>();
             fileStorageMock = new Mock<IFileStorage>();
+        }
+
+        //[TestCase("Properties")]
+        [TestCase("TargetPath")]
+        //[TestCase("Os")]
+        [TestCase("Proxy")]
+        [TestCase("ProxyUser")]
+        [TestCase("ProxyPass")]
+        [TestCase("GitHubTokenName")]
+        [TestCase("GitHubTokenSecret")]
+        [TestCase("LocalRepositoryUser")]
+        [TestCase("LocalRepositoryPassword")]
+        [TestCase("BinaryPath")]
+        [TestCase("ChromeDriverVersion")]
+        [TestCase("ChromeDriverExport")]
+        [TestCase("EdgeDriverVersion")]
+        [TestCase("EdgeDriverExport")]
+        [TestCase("FirefoxDriverVersion")]
+        [TestCase("FirefoxDriverExport")]
+        [TestCase("InternetExplorerDriverVersion")]
+        [TestCase("InternetExplorerDriverExport")]
+        [TestCase("OperaDriverVersion")]
+        [TestCase("OperaDriverExport")]
+        [TestCase("PhantomjsDriverVersion")]
+        [TestCase("PhantomjsDriverExport")]
+        [TestCase("SeleniumServerStandaloneVersion")]
+        public void TestGetConfigStringValueMissingFile(string methodName)
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            string val = (string)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.Empty);
+        }
+
+        //[TestCase("Properties")]
+        [TestCase("TargetPath", "wdm.targetPath")]
+        //[TestCase("Os")]
+        [TestCase("Proxy", "wdm.proxy")]
+        [TestCase("ProxyUser", "wdm.proxyUser")]
+        [TestCase("ProxyPass", "wdm.proxyPass")]
+        [TestCase("GitHubTokenName", "wdm.gitHubTokenName")]
+        [TestCase("GitHubTokenSecret", "wdm.gitHubTokenSecret")]
+        [TestCase("LocalRepositoryUser", "wdm.localRepositoryUser")]
+        [TestCase("LocalRepositoryPassword", "wdm.localRepositoryPassword")]
+        [TestCase("BinaryPath", "wdm.binaryPath")]
+        [TestCase("ChromeDriverVersion", "wdm.chromeDriverVersion")]
+        [TestCase("ChromeDriverExport", "wdm.chromeDriverExport")]
+        [TestCase("EdgeDriverVersion", "wdm.edgeDriverVersion")]
+        [TestCase("EdgeDriverExport", "wdm.edgeDriverExport")]
+        [TestCase("FirefoxDriverVersion", "wdm.geckoDriverVersion")]
+        [TestCase("FirefoxDriverExport", "wdm.geckoDriverExport")]
+        [TestCase("InternetExplorerDriverVersion", "wdm.internetExplorerDriverVersion")]
+        [TestCase("InternetExplorerDriverExport", "wdm.internetExplorerDriverExport")]
+        [TestCase("OperaDriverVersion", "wdm.operaDriverVersion")]
+        [TestCase("OperaDriverExport", "wdm.operaDriverExport")]
+        [TestCase("PhantomjsDriverVersion", "wdm.phantomjsDriverVersion")]
+        [TestCase("PhantomjsDriverExport", "wdm.phantomjsDriverExport")]
+        [TestCase("SeleniumServerStandaloneVersion", "wdm.seleniumServerStandaloneVersion")]
+        public void TestGetSetConfigStringValue(string methodName, string propertyName)
+        {
+            string guid = Guid.NewGuid().ToString();
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, guid))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            string val = (string)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(guid));
+
+            MethodInfo setter = config.GetType().GetMethod("Set" + methodName, BindingFlags.Public | BindingFlags.Instance);
+
+            string newGuid = Guid.NewGuid().ToString();
+
+            setter.Invoke(config, new object[] { newGuid });
+
+            val = (string)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newGuid));
+        }
+
+        [TestCase("VersionsPropertiesUrl")]
+        [TestCase("ChromeDriverUrl")]
+        [TestCase("ChromeDriverMirrorUrl")]
+        [TestCase("EdgeDriverUrl")]
+        [TestCase("FirefoxDriverUrl")]
+        [TestCase("FirefoxDriverMirrorUrl")]
+        [TestCase("InternetExplorerDriverUrl")]
+        [TestCase("OperaDriverUrl")]
+        [TestCase("OperaDriverMirrorUrl")]
+        [TestCase("PhantomjsDriverUrl")]
+        [TestCase("PhantomjsDriverMirrorUrl")]
+        [TestCase("SeleniumServerStandaloneUrl")]
+        public void TestGetConfigUriValueMissingFile(string methodName)
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() => getter.Invoke(config, new object[] { }));
+
+            Assert.That(exception.InnerException, Is.TypeOf<WebDriverManagerException>());
+        }
+
+        [TestCase("VersionsPropertiesUrl", "wdm.versionsPropertiesUrl")]
+        [TestCase("ChromeDriverUrl", "wdm.chromeDriverUrl")]
+        [TestCase("ChromeDriverMirrorUrl", "wdm.chromeDriverMirrorUrl")]
+        [TestCase("EdgeDriverUrl", "wdm.edgeDriverUrl")]
+        [TestCase("FirefoxDriverUrl", "wdm.geckoDriverUrl")]
+        [TestCase("FirefoxDriverMirrorUrl", "wdm.geckoDriverMirrorUrl")]
+        [TestCase("InternetExplorerDriverUrl", "wdm.internetExplorerDriverUrl")]
+        [TestCase("OperaDriverUrl", "wdm.operaDriverUrl")]
+        [TestCase("OperaDriverMirrorUrl", "wdm.operaDriverMirrorUrl")]
+        [TestCase("PhantomjsDriverUrl", "wdm.phantomjsDriverUrl")]
+        [TestCase("PhantomjsDriverMirrorUrl", "wdm.phantomjsDriverMirrorUrl")]
+        [TestCase("SeleniumServerStandaloneUrl", "wdm.seleniumServerStandaloneUrl")]
+        public void TestGetSetConfigUriValue(string methodName, string propertyName)
+        {
+            Uri guid = new Uri("http://" + Guid.NewGuid().ToString());
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, guid))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            Uri val = (Uri)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(guid));
+
+            MethodInfo setter = config.GetType().GetMethod("Set" + methodName, BindingFlags.Public | BindingFlags.Instance);
+
+            Uri newGuid = new Uri("http://" + Guid.NewGuid().ToString());
+
+            setter.Invoke(config, new object[] { newGuid });
+
+            val = (Uri)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newGuid));
+        }
+
+        [TestCase("ForceCache")]
+        [TestCase("Override")]
+        [TestCase("UseMirror")]
+        [TestCase("UseBetaVersions")]
+        [TestCase("AvoidExport")]
+        [TestCase("AvoidOutputTree")]
+        [TestCase("AvoidAutoVersion")]
+        [TestCase("AvoidAutoReset")]
+        [TestCase("AvoidPreferences")]
+        [TestCase("VersionsPropertiesOnlineFirst")]
+        public void TestGetConfigBoolValueMissingFile(string methodName)
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Is" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            bool val = (bool)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.False);
+        }
+
+        [TestCase("ForceCache", "wdm.forceCache")]
+        [TestCase("Override", "wdm.override")]
+        [TestCase("UseMirror", "wdm.useMirror")]
+        [TestCase("UseBetaVersions", "wdm.useBetaVersions")]
+        [TestCase("AvoidExport", "wdm.avoidExport")]
+        [TestCase("AvoidOutputTree", "wdm.avoidOutputTree")]
+        [TestCase("AvoidAutoVersion", "wdm.avoidAutoVersion")]
+        [TestCase("AvoidAutoReset", "wdm.avoidAutoReset")]
+        [TestCase("AvoidPreferences", "wdm.avoidPreferences")]
+        [TestCase("VersionsPropertiesOnlineFirst", "wdm.versionsPropertiesOnlineFirst")]
+        public void TestGetSetConfigBoolValue(string methodName, string propertyName)
+        {
+            bool setVal = true;
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, setVal.ToString().ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Is" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            bool val = (bool)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(setVal));
+
+            MethodInfo setter = config.GetType().GetMethod("Set" + methodName, BindingFlags.Public | BindingFlags.Instance);
+
+            bool newVal = true;
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (bool)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+
+            newVal = false;
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (bool)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+        }
+
+        [TestCase("Timeout")]
+        [TestCase("ServerPort")]
+        [TestCase("Ttl")]
+        public void TestGetConfigIntValueMissingFile(string methodName)
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            int val = (int)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(0));
+        }
+
+        [TestCase("Timeout", "wdm.timeout")]
+        [TestCase("ServerPort", "wdm.serverPort")]
+        [TestCase("Ttl", "wdm.ttl")]
+        public void TestGetSetConfigIntValue(string methodName, string propertyName)
+        {
+            int setVal = 1;
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, setVal.ToString().ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            int val = (int)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(setVal));
+
+            MethodInfo setter = config.GetType().GetMethod("Set" + methodName, BindingFlags.Public | BindingFlags.Instance);
+
+            int newVal = 2;
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (int)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+
+            newVal = 3;
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (int)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+        }
+
+        [Test]
+        public void TestGetTargetDotPathWindows()
+        {
+            systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.WIN);
+
+            string setVal = ".";
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
+            string val = (string)getter.Invoke(config, new object[] { });
+
+            StringAssert.EndsWith("\\WebDriverManagerSharp\\bin\\Debug", val);
+        }
+
+        [Test]
+        public void TestGetTargetHomePathWindows()
+        {
+            systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.WIN);
+
+            string setVal = "~\\mydirectory";
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
+            string val = (string)getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(Environment.ExpandEnvironmentVariables("%userprofile%") + "\\mydirectory"));
+        }
+
+        [Test]
+        [Ignore("not implemented")]
+        public void TestGetTargetHomePathLinux()
+        {
+            systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.LINUX);
+
+            string setVal = "~\\mydirectory";
+
+            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
+            string val = (string)getter.Invoke(config, new object[] { });
+
+            //Assert.That(val, Is.EqualTo(Environment.ExpandEnvironmentVariables("%userprofile%") + "\\mydirectory"));
         }
 
         [Test]
@@ -82,175 +392,15 @@ namespace WebDriverManager.UnitTests.Configuration
         }
 
         [Test]
-        public void TestGetBinaryPathMissingFile()
+        public void TestGetOs()
         {
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            string bin = config.GetBinaryPath();
-
-            Assert.That(bin, Is.Empty);
-        }
-
-        [Test]
-        public void TestGetBinaryPath()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.binaryPath=theBinaryPath")));
+            systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.LINUX);
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
-            string bin = config.GetBinaryPath();
+            string os = config.GetOs();
 
-            Assert.That(bin, Is.EqualTo("theBinaryPath"));
-        }
-
-        [Test]
-        public void TestSetBinaryPath()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.binaryPath=theBinaryPath")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            string bin = config.GetBinaryPath();
-
-            Assert.That(bin, Is.EqualTo("theBinaryPath"));
-
-            config.SetBinaryPath("alternativePath");
-
-            bin = config.GetBinaryPath();
-
-            Assert.That(bin, Is.EqualTo("alternativePath"));
-        }
-
-        [Test]
-        public void TestGetDriverMirrorUrlMissingFile()
-        {
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            Assert.Throws<WebDriverManagerException>(() => config.GetChromeDriverMirrorUrl());
-        }
-
-        [Test]
-        public void TestGetDriverMirrorUrl()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.chromeDriverMirrorUrl=http://mytest.url")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            Uri uri = config.GetChromeDriverMirrorUrl();
-
-            Assert.That(uri.ToString(), Is.EqualTo("http://mytest.url/"));
-        }
-
-
-        [Test]
-        public void TestSetDriverMirrorUrl()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.chromeDriverMirrorUrl=http://mytest.url")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            Uri uri = config.GetChromeDriverMirrorUrl();
-
-            Assert.That(uri.ToString(), Is.EqualTo("http://mytest.url/"));
-
-            config.SetChromeDriverMirrorUrl(new Uri("http://alternative.url"));
-
-            uri = config.GetChromeDriverMirrorUrl();
-
-            Assert.That(uri.ToString(), Is.EqualTo("http://alternative.url/"));
-        }
-
-
-        [Test]
-        public void TestGetServerPortMissingFile()
-        {
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            int port = config.GetServerPort();
-
-            Assert.That(port, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void TestGetServerPort()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.serverPort=1234")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            int port = config.GetServerPort();
-
-            // TODO: Think this is a bug, ConfigKey returns zero for default value instead of null, so file is not read.
-            //Assert.That(port, Is.EqualTo(1234));
-        }
-
-        [Test]
-        public void TestSetServerPort()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.serverPort=1234")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            int port = config.GetServerPort();
-
-            // TODO: Think this is a bug, ConfigKey returns zero for default value instead of null, so file is not read.
-            //Assert.That(port, Is.EqualTo(1234));
-
-            config.SetServerPort(5678);
-
-            port = config.GetServerPort();
-
-            Assert.That(port, Is.EqualTo(5678));
-        }
-
-        [Test]
-        public void TestGetVersionsPropertiesOnlineFirstMissingFile()
-        {
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            bool onlineFirst = config.GetVersionsPropertiesOnlineFirst();
-
-            Assert.That(onlineFirst, Is.False);
-        }
-
-        [Test]
-        public void TestGetVersionsPropertiesOnlineFirst()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.versionsPropertiesOnlineFirst=true")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            bool onlineFirst = config.GetVersionsPropertiesOnlineFirst();
-
-            // TODO: Think this is a bug, ConfigKey returns false for default value instead of null, so file is not read.
-            //Assert.That(onlineFirst, Is.True);
-        }
-
-        [Test]
-        public void TestSetVersionsPropertiesOnlineFirst()
-        {
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
-            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.versionsPropertiesOnlineFirst=true")));
-
-            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
-
-            bool onlineFirst = config.GetVersionsPropertiesOnlineFirst();
-
-            // TODO: Think this is a bug, ConfigKey returns false for default value instead of null, so file is not read.
-            //Assert.That(onlineFirst, Is.True);
-
-            config.SetVersionsPropertiesOnlineFirst(true);
-
-            onlineFirst = config.GetVersionsPropertiesOnlineFirst();
-
-            Assert.That(onlineFirst, Is.True);
+            Assert.That(os, Is.EqualTo(WebDriverManagerSharp.Enums.OperatingSystem.LINUX.ToString()));
         }
     }
 }

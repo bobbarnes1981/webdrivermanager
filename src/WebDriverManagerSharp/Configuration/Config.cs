@@ -43,17 +43,17 @@ namespace WebDriverManagerSharp.Configuration
         private readonly ConfigKey<string> properties = new ConfigKey<string>("wdm.properties", "webdrivermanager.properties");
 
         private readonly ConfigKey<string> targetPath = new ConfigKey<string>("wdm.targetPath");
-        private readonly ConfigKey<bool> forceCache = new ConfigKey<bool>("wdm.forceCache");
-        private readonly ConfigKey<bool> over_ride = new ConfigKey<bool>("wdm.override");
-        private readonly ConfigKey<bool> useMirror = new ConfigKey<bool>("wdm.useMirror");
-        private readonly ConfigKey<bool> useBetaVersions = new ConfigKey<bool>("wdm.useBetaVersions");
-        private readonly ConfigKey<bool> avoidExport = new ConfigKey<bool>("wdm.avoidExport");
-        private readonly ConfigKey<bool> avoidOutputTree = new ConfigKey<bool>("wdm.avoidOutputTree");
-        private readonly ConfigKey<bool> avoidAutoVersion = new ConfigKey<bool>("wdm.avoidAutoVersion");
-        private readonly ConfigKey<bool> avoidAutoReset = new ConfigKey<bool>("wdm.avoidAutoReset");
-        private readonly ConfigKey<bool> avoidPreferences = new ConfigKey<bool>("wdm.avoidPreferences");
-        private readonly ConfigKey<int> timeout = new ConfigKey<int>("wdm.timeout");
-        private readonly ConfigKey<bool> versionsPropertiesOnlineFirst = new ConfigKey<bool>("wdm.versionsPropertiesOnlineFirst");
+        private readonly ConfigKey<bool?> forceCache = new ConfigKey<bool?>("wdm.forceCache");
+        private readonly ConfigKey<bool?> over_ride = new ConfigKey<bool?>("wdm.override");
+        private readonly ConfigKey<bool?> useMirror = new ConfigKey<bool?>("wdm.useMirror");
+        private readonly ConfigKey<bool?> useBetaVersions = new ConfigKey<bool?>("wdm.useBetaVersions");
+        private readonly ConfigKey<bool?> avoidExport = new ConfigKey<bool?>("wdm.avoidExport");
+        private readonly ConfigKey<bool?> avoidOutputTree = new ConfigKey<bool?>("wdm.avoidOutputTree");
+        private readonly ConfigKey<bool?> avoidAutoVersion = new ConfigKey<bool?>("wdm.avoidAutoVersion");
+        private readonly ConfigKey<bool?> avoidAutoReset = new ConfigKey<bool?>("wdm.avoidAutoReset");
+        private readonly ConfigKey<bool?> avoidPreferences = new ConfigKey<bool?>("wdm.avoidPreferences");
+        private readonly ConfigKey<int?> timeout = new ConfigKey<int?>("wdm.timeout");
+        private readonly ConfigKey<bool?> versionsPropertiesOnlineFirst = new ConfigKey<bool?>("wdm.versionsPropertiesOnlineFirst");
         private readonly ConfigKey<Uri> versionsPropertiesUrl = new ConfigKey<Uri>("wdm.versionsPropertiesUrl");
 
         private readonly ConfigKey<string> architecture;
@@ -98,9 +98,9 @@ namespace WebDriverManagerSharp.Configuration
         private readonly ConfigKey<string> seleniumServerStandaloneVersion = new ConfigKey<string>("wdm.seleniumServerStandaloneVersion");
         private readonly ConfigKey<Uri> seleniumServerStandaloneUrl = new ConfigKey<Uri>("wdm.seleniumServerStandaloneUrl");
 
-        private readonly ConfigKey<int> serverPort = new ConfigKey<int>("wdm.serverPort");
+        private readonly ConfigKey<int?> serverPort = new ConfigKey<int?>("wdm.serverPort");
         private readonly ConfigKey<string> binaryPath = new ConfigKey<string>("wdm.binaryPath");
-        private readonly ConfigKey<int> ttl = new ConfigKey<int>("wdm.ttl");
+        private readonly ConfigKey<int?> ttl = new ConfigKey<int?>("wdm.ttl");
 
         public Config(ILogger logger, ISystemInformation systemInformation, IFileStorage fileStorage)
         {
@@ -154,19 +154,47 @@ namespace WebDriverManagerSharp.Configuration
             {
                 output = strValue;
             }
-            else if (typeof(T).Equals(typeof(int)))
+            //else if (typeof(T).Equals(typeof(int)))
+            //{
+            //    output = int.Parse(strValue, CultureInfo.InvariantCulture);
+            //}
+            else if (typeof(T).Equals(typeof(int?)))
             {
-                output = int.Parse(strValue, CultureInfo.InvariantCulture);
-            }
-            else if (typeof(T).Equals(typeof(bool)))
-            {
-                bool boolOut;
-                if (!bool.TryParse(strValue, out boolOut))
+                if (string.IsNullOrEmpty(strValue))
                 {
-                    throw new WebDriverManagerException("Failed to parse '" + strValue + "' as bool");
+                    output = default(T);
                 }
+                else
+                {
+                    output = int.Parse(strValue, CultureInfo.InvariantCulture);
+                }
+            }
+            //else if (typeof(T).Equals(typeof(bool)))
+            //{
+            //    bool boolOut;
+            //    if (!bool.TryParse(strValue, out boolOut))
+            //    {
+            //        throw new WebDriverManagerException("Failed to parse '" + strValue + "' as bool");
+            //    }
 
-                output = boolOut;
+            //    output = boolOut;
+            //}
+            else if (typeof(T).Equals(typeof(bool?)))
+            {
+                if (string.IsNullOrEmpty(strValue))
+                {
+                    output = default(T);
+                }
+                else
+                {
+                    bool boolOut;
+                    if (!bool.TryParse(strValue, out boolOut))
+                    {
+                        throw new WebDriverManagerException("Failed to parse '" + strValue + "' as bool");
+                    }
+
+                    output = boolOut;
+                }
             }
             else if (typeof(T).Equals(typeof(Uri)))
             {
@@ -290,7 +318,7 @@ namespace WebDriverManagerSharp.Configuration
                 path = resolved;
                 if (path.Contains(HOME))
                 {
-                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                    if (systemInformation.OperatingSystem == Enums.OperatingSystem.WIN)
                     {
                         path = path.Replace(HOME, Environment.ExpandEnvironmentVariables("%userprofile%"));
                     }
@@ -318,7 +346,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsForceCache()
         {
-            return resolve(forceCache);
+            return resolve(forceCache) ?? default(bool);
         }
 
         public IConfig SetForceCache(bool value)
@@ -329,7 +357,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsOverride()
         {
-            return resolve(over_ride);
+            return resolve(over_ride) ?? default(bool);
         }
 
         public IConfig SetOverride(bool value)
@@ -340,7 +368,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsUseMirror()
         {
-            return resolve(useMirror);
+            return resolve(useMirror) ?? default(bool);
         }
 
         public IConfig SetUseMirror(bool value)
@@ -351,7 +379,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsUseBetaVersions()
         {
-            return resolve(useBetaVersions);
+            return resolve(useBetaVersions) ?? default(bool);
         }
 
         public IConfig SetUseBetaVersions(bool value)
@@ -362,7 +390,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsAvoidExport()
         {
-            return resolve(avoidExport);
+            return resolve(avoidExport) ?? default(bool);
         }
 
         public IConfig SetAvoidExport(bool value)
@@ -373,7 +401,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsAvoidOutputTree()
         {
-            return resolve(avoidOutputTree);
+            return resolve(avoidOutputTree) ?? default(bool);
         }
 
         public IConfig SetAvoidOutputTree(bool value)
@@ -384,7 +412,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsAvoidAutoVersion()
         {
-            return resolve(avoidAutoVersion);
+            return resolve(avoidAutoVersion) ?? default(bool);
         }
 
         public IConfig SetAvoidAutoVersion(bool value)
@@ -395,7 +423,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsAvoidAutoReset()
         {
-            return resolve(avoidAutoReset);
+            return resolve(avoidAutoReset) ?? default(bool);
         }
 
         public IConfig SetAvoidAutoReset(bool value)
@@ -406,7 +434,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public bool IsAvoidPreferences()
         {
-            return resolve(avoidPreferences);
+            return resolve(avoidPreferences) ?? default(bool);
         }
 
         public IConfig SetAvoidPreferences(bool value)
@@ -417,7 +445,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public int GetTimeout()
         {
-            return resolve(timeout);
+            return resolve(timeout) ?? default(int);
         }
 
         public IConfig SetTimeout(int value)
@@ -426,9 +454,9 @@ namespace WebDriverManagerSharp.Configuration
             return this;
         }
 
-        public bool GetVersionsPropertiesOnlineFirst()
+        public bool IsVersionsPropertiesOnlineFirst()
         {
-            return resolve(versionsPropertiesOnlineFirst);
+            return resolve(versionsPropertiesOnlineFirst) ?? default(bool);
         }
 
         public IConfig SetVersionsPropertiesOnlineFirst(bool value)
@@ -578,7 +606,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public int GetServerPort()
         {
-            return resolve(serverPort);
+            return resolve(serverPort) ?? default(int);
         }
 
         public IConfig SetServerPort(int value)
@@ -589,7 +617,7 @@ namespace WebDriverManagerSharp.Configuration
 
         public int GetTtl()
         {
-            return resolve(ttl);
+            return resolve(ttl) ?? default(int);
         }
 
         public IConfig SetTtl(int value)
@@ -647,7 +675,7 @@ namespace WebDriverManagerSharp.Configuration
             return resolve(chromeDriverMirrorUrl);
         }
 
-        public IConfig SetChromeDriverMirrorUrl(System.Uri value)
+        public IConfig SetChromeDriverMirrorUrl(Uri value)
         {
             this.chromeDriverMirrorUrl.SetValue(value);
             return this;
@@ -719,7 +747,7 @@ namespace WebDriverManagerSharp.Configuration
             return this;
         }
 
-        public Uri getFirefoxDriverMirrorUrl()
+        public Uri GetFirefoxDriverMirrorUrl()
         {
             return resolve(firefoxDriverMirrorUrl);
         }
