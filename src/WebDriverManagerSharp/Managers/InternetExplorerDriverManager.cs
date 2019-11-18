@@ -18,6 +18,7 @@
 namespace WebDriverManagerSharp.Managers
 {
     using System.Collections.Generic;
+    using System.Runtime.InteropServices;
     using WebDriverManagerSharp.Enums;
 
     /**
@@ -80,6 +81,19 @@ namespace WebDriverManagerSharp.Managers
 
         protected override string GetBrowserVersion()
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string[] programFilesEnvs = { getProgramFilesEnv() };
+                string ieVersion = GetDefaultBrowserVersion(programFilesEnvs, "\\\\Internet Explorer\\\\IExplore.exe", string.Empty, string.Empty, string.Empty, GetDriverManagerType().ToString());
+                string browserVersionOutput;
+                if (ieVersion != null)
+                {
+                    browserVersionOutput = ieVersion;
+                    Log.Debug("Internet Explorer version {0} found", browserVersionOutput);
+                    return browserVersionOutput;
+                }
+            }
+
             return null;
         }
     }
