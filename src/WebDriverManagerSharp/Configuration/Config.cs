@@ -219,7 +219,7 @@ namespace WebDriverManagerSharp.Configuration
         {
             string value = null;
             string propertiesValue = GetProperties();
-            string defaultProperties = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "Resources", "webdrivermanager.properties");
+            string defaultProperties = Path.Combine(fileStorage.GetCurrentDirectory(), "Resources", "webdrivermanager.properties");
             try
             {
                 value = getPropertyFrom(propertiesValue, key);
@@ -331,7 +331,7 @@ namespace WebDriverManagerSharp.Configuration
 
                 if (path.Equals(".", StringComparison.OrdinalIgnoreCase))
                 {
-                    path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                    path = fileStorage.GetCurrentDirectory();
                 }
             }
 

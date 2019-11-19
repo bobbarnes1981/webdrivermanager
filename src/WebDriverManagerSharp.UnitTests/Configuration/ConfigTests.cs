@@ -42,6 +42,8 @@ namespace WebDriverManager.UnitTests.Configuration
             loggerMock = new Mock<ILogger>();
             systemInformationMock = new Mock<ISystemInformation>();
             fileStorageMock = new Mock<IFileStorage>();
+
+            fileStorageMock.Setup(x => x.GetCurrentDirectory()).Returns("d:\\my_directory");
         }
 
         //[TestCase("Properties")]
@@ -307,13 +309,15 @@ namespace WebDriverManager.UnitTests.Configuration
 
             fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
+            fileStorageMock.Setup(x => x.GetCurrentDirectory()).Returns("c:\\my_curent_path");
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
             MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
             string val = (string)getter.Invoke(config, new object[] { });
 
-            StringAssert.EndsWith("\\WebDriverManagerSharp\\bin\\Debug", val);
+            string path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            Assert.That(val, Is.EqualTo("c:\\my_curent_path"));
         }
 
         [Test]

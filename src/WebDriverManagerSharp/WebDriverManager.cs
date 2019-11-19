@@ -831,7 +831,7 @@ namespace WebDriverManagerSharp
         private static Stream getLocalVersionsInputStream()
         {
             Stream inputStream;
-            inputStream = File.OpenRead(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "Resources", "versions.properties"));
+            inputStream = File.OpenRead(Path.Combine(fileStorage.GetCurrentDirectory(), "Resources", "versions.properties"));
             return inputStream;
         }
 

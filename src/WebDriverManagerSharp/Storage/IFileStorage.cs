@@ -30,5 +30,7 @@ namespace WebDriverManagerSharp.Storage
         string[] ReadAllLines(string file);
 
         string[] GetFileNames(string directory, string filter);
+
+        string GetCurrentDirectory();
     }
 }

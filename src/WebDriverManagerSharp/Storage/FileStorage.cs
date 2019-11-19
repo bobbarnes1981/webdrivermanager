@@ -18,6 +18,7 @@
 namespace WebDriverManagerSharp.Storage
 {
     using System.IO;
+    using System.Reflection;
 
     public class FileStorage : IFileStorage
     {
@@ -29,6 +30,11 @@ namespace WebDriverManagerSharp.Storage
         public bool FileExists(string file)
         {
             return File.Exists(file);
+        }
+
+        public string GetCurrentDirectory()
+        {
+            return new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
         }
 
         public string[] GetFileNames(string directory, string filter)
