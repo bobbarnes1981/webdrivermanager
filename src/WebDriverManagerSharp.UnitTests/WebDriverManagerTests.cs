@@ -17,6 +17,7 @@
 
 namespace WebDriverManagerSharp.UnitTests
 {
+    using Moq;
     using NUnit.Framework;
     using OpenQA.Selenium.Chrome;
     using OpenQA.Selenium.Edge;
@@ -24,6 +25,7 @@ namespace WebDriverManagerSharp.UnitTests
     using OpenQA.Selenium.IE;
     using OpenQA.Selenium.Opera;
     using System;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Managers;
 

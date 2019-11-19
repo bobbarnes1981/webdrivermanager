@@ -45,12 +45,12 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetSeleniumServerStandaloneVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
             return Config().GetSeleniumServerStandaloneUrl();
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return null;
         }
@@ -65,7 +65,7 @@ namespace WebDriverManagerSharp.Managers
             Config().SetSeleniumServerStandaloneVersion(version);
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             Config().SetSeleniumServerStandaloneUrl(url);
         }

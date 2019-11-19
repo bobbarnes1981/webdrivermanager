@@ -46,6 +46,114 @@ namespace WebDriverManager.UnitTests.Configuration
             fileStorageMock.Setup(x => x.GetCurrentDirectory()).Returns("d:\\my_directory");
         }
 
+        [Test]
+        public void TestConstructor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Config(loggerMock.Object, null, fileStorageMock.Object));
+        }
+
+        [Test]
+        public void TestFileStorageException()
+        {
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Throws(new IOException());
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            string path = config.GetBinaryPath();
+
+            Assert.That(path, Is.Empty);
+            loggerMock.Verify(x => x.Trace("Property {0} not found in {1}", "wdm.binaryPath", It.IsAny<ConfigKey<string>>()), Times.Once);
+        }
+
+        [Test]
+        public void TestIsExecutableNull()
+        {
+            FileInfo fileInfo = null;
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => config.IsExecutable(fileInfo));
+        }
+
+        [Test]
+        public void TestIsExecutableWindowsNotExecutable()
+        {
+            FileInfo fileInfo = new FileInfo("testfile.doc");
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            config.SetOs("WIN");
+
+            bool result = config.IsExecutable(fileInfo);
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void TestIsExecutableWindowsExecutable()
+        {
+            FileInfo fileInfo = new FileInfo("testfile.exe");
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            config.SetOs("WIN");
+
+            bool result = config.IsExecutable(fileInfo);
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void TestIsExecutableLinux()
+        {
+            FileInfo fileInfo = new FileInfo("testfile");
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            config.SetOs("LINUX");
+
+            Assert.Throws<NotImplementedException>(() => config.IsExecutable(fileInfo));
+        }
+
+        [Test]
+        public void TestIsExecutableMac()
+        {
+            FileInfo fileInfo = new FileInfo("testfile");
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            config.SetOs("Mac");
+
+            Assert.Throws<NotImplementedException>(() => config.IsExecutable(fileInfo));
+        }
+
+        [Test]
+        public void TestReset()
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            Architecture origArch = config.GetArchitecture();
+
+            Architecture newArch = Architecture.X32;
+            if (origArch == Architecture.X32)
+            {
+                newArch = Architecture.X64;
+            }
+
+            config.SetArchitecture(newArch);
+
+            Architecture arch = config.GetArchitecture();
+
+            Assert.That(arch, Is.EqualTo(newArch));
+
+            config.Reset();
+
+            arch = config.GetArchitecture();
+
+            Assert.That(arch, Is.EqualTo(origArch));
+        }
+
         //[TestCase("Properties")]
         [TestCase("TargetPath")]
         //[TestCase("Os")]
@@ -251,6 +359,17 @@ namespace WebDriverManager.UnitTests.Configuration
             Assert.That(val, Is.EqualTo(newVal));
         }
 
+        [Test]
+        public void TestGetSetConfigBoolInvalidValue()
+        {
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.forceCache=dave")));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            Assert.Throws<WebDriverManagerException>(() => config.IsForceCache());
+        }
+
         [TestCase("Timeout")]
         [TestCase("ServerPort")]
         [TestCase("Ttl")]
@@ -301,6 +420,17 @@ namespace WebDriverManager.UnitTests.Configuration
         }
 
         [Test]
+        public void TestGetSetConfigIntInvalidValue()
+        {
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes("wdm.timeout=dave")));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            Assert.Throws<FormatException>(() => config.GetTimeout());
+        }
+
+        [Test]
         public void TestGetTargetDotPathWindows()
         {
             systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.WIN);
@@ -332,14 +462,12 @@ namespace WebDriverManager.UnitTests.Configuration
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
-            MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
-            string val = (string)getter.Invoke(config, new object[] { });
+            string val = config.GetTargetPath();
 
             Assert.That(val, Is.EqualTo(Environment.ExpandEnvironmentVariables("%userprofile%") + "\\mydirectory"));
         }
 
         [Test]
-        [Ignore("not implemented")]
         public void TestGetTargetHomePathLinux()
         {
             systemInformationMock.Setup(x => x.OperatingSystem).Returns(WebDriverManagerSharp.Enums.OperatingSystem.LINUX);
@@ -351,8 +479,9 @@ namespace WebDriverManager.UnitTests.Configuration
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
-            MethodInfo getter = config.GetType().GetMethod("GetTargetPath", BindingFlags.Public | BindingFlags.Instance);
-            string val = (string)getter.Invoke(config, new object[] { });
+            Assert.Throws<NotImplementedException>(() => config.GetTargetPath());
+
+            //string val = config.GetTargetPath();
 
             //Assert.That(val, Is.EqualTo(Environment.ExpandEnvironmentVariables("%userprofile%") + "\\mydirectory"));
         }

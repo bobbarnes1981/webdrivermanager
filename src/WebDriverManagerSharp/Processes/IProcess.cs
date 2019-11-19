@@ -15,12 +15,14 @@
  *
  */
 
-namespace WebDriverManagerSharp.UnitTests.Managers
+namespace WebDriverManagerSharp.Processes
 {
-    using NUnit.Framework;
+    using System;
+    using System.IO;
 
-    [TestFixture]
-    public class VoidDriverManagerTests
+    public interface IProcess : IDisposable
     {
+        StreamReader StandardOutput { get; }
+        void WaitForExit();
     }
 }

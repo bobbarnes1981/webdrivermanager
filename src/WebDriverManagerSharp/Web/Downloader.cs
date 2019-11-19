@@ -26,6 +26,7 @@ namespace WebDriverManagerSharp.Web
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Exceptions;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
 
     /**
      * Downloader class.
@@ -366,7 +367,7 @@ namespace WebDriverManagerSharp.Web
             msi.MoveTo(tmpMsi.FullName);
             log.Trace("Temporal msi file: {0}", tmpMsi);
 
-            using (Process process = new ProcessBuilder(new string[] { "msiexec", "/a", tmpMsi.FullName, "/qb", "TARGETDIR=" + msi.DirectoryName }).Start())
+            using (IProcess process = new ProcessBuilder(new string[] { "msiexec", "/a", tmpMsi.FullName, "/qb", "TARGETDIR=" + msi.DirectoryName }).Start())
             {
                 process.WaitForExit();
             }

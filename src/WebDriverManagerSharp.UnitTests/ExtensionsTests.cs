@@ -19,6 +19,8 @@ namespace WebDriverManagerSharp.UnitTests
 {
     using NUnit.Framework;
     using System;
+    using System.IO;
+    using System.Text;
 
     [TestFixture]
     public class ExtensionsTests
@@ -152,6 +154,26 @@ namespace WebDriverManagerSharp.UnitTests
             Uri result = uri.Append(uriPartString);
 
             Assert.That(result.ToString(), Is.EqualTo(expectedUri));
+        }
+
+        [Test]
+        public void CreateFromStreamNullFile()
+        {
+            Stream stream = new MemoryStream(Encoding.ASCII.GetBytes("my test data"));
+
+            FileInfo fileInfo = null;
+
+            Assert.Throws<ArgumentNullException>(() => fileInfo.CreateFromStream(stream));
+        }
+
+        [Test]
+        public void CreateFromStreamNullSource()
+        {
+            Stream stream = null;
+
+            FileInfo fileInfo = new FileInfo("test.file");
+
+            Assert.Throws<ArgumentNullException>(() => fileInfo.CreateFromStream(stream));
         }
     }
 }

@@ -18,9 +18,6 @@
 namespace WebDriverManagerSharp.UnitTests.Managers
 {
     using NUnit.Framework;
-    using OpenQA.Selenium.Edge;
-    using WebDriverManagerSharp.Enums;
-    using WebDriverManagerSharp.Managers;
 
     [TestFixture]
     public class EdgeDriverManagerTests

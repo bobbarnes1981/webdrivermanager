@@ -71,14 +71,20 @@ namespace WebDriverManagerSharp
         private bool forcedOs;
         private bool isLatest;
         private bool retry = true;
-        private IConfig config = new Config(log, systemInformation, fileStorage);
+        private IConfig config;
         private readonly IPreferences preferences;
         private string preferenceKey;
         private Properties versionsProperties;
 
         protected WebDriverManager()
+            : this(new Config(log, systemInformation, fileStorage))
         {
-            preferences = new Preferences(log, config);
+            this.preferences = new Preferences(log, config);
+        }
+
+        protected WebDriverManager(IConfig config)
+        {
+            this.config = config;
         }
 
         protected static ILogger Log { get { return log; } }
@@ -465,9 +471,11 @@ namespace WebDriverManagerSharp
             return instanceMap[GetDriverManagerType().Value].downloadedVersion;
         }
 
+        public static IHttpClientFactory HttpClientFactory = new HttpClientFactory();
+
         public virtual List<string> GetVersions()
         {
-            httpClient = new HttpClient(Config());
+            httpClient = HttpClientFactory.Build(config);
             try
             {
                 List<Uri> drivers = GetDrivers();
@@ -475,7 +483,7 @@ namespace WebDriverManagerSharp
                 foreach (Uri url in drivers)
                 {
                     string version = GetCurrentVersion(url, GetDriverName());
-                    if (string.IsNullOrEmpty(version) || version.Equals("icons", System.StringComparison.InvariantCultureIgnoreCase))
+                    if (string.IsNullOrEmpty(version) || version.Equals("icons", StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }

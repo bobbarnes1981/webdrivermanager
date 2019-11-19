@@ -31,6 +31,7 @@ namespace WebDriverManagerSharp.Managers
      */
     public class PhantomJsDriverManager : WebDriverManager
     {
+
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.PHANTOMJS;

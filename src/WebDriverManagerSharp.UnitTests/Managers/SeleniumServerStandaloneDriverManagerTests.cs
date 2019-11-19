@@ -26,22 +26,22 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using WebDriverManagerSharp.Web;
 
     [TestFixture]
-    public class ChromeDriverManagerTests
+    public class SeleniumServerStandaloneDriverManagerTests
     {
         [Test]
         public void Test()
         {
-            string fakeXml = "<?xml version='1.0' encoding='UTF-8'?> <ListBucketResult xmlns='http://doc.s3.amazonaws.com/2006-03-01'> <Name>chromedriver</Name> <Prefix/> <Marker/> <IsTruncated>false</IsTruncated> <Contents> <Key>2.0/chromedriver_linux32.zip</Key> <Generation>1380149859530000</Generation> <MetaGeneration>4</MetaGeneration> <LastModified>2013-09-25T22:57:39.349Z</LastModified> <ETag>\"c0d96102715c4916b872f91f5bf9b12c\"</ETag> <Size>7262134</Size> </Contents> <Contents> <Key>2.0/chromedriver_linux64.zip</Key> <Generation>1380149860664000</Generation> <MetaGeneration>4</MetaGeneration> <LastModified>2013-09-25T22:57:40.449Z</LastModified> <ETag>\"858ebaf47e13dce7600191ed59974c09\"</ETag> <Size>7433593</Size> </Contents> <Contents> <Key>2.0/chromedriver_mac32.zip</Key> <Generation>1380149857425000</Generation> <MetaGeneration>4</MetaGeneration> <LastModified>2013-09-25T22:57:37.204Z</LastModified> <ETag>\"efc13db5afc518000d886c2bdcb3a4bc\"</ETag> <Size>7614601</Size> </Contents> </ListBucketResult>";
+            string fakeXml = "<?xml version='1.0' encoding='UTF-8'?><ListBucketResult xmlns='http://doc.s3.amazonaws.com/2006-03-01'><Name>selenium-release</Name><Prefix/><Marker/><IsTruncated>false</IsTruncated><Contents><Key>2.39/IEDriverServer_Win32_2.39.0.zip</Key><Generation>1389651460351000</Generation><MetaGeneration>4</MetaGeneration><LastModified>2014-01-13T22:17:40.327Z</LastModified><ETag>\"bd4bc2b77a04999148e7fab974336e99\"</ETag><Size>836478</Size></Contents><Contents><Key>2.39/IEDriverServer_x64_2.39.0.zip</Key><Generation>1389651273362000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:33.323Z</LastModified><ETag>\"7d19f3d7ffb9cb40fc26cc38885b9160\"</ETag><Size>946479</Size></Contents><Contents><Key>2.39/selenium-dotnet-2.39.0.zip</Key><Generation>1389651287806000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:47.774Z</LastModified><ETag>\"e5d82bd497eff0bf3a3990cb746a2680\"</ETag><Size>10263239</Size></Contents></ListBucketResult>";
 
             Mock<IHttpClient> httpClientMock = new Mock<IHttpClient>();
-            httpClientMock.Setup(x => x.ExecuteHttpGet(new System.Uri("https://chromedriver.storage.googleapis.com/"), null)).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeXml)));
+            httpClientMock.Setup(x => x.ExecuteHttpGet(new System.Uri("https://selenium-release.storage.googleapis.com/"), null)).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeXml)));
 
             Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
 
             WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
 
-            List<string> versions = WebDriverManager.ChromeDriver().GetVersions();
+            List<string> versions = WebDriverManager.SeleniumServerStandalone().GetVersions();
 
             Assert.That(versions, Is.Not.Null);
             Assert.That(versions.Count, Is.EqualTo(1));

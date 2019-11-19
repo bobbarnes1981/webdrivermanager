@@ -18,9 +18,9 @@
 namespace WebDriverManagerSharp
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
 
     /**
      * Command line executor.
@@ -56,7 +56,7 @@ namespace WebDriverManagerSharp
             string output = string.Empty;
             try
             {
-                using (Process process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start())
+                using (IProcess process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start())
                 {
                     output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();

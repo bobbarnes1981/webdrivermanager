@@ -154,10 +154,6 @@ namespace WebDriverManagerSharp.Configuration
             {
                 output = strValue;
             }
-            //else if (typeof(T).Equals(typeof(int)))
-            //{
-            //    output = int.Parse(strValue, CultureInfo.InvariantCulture);
-            //}
             else if (typeof(T).Equals(typeof(int?)))
             {
                 if (string.IsNullOrEmpty(strValue))
@@ -169,16 +165,6 @@ namespace WebDriverManagerSharp.Configuration
                     output = int.Parse(strValue, CultureInfo.InvariantCulture);
                 }
             }
-            //else if (typeof(T).Equals(typeof(bool)))
-            //{
-            //    bool boolOut;
-            //    if (!bool.TryParse(strValue, out boolOut))
-            //    {
-            //        throw new WebDriverManagerException("Failed to parse '" + strValue + "' as bool");
-            //    }
-
-            //    output = boolOut;
-            //}
             else if (typeof(T).Equals(typeof(bool?)))
             {
                 if (string.IsNullOrEmpty(strValue))
@@ -266,13 +252,14 @@ namespace WebDriverManagerSharp.Configuration
         {
             foreach (FieldInfo field in typeof(Config).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                if (field.GetType().IsGenericType && field.GetType().GetGenericTypeDefinition() == typeof(ConfigKey<>))
+                if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(ConfigKey<>))
                 {
                     try
                     {
-                        field.GetType().GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(this, new object[0]);
+                        object fieldObject = field.GetValue(this);
+                        field.FieldType.GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(fieldObject, new object[0]);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         logger.Warn("Exception resetting {0}", field.Name);
                     }

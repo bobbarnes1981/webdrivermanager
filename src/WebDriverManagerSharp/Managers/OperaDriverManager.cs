@@ -47,12 +47,12 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetOperaDriverVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
             return getDriverUrlCheckingMirror(Config().GetOperaDriverUrl());
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return Config().GetOperaDriverMirrorUrl();
         }
@@ -67,12 +67,12 @@ namespace WebDriverManagerSharp.Managers
             Config().SetOperaDriverVersion(version);
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             Config().SetOperaDriverUrl(url);
         }
 
-        protected override string GetCurrentVersion(System.Uri url, string driverName)
+        protected override string GetCurrentVersion(Uri url, string driverName)
         {
             if (Config().IsUseMirror())
             {

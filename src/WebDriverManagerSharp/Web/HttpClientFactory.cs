@@ -15,12 +15,15 @@
  *
  */
 
-namespace WebDriverManagerSharp.UnitTests.Managers
+namespace WebDriverManagerSharp.Web
 {
-    using NUnit.Framework;
+    using WebDriverManagerSharp.Configuration;
 
-    [TestFixture]
-    public class VoidDriverManagerTests
+    public class HttpClientFactory : IHttpClientFactory
     {
+        public IHttpClient Build(IConfig config)
+        {
+            return new HttpClient(config);
+        }
     }
 }

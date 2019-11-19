@@ -17,13 +17,13 @@
 
 namespace WebDriverManagerSharp.Managers
 {
+    using HtmlAgilityPack;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using HtmlAgilityPack;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Exceptions;
     using WebDriverManagerSharp.Web;

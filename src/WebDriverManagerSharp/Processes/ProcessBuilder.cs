@@ -15,9 +15,8 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Processes
 {
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
@@ -48,9 +47,9 @@ namespace WebDriverManagerSharp
             return this;
         }
 
-        public Process Start()
+        public IProcess Start()
         {
-            Process process = new Process();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
             process.StartInfo.FileName = Path.Combine(this.directory.FullName, this.command[0]);
             process.StartInfo.Arguments = string.Join(" ", this.command.Skip(1));
 
@@ -62,7 +61,7 @@ namespace WebDriverManagerSharp
             }
 
             process.Start();
-            return process;
+            return new Process(process);
         }
     }
 }
