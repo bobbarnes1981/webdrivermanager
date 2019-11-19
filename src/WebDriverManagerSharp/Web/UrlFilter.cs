@@ -22,6 +22,7 @@ namespace WebDriverManagerSharp.Web
     using System.IO;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * System.Uri filtering logic.
@@ -33,9 +34,12 @@ namespace WebDriverManagerSharp.Web
     {
         private readonly ILogger logger;
 
-        public UrlFilter(ILogger logger)
+        private readonly IFileStorage storage;
+
+        public UrlFilter(ILogger logger, IFileStorage storage)
         {
             this.logger = logger;
+            this.storage = storage;
         }
 
         public List<Uri> FilterByOs(List<Uri> list, string osName)
@@ -174,30 +178,28 @@ namespace WebDriverManagerSharp.Web
         /// </summary>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        private static string getDistroName()
+        private string getDistroName()
         {
             string outString = string.Empty;
             string key = "UBUNTU_CODENAME";
-            DirectoryInfo dir = new DirectoryInfo(Path.DirectorySeparatorChar + "etc");
-            FileInfo[] fileList = new FileInfo[0];
-            if (dir.Exists)
+
+            string directory = "/etc";
+            string[] fileList = new string[0];
+            if (storage.DirectoryExists(directory))
             {
-                fileList = dir.GetFiles("*-release");
+                fileList = storage.GetFileNames(directory, "*-release");
             }
 
-            FileInfo fileVersion = new FileInfo(Path.Combine(Path.DirectorySeparatorChar + "proc", "version"));
-            if (fileVersion.Exists)
+            string fileVersion = "/proc/version";
+            if (storage.FileExists(fileVersion))
             {
                 fileList = fileList.CopyOf(fileList.Length + 1);
                 fileList[fileList.Length - 1] = fileVersion;
             }
 
-            foreach (FileInfo f in fileList)
+            foreach (string f in fileList)
             {
-                ////if (f.isDirectory()) {
-                ////    continue;
-                ////}
-                string[] lines = File.ReadAllLines(f.FullName);
+                string[] lines = storage.ReadAllLines(f);
                 foreach (string line in lines)
                 {
                     if (line.Contains(key))

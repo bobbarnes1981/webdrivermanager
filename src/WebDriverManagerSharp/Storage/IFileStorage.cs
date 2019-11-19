@@ -21,8 +21,14 @@ namespace WebDriverManagerSharp.Storage
 
     public interface IFileStorage
     {
-        bool Exists(string file);
+        bool FileExists(string file);
+
+        bool DirectoryExists(string directory);
 
         Stream OpenRead(string file);
+
+        string[] ReadAllLines(string file);
+
+        string[] GetFileNames(string directory, string filter);
     }
 }

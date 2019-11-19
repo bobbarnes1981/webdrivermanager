@@ -15,20 +15,35 @@
  *
  */
 
-using System.IO;
-
 namespace WebDriverManagerSharp.Storage
 {
+    using System.IO;
+
     public class FileStorage : IFileStorage
     {
-        public bool Exists(string file)
+        public bool DirectoryExists(string directory)
+        {
+            return Directory.Exists(directory);
+        }
+
+        public bool FileExists(string file)
         {
             return File.Exists(file);
+        }
+
+        public string[] GetFileNames(string directory, string filter)
+        {
+            return Directory.GetFiles(directory, filter);
         }
 
         public Stream OpenRead(string file)
         {
             return File.OpenRead(file);
+        }
+
+        public string[] ReadAllLines(string file)
+        {
+            return File.ReadAllLines(file);
         }
     }
 }

@@ -22,23 +22,26 @@ namespace WebDriverManager.UnitTests.Web
     using System.Collections.Generic;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     [TestFixture]
     public class UrlFilterTests
     {
         private Mock<ILogger> loggerMock;
+        private Mock<IFileStorage> storageMock;
 
         [SetUp]
         public void SetUp()
         {
             loggerMock = new Mock<ILogger>();
+            storageMock = new Mock<IFileStorage>();
         }
 
         [Test]
         public void TestFilterByArch()
         {
-            UrlFilter urlFilter = new UrlFilter(loggerMock.Object);
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
 
             List<System.Uri> uris = new List<System.Uri>
             {
@@ -60,7 +63,7 @@ namespace WebDriverManager.UnitTests.Web
         [Test]
         public void TestFilterByArchNone()
         {
-            UrlFilter urlFilter = new UrlFilter(loggerMock.Object);
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
 
             List<System.Uri> uris = new List<System.Uri>
             {
@@ -79,7 +82,7 @@ namespace WebDriverManager.UnitTests.Web
         [Test]
         public void TestFilterByArchOnlyOne()
         {
-            UrlFilter urlFilter = new UrlFilter(loggerMock.Object);
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
 
             List<System.Uri> uris = new List<System.Uri>
             {
@@ -95,7 +98,7 @@ namespace WebDriverManager.UnitTests.Web
         [Test]
         public void TestFilterByArchTwoNonMatching()
         {
-            UrlFilter urlFilter = new UrlFilter(loggerMock.Object);
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
 
             List<System.Uri> uris = new List<System.Uri>
             {
@@ -110,9 +113,19 @@ namespace WebDriverManager.UnitTests.Web
         }
 
         [Test]
+        public void TestFilterByArchNull()
+        {
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = null;
+
+            Assert.Throws<System.ArgumentNullException>(() => urlFilter.FilterByArch(uris, Architecture.X64, false));
+        }
+
+        [Test]
         public void TestFilterByOs()
         {
-            UrlFilter urlFilter = new UrlFilter(loggerMock.Object);
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
 
             List<System.Uri> uris = new List<System.Uri>
             {
@@ -136,15 +149,143 @@ namespace WebDriverManager.UnitTests.Web
         }
 
         [Test]
-        public void TestFilterByDistro()
+        public void TestFilterByOsNull()
         {
-            // TODO:
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = null;
+
+            Assert.Throws<System.ArgumentNullException>(() => urlFilter.FilterByOs(uris, OperatingSystem.WIN.ToString()));
+        }
+
+        [Test]
+        public void TestFilterByDistroNull()
+        {
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = null;
+
+            Assert.Throws<System.ArgumentNullException>(() => urlFilter.FilterByDistro(uris, "version"));
+        }
+
+        [Test]
+        public void TestFilterByDistroNoDirectories()
+        {
+            storageMock.Setup(x => x.DirectoryExists("/etc")).Returns(false);
+            storageMock.Setup(x => x.FileExists("/proc/version")).Returns(false);
+
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = new List<System.Uri>
+            {
+                new System.Uri("http://ubuntu/warty"),
+                new System.Uri("http://ubuntu/breezy"),
+                new System.Uri("http://ubuntu/dapper"),
+            };
+
+            List<System.Uri> output = urlFilter.FilterByDistro(uris, "version");
+
+            Assert.That(output.Count, Is.EqualTo(uris.Count));
+        }
+
+        [Test]
+        public void TestFilterByDistroEtcExists()
+        {
+            storageMock.Setup(x => x.DirectoryExists("/etc")).Returns(true);
+            storageMock.Setup(x => x.FileExists("/proc/version")).Returns(false);
+            storageMock.Setup(x => x.GetFileNames("/etc", "*-release")).Returns(new string[] { "/etc/os-release" });
+            storageMock.Setup(x => x.ReadAllLines("/etc/os-release")).Returns(new string[] { "NAME=\"Ubuntu\"", "VERSION=\"16.04 LTS (Xenial Xerus)\"", "ID=ubuntu", "ID_LIKE=debian", "PRETTY_NAME=\"Ubuntu 16.04 LTS\"", "VERSION_ID=\"16.04\"", "HOME_URL=\"http://www.ubuntu.com/\"", "SUPPORT_URL=\"http://help.ubuntu.com/\"", "BUG_REPORT_URL=\"http://bugs.launchpad.net/ubuntu/\"", "UBUNTU_CODENAME=xenial" });
+
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = new List<System.Uri>
+            {
+                new System.Uri("http://ubuntu/1.2.3/warty"),
+                new System.Uri("http://ubuntu/1.2.3/breezy"),
+                new System.Uri("http://ubuntu/1.2.3/dapper"),
+                new System.Uri("http://ubuntu/1.2.3/xenial"),
+            };
+
+            List<System.Uri> output = urlFilter.FilterByDistro(uris, "1.2.3");
+
+            Assert.That(output.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestFilterByDistroVersionExists()
+        {
+            storageMock.Setup(x => x.DirectoryExists("/etc")).Returns(false);
+            storageMock.Setup(x => x.FileExists("/proc/version")).Returns(true);
+            storageMock.Setup(x => x.ReadAllLines("/proc/version")).Returns(new string[] { "NAME=\"Ubuntu\"", "VERSION=\"16.04 LTS (Xenial Xerus)\"", "ID=ubuntu", "ID_LIKE=debian", "PRETTY_NAME=\"Ubuntu 16.04 LTS\"", "VERSION_ID=\"16.04\"", "HOME_URL=\"http://www.ubuntu.com/\"", "SUPPORT_URL=\"http://help.ubuntu.com/\"", "BUG_REPORT_URL=\"http://bugs.launchpad.net/ubuntu/\"", "UBUNTU_CODENAME=xenial" });
+
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = new List<System.Uri>
+            {
+                new System.Uri("http://ubuntu/1.2.3/warty"),
+                new System.Uri("http://ubuntu/1.2.3/breezy"),
+                new System.Uri("http://ubuntu/1.2.3/dapper"),
+                new System.Uri("http://ubuntu/1.2.3/xenial"),
+            };
+
+            List<System.Uri> output = urlFilter.FilterByDistro(uris, "1.2.3");
+
+            Assert.That(output.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void FilterByIgnoredVersionsNull()
+        {
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = null;
+
+            Assert.Throws<System.ArgumentNullException>(() => urlFilter.FilterByIgnoredVersions(uris, "1.2.3.4"));
+        }
+
+        [Test]
+        public void FilterByIgnoredVersionsNone()
+        {
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = null;
+
+            Assert.Throws<System.ArgumentNullException>(() => urlFilter.FilterByIgnoredVersions(uris));
+        }
+
+        [Test]
+        public void FilterByIgnoredVersionsEmpty()
+        {
+            loggerMock.Setup(x => x.IsTraceEnabled()).Returns(true);
+
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = new List<System.Uri>();
+
+            List<System.Uri> output = urlFilter.FilterByIgnoredVersions(uris);
+
+            Assert.That(output.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void TestFilterByIgnoreVersions()
         {
-            // TODO:
+            loggerMock.Setup(x => x.IsTraceEnabled()).Returns(true);
+
+            UrlFilter urlFilter = new UrlFilter(loggerMock.Object, storageMock.Object);
+
+            List<System.Uri> uris = new List<System.Uri>
+            {
+                new System.Uri("http://website/1.2.3.4"),
+                new System.Uri("http://website/1.2.3.5"),
+                new System.Uri("http://website/1.2.4.4"),
+                new System.Uri("http://website/1.3.3.4"),
+                new System.Uri("http://website/2.2.3.4"),
+            };
+
+            List<System.Uri> output = urlFilter.FilterByIgnoredVersions(uris, "1.2.3.4", "1.3.3.4");
+
+            Assert.That(output.Count, Is.EqualTo(3));
         }
     }
 }

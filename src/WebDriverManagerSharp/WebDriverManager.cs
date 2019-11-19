@@ -572,7 +572,7 @@ namespace WebDriverManagerSharp
             try
             {
                 downloader = new Downloader(GetDriverManagerType().Value);
-                urlFilter = new UrlFilter(log);
+                urlFilter = new UrlFilter(log, fileStorage);
 
                 bool getLatest = isVersionLatest(version);
                 bool cache = Config().IsForceCache();

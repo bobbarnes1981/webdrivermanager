@@ -244,7 +244,7 @@ namespace WebDriverManagerSharp.Configuration
         private string getPropertyFrom(string propertiesFile, string key)
         {
             Properties props = new Properties();
-            if (fileStorage.Exists(propertiesFile))
+            if (fileStorage.FileExists(propertiesFile))
             {
                 try
                 {

@@ -106,7 +106,7 @@ namespace WebDriverManager.UnitTests.Configuration
         {
             string guid = Guid.NewGuid().ToString();
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, guid))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -165,7 +165,7 @@ namespace WebDriverManager.UnitTests.Configuration
         {
             Uri guid = new Uri("http://" + Guid.NewGuid().ToString());
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, guid))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -220,7 +220,7 @@ namespace WebDriverManager.UnitTests.Configuration
         {
             bool setVal = true;
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, setVal.ToString().ToLower()))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -269,7 +269,7 @@ namespace WebDriverManager.UnitTests.Configuration
         {
             int setVal = 1;
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, setVal.ToString().ToLower()))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -305,7 +305,7 @@ namespace WebDriverManager.UnitTests.Configuration
 
             string setVal = ".";
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -323,7 +323,7 @@ namespace WebDriverManager.UnitTests.Configuration
 
             string setVal = "~\\mydirectory";
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
@@ -342,7 +342,7 @@ namespace WebDriverManager.UnitTests.Configuration
 
             string setVal = "~\\mydirectory";
 
-            fileStorageMock.Setup(x => x.Exists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
             fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("wdm.targetPath={0}", setVal.ToString().ToLower()))));
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);

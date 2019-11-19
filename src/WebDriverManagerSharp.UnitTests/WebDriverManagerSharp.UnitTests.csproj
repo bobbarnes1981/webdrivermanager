@@ -84,6 +84,7 @@
     <Compile Include="Managers\FirefoxDriverManagerTests.cs" />
     <Compile Include="Managers\ChromeDriverManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VersionComparatorTests.cs" />
     <Compile Include="Web\UrlFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
