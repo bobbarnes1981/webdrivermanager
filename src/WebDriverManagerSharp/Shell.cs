@@ -108,7 +108,7 @@ namespace WebDriverManagerSharp
             return i != -1 && j != -1 ? output.SubstringJava(i + driverType.Length, j).Trim() : output;
         }
 
-        public static string getVersionFromPowerShellOutput(string output)
+        public static string GetVersionFromPowerShellOutput(string output)
         {
             if (output == null)
             {

@@ -247,7 +247,7 @@ namespace WebDriverManagerSharp.Managers
                     browserVersionOutput = Shell.runAndWait("powershell", "get-appxpackage Microsoft.MicrosoftEdge");
                     if (!string.IsNullOrEmpty(browserVersionOutput))
                     {
-                        return Shell.getVersionFromPowerShellOutput(browserVersionOutput);
+                        return Shell.GetVersionFromPowerShellOutput(browserVersionOutput);
                     }
                 }
             }
