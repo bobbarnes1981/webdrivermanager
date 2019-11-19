@@ -25,28 +25,5 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     [TestFixture]
     public class EdgeDriverManagerTests
     {
-        [Test]
-        public void GetDriverManager()
-        {
-            WebDriverManager manager = WebDriverManager.EdgeDriver();
-
-            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceType()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(typeof(EdgeDriver));
-
-            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceEnum()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.EDGE);
-
-            Assert.That(manager, Is.InstanceOf<EdgeDriverManager>());
-        }
     }
 }

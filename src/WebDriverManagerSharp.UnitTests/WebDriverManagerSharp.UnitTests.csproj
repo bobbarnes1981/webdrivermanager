@@ -57,6 +57,9 @@
     <Reference Include="Moq, Version=4.13.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -79,12 +82,16 @@
     <Compile Include="Configuration\ConfigKeyTests.cs" />
     <Compile Include="Configuration\PropetiesTests.cs" />
     <Compile Include="Configuration\PreferencesTests.cs" />
+    <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="GitHub\ApiTests.cs" />
+    <Compile Include="Managers\VoidDriverManagerTests.cs" />
     <Compile Include="Managers\InternetExplorerDriverManagerTests.cs" />
     <Compile Include="Managers\EdgeDriverManagerTests.cs" />
     <Compile Include="Managers\FirefoxDriverManagerTests.cs" />
     <Compile Include="Managers\ChromeDriverManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionComparatorTests.cs" />
+    <Compile Include="WebDriverManagerTests.cs" />
     <Compile Include="Web\ShellTests.cs" />
     <Compile Include="Web\UrlFilterTests.cs" />
   </ItemGroup>

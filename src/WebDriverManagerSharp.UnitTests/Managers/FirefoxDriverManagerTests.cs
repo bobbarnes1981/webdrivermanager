@@ -25,28 +25,5 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     [TestFixture]
     public class FirefoxDriverManagerTests
     {
-        [Test]
-        public void GetDriverManager()
-        {
-            WebDriverManager manager = WebDriverManager.FirefoxDriver();
-
-            Assert.That(manager, Is.InstanceOf<FirefoxDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceType()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(typeof(FirefoxDriver));
-
-            Assert.That(manager, Is.InstanceOf<FirefoxDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceEnum()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.FIREFOX);
-
-            Assert.That(manager, Is.InstanceOf<FirefoxDriverManager>());
-        }
     }
 }

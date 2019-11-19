@@ -25,28 +25,5 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     [TestFixture]
     public class InternetExplorerDriverManagerTests
     {
-        [Test]
-        public void GetDriverManager()
-        {
-            WebDriverManager manager = WebDriverManager.IEDriver();
-
-            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceType()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(typeof(InternetExplorerDriver));
-
-            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
-        }
-
-        [Test]
-        public void GetInstanceEnum()
-        {
-            WebDriverManager manager = WebDriverManager.GetInstance(DriverManagerType.IEXPLORER);
-
-            Assert.That(manager, Is.InstanceOf<InternetExplorerDriverManager>());
-        }
     }
 }

@@ -136,8 +136,13 @@ namespace WebDriverManagerSharp
                 throw new ArgumentNullException(nameof(uriPart));
             }
 
+            if (uriPart.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+            {
+                uriPart = uriPart.Substring(1);
+            }
+
             string uriString = uri.ToString();
-            if (!uriString.EndsWith("/", StringComparison.OrdinalIgnoreCase) && !uriPart.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            if (!uriString.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
                 uriString += '/';
             }

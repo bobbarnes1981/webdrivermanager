@@ -1409,7 +1409,7 @@ namespace WebDriverManagerSharp
                     {
                         if (release != null)
                         {
-                            List<Asset> assets = release.Assets;
+                            Asset[] assets = release.Assets;
                             foreach (Asset asset in assets)
                             {
                                 urls.Add(new Uri(asset.BrowserDownloadUrl));
@@ -1468,7 +1468,7 @@ namespace WebDriverManagerSharp
                     string browserVersionOutput = getBrowserVersionInWindows(programFilesEnv, winBrowserName, browserBinaryPath);
                     if (!string.IsNullOrEmpty(browserVersionOutput))
                     {
-                        return Shell.getVersionFromWmicOutput(browserVersionOutput);
+                        return Shell.GetVersionFromWmicOutput(browserVersionOutput);
                     }
                 }
             }
@@ -1478,7 +1478,7 @@ namespace WebDriverManagerSharp
                 string browserVersionOutput = Shell.runAndWait(browserPath, versionFlag);
                 if (!string.IsNullOrEmpty(browserVersionOutput))
                 {
-                    return Shell.getVersionFromPosixOutput(browserVersionOutput, browserNameInOutput);
+                    return Shell.GetVersionFromPosixOutput(browserVersionOutput, browserNameInOutput);
                 }
             }
 

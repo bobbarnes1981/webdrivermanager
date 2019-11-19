@@ -18,12 +18,28 @@
 namespace WebDriverManagerSharp.UnitTests.Managers
 {
     using NUnit.Framework;
-    using OpenQA.Selenium.Chrome;
-    using WebDriverManagerSharp.Enums;
+    using System.Collections.Generic;
     using WebDriverManagerSharp.Managers;
 
     [TestFixture]
-    public class ChromeDriverManagerTests
+    public class VoidDriverManagerTests
     {
+        private VoidDriverManager manager;
+
+        [SetUp]
+        public void SetUp()
+        {
+            manager = new VoidDriverManager();
+        }
+
+        [Test]
+        public void Test()
+        {
+            List<string> versions = manager.GetVersions();
+
+            Assert.That(versions.Count, Is.EqualTo(0));
+
+            manager.Setup();
+        }
     }
 }

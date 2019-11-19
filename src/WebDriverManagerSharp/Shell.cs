@@ -73,7 +73,7 @@ namespace WebDriverManagerSharp
             return output.Trim();
         }
 
-        public static string getVersionFromWmicOutput(string output)
+        public static string GetVersionFromWmicOutput(string output)
         {
             if (output == null)
             {
@@ -85,7 +85,7 @@ namespace WebDriverManagerSharp
             return i != -1 && j != -1 ? output.SubstringJava(i + 1, j) : output;
         }
 
-        public static string getVersionFromPosixOutput(string output, string driverType)
+        public static string GetVersionFromPosixOutput(string output, string driverType)
         {
             if (output == null)
             {

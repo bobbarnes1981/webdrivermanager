@@ -17,7 +17,6 @@
 
 namespace WebDriverManagerSharp.GitHubApi
 {
-    using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /**
@@ -37,6 +36,6 @@ namespace WebDriverManagerSharp.GitHubApi
         public string Name { get; set; }
 
         [JsonProperty("assets")]
-        public List<Asset> Assets { get; set; }
+        public Asset[] Assets { get; set; }
     }
 }
