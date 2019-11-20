@@ -78,7 +78,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigFactory.cs" />
     <Compile Include="Configuration\IConfig.cs" />
+    <Compile Include="Configuration\IConfigFactory.cs" />
     <Compile Include="Configuration\IPreferences.cs" />
     <Compile Include="Configuration\ISystemInformation.cs" />
     <Compile Include="Configuration\SystemInformation.cs" />
@@ -103,7 +105,6 @@
     <Compile Include="Managers\EdgeDriverManager.cs" />
     <Compile Include="Managers\FirefoxDriverManager.cs" />
     <Compile Include="GitHubApi\Release.cs" />
-    <Compile Include="GitHubApi\User.cs" />
     <Compile Include="Web\HttpClient.cs" />
     <Compile Include="Exceptions\IllegalStateException.cs" />
     <Compile Include="Managers\InternetExplorerDriverManager.cs" />

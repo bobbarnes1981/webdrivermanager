@@ -28,30 +28,35 @@ namespace WebDriverManagerSharp
      * @author Boni Garcia (boni.gg@gmail.com)
      * @since 3.0.0
      */
-    public static class Shell
+    public class Shell : IShell
     {
-        private static readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger logger;
 
-        public static string runAndWait(params string[] command)
+        public Shell(ILogger logger)
         {
-            return runAndWaitArray(new DirectoryInfo(Directory.GetCurrentDirectory()), command);
+            this.logger = logger;
         }
 
-        public static string runAndWait(DirectoryInfo folder, params string[] command)
+        public string RunAndWait(params string[] command)
         {
-            return runAndWaitArray(folder, command);
+            return RunAndWaitArray(new DirectoryInfo(Directory.GetCurrentDirectory()), command);
         }
 
-        public static string runAndWaitArray(DirectoryInfo folder, string[] command)
+        public string RunAndWait(DirectoryInfo folder, params string[] command)
+        {
+            return RunAndWaitArray(folder, command);
+        }
+
+        public string RunAndWaitArray(DirectoryInfo folder, string[] command)
         {
             string commandStr = command.ToStringJava();
-            log.Debug("Running command on the shell: {0}", commandStr);
-            string result = runAndWaitNoLog(folder, command);
-            log.Debug("Result: {0}", result);
+            logger.Debug("Running command on the shell: {0}", commandStr);
+            string result = RunAndWaitNoLog(folder, command);
+            logger.Debug("Result: {0}", result);
             return result;
         }
 
-        public static string runAndWaitNoLog(DirectoryInfo folder, params string[] command)
+        public string RunAndWaitNoLog(DirectoryInfo folder, params string[] command)
         {
             string output = string.Empty;
             try
@@ -64,16 +69,16 @@ namespace WebDriverManagerSharp
             }
             catch (IOException e)
             {
-                if (log.IsDebugEnabled())
+                if (logger.IsDebugEnabled())
                 {
-                    log.Debug("There was a problem executing command <{0}> on the shell: {1}", string.Join(" ", command), e.Message);
+                    logger.Debug("There was a problem executing command <{0}> on the shell: {1}", string.Join(" ", command), e.Message);
                 }
             }
 
             return output.Trim();
         }
 
-        public static string GetVersionFromWmicOutput(string output)
+        public string GetVersionFromWmicOutput(string output)
         {
             if (output == null)
             {
@@ -85,7 +90,7 @@ namespace WebDriverManagerSharp
             return i != -1 && j != -1 ? output.SubstringJava(i + 1, j) : output;
         }
 
-        public static string GetVersionFromPosixOutput(string output, string driverType)
+        public string GetVersionFromPosixOutput(string output, string driverType)
         {
             if (output == null)
             {
@@ -108,7 +113,7 @@ namespace WebDriverManagerSharp
             return i != -1 && j != -1 ? output.SubstringJava(i + driverType.Length, j).Trim() : output;
         }
 
-        public static string GetVersionFromPowerShellOutput(string output)
+        public string GetVersionFromPowerShellOutput(string output)
         {
             if (output == null)
             {

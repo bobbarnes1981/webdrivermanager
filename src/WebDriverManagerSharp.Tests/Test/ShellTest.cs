@@ -19,6 +19,7 @@ namespace WebDriverManagerSharp.Tests.Test
 {
     using NUnit.Framework;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
 
     /**
      * Shell utilities test.
@@ -33,7 +34,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("Google Chrome 75.0.3770.80", "75")]
         public void versionFromPosixOutputTest(string output, string version)
         {
-            string versionFromPosixOutput = Shell.GetVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
+            string versionFromPosixOutput = new Shell(Logger.GetLogger()).GetVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
             Assert.That(versionFromPosixOutput, Is.EqualTo(version));
         }
     }

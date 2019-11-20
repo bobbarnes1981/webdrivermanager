@@ -72,22 +72,23 @@ namespace WebDriverManagerSharp
         private bool isLatest;
         private bool retry = true;
         private IConfig config;
+        private IShell shell;
         private readonly IPreferences preferences;
         private string preferenceKey;
         private Properties versionsProperties;
 
+        public static IConfigFactory ConfigFactory = new ConfigFactory();
+
         protected WebDriverManager()
-            : this(new Config(log, systemInformation, fileStorage))
         {
+            this.config = ConfigFactory.Build();
+            this.shell = new Shell(log);
             this.preferences = new Preferences(log, config);
         }
 
-        protected WebDriverManager(IConfig config)
-        {
-            this.config = config;
-        }
-
         protected static ILogger Log { get { return log; } }
+
+        protected IShell Shell { get { return shell; } }
 
         public IHttpClient HttpClient { get { return httpClient; } protected set { httpClient = value; } } // setter only for edge driver
 
@@ -122,7 +123,7 @@ namespace WebDriverManagerSharp
 
         public static IConfig GlobalConfig()
         {
-            IConfig global = new Config(log, systemInformation, fileStorage);
+            IConfig global = ConfigFactory.Build();
             global.SetAvoidAutoReset(true);
             foreach (DriverManagerType type in Enum.GetValues(typeof(DriverManagerType)))
             {
@@ -528,6 +529,11 @@ namespace WebDriverManagerSharp
             }
         }
 
+        public static void ClearDrivers()
+        {
+            instanceMap.Clear();
+        }
+
         // ------------
 
         public virtual string PreDownload(string target, string version)
@@ -732,7 +738,7 @@ namespace WebDriverManagerSharp
 
         private static bool isVersionLatest(string version)
         {
-            return string.IsNullOrEmpty(version) || version.Equals("latest", System.StringComparison.InvariantCultureIgnoreCase);
+            return string.IsNullOrEmpty(version) || version.Equals("latest", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private string getVersionForInstalledBrowser(string browserVersion)
@@ -1469,7 +1475,7 @@ namespace WebDriverManagerSharp
             }
 
             string browserBinaryPath = Config().GetBinaryPath();
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            if (systemInformation.OperatingSystem == Enums.OperatingSystem.WIN)
             {
                 foreach (string programFilesEnv in programFilesEnvs)
                 {
@@ -1480,13 +1486,13 @@ namespace WebDriverManagerSharp
                     }
                 }
             }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux) || System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+            else if (systemInformation.OperatingSystem == Enums.OperatingSystem.LINUX || systemInformation.OperatingSystem == Enums.OperatingSystem.MAC)
             {
                 string browserPath = getPosixBrowserPath(linuxBrowserName, macBrowserName, browserBinaryPath);
-                string browserVersionOutput = Shell.runAndWait(browserPath, versionFlag);
+                string browserVersionOutput = shell.RunAndWait(browserPath, versionFlag);
                 if (!string.IsNullOrEmpty(browserVersionOutput))
                 {
-                    return Shell.GetVersionFromPosixOutput(browserVersionOutput, browserNameInOutput);
+                    return shell.GetVersionFromPosixOutput(browserVersionOutput, browserNameInOutput);
                 }
             }
 
@@ -1505,13 +1511,13 @@ namespace WebDriverManagerSharp
             }
         }
 
-        private static string getBrowserVersionInWindows(string programFilesEnv, string winBrowserName, string browserBinaryPath)
+        private string getBrowserVersionInWindows(string programFilesEnv, string winBrowserName, string browserBinaryPath)
         {
             string programFiles = System.Environment.GetEnvironmentVariable(programFilesEnv).Replace("\\", "\\\\");
             string browserPath = string.IsNullOrEmpty(browserBinaryPath)
                     ? programFiles + winBrowserName
                     : browserBinaryPath;
-            return Shell.runAndWait(getExecFile(), "wmic.exe", "datafile", "where", "name='" + browserPath + "'", "get", "Version", "/value");
+            return shell.RunAndWait(getExecFile(), "wmic.exe", "datafile", "where", "name='" + browserPath + "'", "get", "Version", "/value");
         }
 
         protected static DirectoryInfo getExecFile()
@@ -1594,7 +1600,7 @@ namespace WebDriverManagerSharp
                 }
                 else if (arg.Equals("clear-preferences", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    new Preferences(log, new Config(log, systemInformation, fileStorage)).Clear();
+                    new Preferences(log, ConfigFactory.Build()).Clear();
                 }
                 else
                 {
@@ -1628,7 +1634,7 @@ namespace WebDriverManagerSharp
             int port;
             if (args.Length < 2 || !int.TryParse(args[1], out port))
             {
-                port = new Config(log, systemInformation, fileStorage).GetServerPort();
+                port = ConfigFactory.Build().GetServerPort();
             }
 
             new NancyHost(

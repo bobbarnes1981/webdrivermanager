@@ -84,6 +84,7 @@
     <Compile Include="Configuration\PropetiesTests.cs" />
     <Compile Include="Configuration\PreferencesTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="FixtureSetUp.cs" />
     <Compile Include="GitHub\ApiTests.cs" />
     <Compile Include="Managers\SeleniumServerStandaloneDriverManagerTests.cs" />
     <Compile Include="Managers\OperaDriverManagerTests.cs" />
