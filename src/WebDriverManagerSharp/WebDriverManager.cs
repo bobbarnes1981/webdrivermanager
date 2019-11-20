@@ -35,6 +35,7 @@ namespace WebDriverManagerSharp
     using WebDriverManagerSharp.GitHubApi;
     using WebDriverManagerSharp.Logging;
     using WebDriverManagerSharp.Managers;
+    using WebDriverManagerSharp.Processes;
     using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
@@ -77,12 +78,14 @@ namespace WebDriverManagerSharp
         private string preferenceKey;
         private Properties versionsProperties;
 
-        public static IConfigFactory ConfigFactory = new ConfigFactory();
+        public static IConfigFactory ConfigFactory = new ConfigFactory(log);
+        public static IHttpClientFactory HttpClientFactory = new HttpClientFactory(log);
+        public static IShellFactory ShellFactory = new ShellFactory(log);
 
         protected WebDriverManager()
         {
             this.config = ConfigFactory.Build();
-            this.shell = new Shell(log);
+            this.shell = ShellFactory.Build();
             this.preferences = new Preferences(log, config);
         }
 
@@ -393,8 +396,7 @@ namespace WebDriverManagerSharp
             return instanceMap[GetDriverManagerType().Value];
         }
 
-        public WebDriverManager LocalRepositoryPassword(
-                string localRepositoryPassword)
+        public WebDriverManager LocalRepositoryPassword(string localRepositoryPassword)
         {
             Config().SetLocalRepositoryPassword(localRepositoryPassword);
             return instanceMap[GetDriverManagerType().Value];
@@ -471,8 +473,6 @@ namespace WebDriverManagerSharp
         {
             return instanceMap[GetDriverManagerType().Value].downloadedVersion;
         }
-
-        public static IHttpClientFactory HttpClientFactory = new HttpClientFactory();
 
         public virtual List<string> GetVersions()
         {
@@ -906,8 +906,8 @@ namespace WebDriverManagerSharp
         /// <returns></returns>
         protected List<Uri> filterCandidateUrls(Architecture arch, string version, bool getLatest)
         {
-            List<System.Uri> urls = GetDrivers();
-            List<System.Uri> candidateUrls;
+            List<Uri> urls = GetDrivers();
+            List<Uri> candidateUrls;
             Log.Trace("All System.Uris: {0}", urls);
 
             bool continueSearchingVersion;

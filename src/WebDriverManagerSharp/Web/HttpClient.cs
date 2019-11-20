@@ -37,16 +37,16 @@ namespace WebDriverManagerSharp.Web
      */
     public class HttpClient : IHttpClient
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly IConfig config;
+        private readonly ILogger logger;
 
         private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-        private readonly IConfig config;
         private readonly System.Net.Http.HttpClient closeableHttpClient;
 
         private bool disposed = false;
 
-        public HttpClient(IConfig config)
+        public HttpClient(IConfig config, ILogger logger)
         {
             if (config == null)
             {
@@ -54,6 +54,7 @@ namespace WebDriverManagerSharp.Web
             }
 
             this.config = config;
+            this.logger = logger;
 
             System.Net.Http.HttpClientHandler handler = new System.Net.Http.HttpClientHandler();
 
@@ -131,7 +132,7 @@ namespace WebDriverManagerSharp.Web
                 string responseString = response.Content.ReadAsStringAsync().Result;
 
                 string errorMessage = "Error HTTP " + response.StatusCode + " executing " + url + " [" + responseString + "]";
-                log.Error(errorMessage);
+                logger.Error(errorMessage);
                 throw new WebDriverManagerException(errorMessage);
             }
 

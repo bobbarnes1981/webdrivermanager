@@ -25,12 +25,15 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.Net.Http.Headers;
     using System.Text;
     using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Processes;
     using WebDriverManagerSharp.Web;
 
     [TestFixture]
     public class OperaDriverManagerTests
     {
         private Mock<IConfig> configMock;
+        private Mock<IHttpClient> httpClientMock;
+        private Mock<IShell> shellMock;
 
         [SetUp]
         public void SetUp()
@@ -38,12 +41,21 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             WebDriverManager.ClearDrivers();
 
             configMock = new Mock<IConfig>();
+            httpClientMock = new Mock<IHttpClient>();
+            shellMock = new Mock<IShell>();
 
             Mock<IConfigFactory> configFactoryMock = new Mock<IConfigFactory>();
-
             configFactoryMock.Setup(x => x.Build()).Returns(configMock.Object);
 
+            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
+            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
+
+            Mock<IShellFactory> shellFactoryMock = new Mock<IShellFactory>();
+            shellFactoryMock.Setup(x => x.Build()).Returns(shellMock.Object);
+
             WebDriverManager.ConfigFactory = configFactoryMock.Object;
+            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
+            WebDriverManager.ShellFactory = shellFactoryMock.Object;
         }
 
         [Test]
@@ -56,13 +68,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
 
             string fakeJson = "[  {    \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/21466859\",    \"assets_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/21466859/assets\",    \"upload_url\": \"https://uploads.github.com/repos/operasoftware/operachromiumdriver/releases/21466859/assets{?name,label}\",    \"html_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/tag/v.78.0.3904.87\",    \"id\": 21466859,    \"node_id\": \"MDc6UmVsZWFzZTIxNDY2ODU5\",    \"tag_name\": \"v.78.0.3904.87\",    \"target_commitish\": \"master\",    \"name\": \"78.0.3904.87\",    \"draft\": false,    \"author\": {      \"login\": \"rkrupski\",      \"id\": 741882,      \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",      \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",      \"gravatar_id\": \"\",      \"url\": \"https://api.github.com/users/rkrupski\",      \"html_url\": \"https://github.com/rkrupski\",      \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",      \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",      \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",      \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",      \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",      \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",      \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",      \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",      \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",      \"type\": \"User\",      \"site_admin\": false    },    \"prerelease\": false,    \"created_at\": \"2017-04-05T14:23:06Z\",    \"published_at\": \"2019-11-14T10:34:07Z\",    \"assets\": [      {        \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/assets/16155574\",        \"id\": 16155574,        \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE2MTU1NTc0\",        \"name\": \"operadriver_linux64.zip\",        \"label\": null,        \"uploader\": {          \"login\": \"rkrupski\",          \"id\": 741882,          \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",          \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",          \"gravatar_id\": \"\",          \"url\": \"https://api.github.com/users/rkrupski\",          \"html_url\": \"https://github.com/rkrupski\",          \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",          \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",          \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",          \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",          \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",          \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",          \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",          \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",          \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",          \"type\": \"User\",          \"site_admin\": false        },        \"content_type\": \"application/x-zip-compressed\",        \"state\": \"uploaded\",        \"size\": 5898614,        \"download_count\": 225,        \"created_at\": \"2019-11-14T09:10:04Z\",        \"updated_at\": \"2019-11-14T09:10:32Z\",        \"browser_download_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/download/v.78.0.3904.87/operadriver_linux64.zip\"      },      {        \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/assets/16155575\",        \"id\": 16155575,        \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE2MTU1NTc1\",        \"name\": \"operadriver_mac64.zip\",        \"label\": null,        \"uploader\": {          \"login\": \"rkrupski\",          \"id\": 741882,          \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",          \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",          \"gravatar_id\": \"\",          \"url\": \"https://api.github.com/users/rkrupski\",          \"html_url\": \"https://github.com/rkrupski\",          \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",          \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",          \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",          \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",          \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",          \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",          \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",          \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",          \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",          \"type\": \"User\",          \"site_admin\": false        },        \"content_type\": \"application/x-zip-compressed\",        \"state\": \"uploaded\",        \"size\": 7517740,        \"download_count\": 85,        \"created_at\": \"2019-11-14T09:10:05Z\",        \"updated_at\": \"2019-11-14T09:10:33Z\",        \"browser_download_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/download/v.78.0.3904.87/operadriver_mac64.zip\"      }    ],    \"tarball_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/tarball/v0.1.0\",    \"zipball_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/zipball/v0.1.0\",    \"body\": \"OperaChromiumDriver early beta.\n\"  }]";
 
-            Mock<IHttpClient> httpClientMock = new Mock<IHttpClient>();
             httpClientMock.Setup(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeJson)));
-
-            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
-
-            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
 
             List<string> versions = WebDriverManager.OperaDriver().GetVersions();
 
@@ -73,21 +79,18 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void GetVersionsMirror()
         {
-            System.Uri driverUrl = new System.Uri("https://api.github.com/repos/operasoftware/operachromiumdriver/releases");
-            configMock.Setup(x => x.GetOperaDriverUrl()).Returns(driverUrl);
+            Uri driverUrl = new Uri("http://npm.taobao.org/mirrors/operadriver");
+            Uri driverSubUrl = new Uri("http://npm.taobao.org/mirrors/operadriver/.75.0.3770.100/");
+            configMock.Setup(x => x.GetOperaDriverMirrorUrl()).Returns(driverUrl);
             configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
             configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
             configMock.Setup(x => x.IsUseMirror()).Returns(true);
 
-            string fakeJson = "[  {    \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/21466859\",    \"assets_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/21466859/assets\",    \"upload_url\": \"https://uploads.github.com/repos/operasoftware/operachromiumdriver/releases/21466859/assets{?name,label}\",    \"html_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/tag/v.78.0.3904.87\",    \"id\": 21466859,    \"node_id\": \"MDc6UmVsZWFzZTIxNDY2ODU5\",    \"tag_name\": \"v.78.0.3904.87\",    \"target_commitish\": \"master\",    \"name\": \"78.0.3904.87\",    \"draft\": false,    \"author\": {      \"login\": \"rkrupski\",      \"id\": 741882,      \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",      \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",      \"gravatar_id\": \"\",      \"url\": \"https://api.github.com/users/rkrupski\",      \"html_url\": \"https://github.com/rkrupski\",      \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",      \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",      \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",      \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",      \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",      \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",      \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",      \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",      \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",      \"type\": \"User\",      \"site_admin\": false    },    \"prerelease\": false,    \"created_at\": \"2017-04-05T14:23:06Z\",    \"published_at\": \"2019-11-14T10:34:07Z\",    \"assets\": [      {        \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/assets/16155574\",        \"id\": 16155574,        \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE2MTU1NTc0\",        \"name\": \"operadriver_linux64.zip\",        \"label\": null,        \"uploader\": {          \"login\": \"rkrupski\",          \"id\": 741882,          \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",          \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",          \"gravatar_id\": \"\",          \"url\": \"https://api.github.com/users/rkrupski\",          \"html_url\": \"https://github.com/rkrupski\",          \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",          \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",          \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",          \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",          \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",          \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",          \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",          \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",          \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",          \"type\": \"User\",          \"site_admin\": false        },        \"content_type\": \"application/x-zip-compressed\",        \"state\": \"uploaded\",        \"size\": 5898614,        \"download_count\": 225,        \"created_at\": \"2019-11-14T09:10:04Z\",        \"updated_at\": \"2019-11-14T09:10:32Z\",        \"browser_download_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/download/v.78.0.3904.87/operadriver_linux64.zip\"      },      {        \"url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/releases/assets/16155575\",        \"id\": 16155575,        \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE2MTU1NTc1\",        \"name\": \"operadriver_mac64.zip\",        \"label\": null,        \"uploader\": {          \"login\": \"rkrupski\",          \"id\": 741882,          \"node_id\": \"MDQ6VXNlcjc0MTg4Mg==\",          \"avatar_url\": \"https://avatars2.githubusercontent.com/u/741882?v=4\",          \"gravatar_id\": \"\",          \"url\": \"https://api.github.com/users/rkrupski\",          \"html_url\": \"https://github.com/rkrupski\",          \"followers_url\": \"https://api.github.com/users/rkrupski/followers\",          \"following_url\": \"https://api.github.com/users/rkrupski/following{/other_user}\",          \"gists_url\": \"https://api.github.com/users/rkrupski/gists{/gist_id}\",          \"starred_url\": \"https://api.github.com/users/rkrupski/starred{/owner}{/repo}\",          \"subscriptions_url\": \"https://api.github.com/users/rkrupski/subscriptions\",          \"organizations_url\": \"https://api.github.com/users/rkrupski/orgs\",          \"repos_url\": \"https://api.github.com/users/rkrupski/repos\",          \"events_url\": \"https://api.github.com/users/rkrupski/events{/privacy}\",          \"received_events_url\": \"https://api.github.com/users/rkrupski/received_events\",          \"type\": \"User\",          \"site_admin\": false        },        \"content_type\": \"application/x-zip-compressed\",        \"state\": \"uploaded\",        \"size\": 7517740,        \"download_count\": 85,        \"created_at\": \"2019-11-14T09:10:05Z\",        \"updated_at\": \"2019-11-14T09:10:33Z\",        \"browser_download_url\": \"https://github.com/operasoftware/operachromiumdriver/releases/download/v.78.0.3904.87/operadriver_mac64.zip\"      }    ],    \"tarball_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/tarball/v0.1.0\",    \"zipball_url\": \"https://api.github.com/repos/operasoftware/operachromiumdriver/zipball/v0.1.0\",    \"body\": \"OperaChromiumDriver early beta.\n\"  }]";
+            string fakeHtml = "<a href=\"/mirrors/operadriver/.75.0.3770.100/\">.75.0.3770.100</a>";
+            string fakeSubHtml = "<a href=\"/mirrors/operadriver/.75.0.3770.100/operadriver_win64.zip\">operadriver_win64.zip</a>";
 
-            Mock<IHttpClient> httpClientMock = new Mock<IHttpClient>();
-            httpClientMock.Setup(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeJson)));
-
-            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
-
-            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
+            httpClientMock.Setup(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+            httpClientMock.Setup(x => x.ExecuteHttpGet(driverSubUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeSubHtml)));
 
             List<string> versions = WebDriverManager.OperaDriver().GetVersions();
 

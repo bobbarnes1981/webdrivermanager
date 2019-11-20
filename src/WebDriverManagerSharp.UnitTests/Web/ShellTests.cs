@@ -20,8 +20,8 @@ namespace WebDriverManager.UnitTests.Web
     using Moq;
     using NUnit.Framework;
     using System;
-    using WebDriverManagerSharp;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
 
     [TestFixture]
     public class ShellTests

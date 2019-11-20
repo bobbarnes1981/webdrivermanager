@@ -40,11 +40,12 @@ namespace WebDriverManagerSharp.Tests
                 "iedriverserver",
             };
 
-            IEnumerable<Process> processes = Process.GetProcesses().Where(p => driversToKill.Contains(p.ProcessName));
+            IEnumerable<Process> processes = Process.GetProcesses().Where(p => driversToKill.Contains(p.ProcessName.ToLower()));
 
             foreach (Process p in processes)
             {
                 p.Kill();
+                p.WaitForExit();
             }
 
             // remove drivers in current directory

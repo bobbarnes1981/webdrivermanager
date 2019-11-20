@@ -15,17 +15,10 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Processes
 {
-    using System.IO;
-
-    public interface IShell
+    public interface IShellFactory
     {
-        string RunAndWait(params string[] command);
-        string RunAndWait(DirectoryInfo folder, params string[] command);
-
-        string GetVersionFromWmicOutput(string output);
-        string GetVersionFromPosixOutput(string output, string driverType);
-        string GetVersionFromPowerShellOutput(string output);
+        IShell Build();
     }
 }

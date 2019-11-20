@@ -22,9 +22,16 @@ namespace WebDriverManagerSharp.Configuration
 
     public class ConfigFactory : IConfigFactory
     {
+        private ILogger logger;
+
+        public ConfigFactory(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public IConfig Build()
         {
-            return new Config(Logger.GetLogger(), new SystemInformation(), new FileStorage());
+            return new Config(logger, new SystemInformation(), new FileStorage());
         }
     }
 }

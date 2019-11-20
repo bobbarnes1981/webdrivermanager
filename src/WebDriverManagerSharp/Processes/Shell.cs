@@ -15,12 +15,11 @@
  *
  */
 
-namespace WebDriverManagerSharp
+namespace WebDriverManagerSharp.Processes
 {
     using System;
     using System.IO;
     using WebDriverManagerSharp.Logging;
-    using WebDriverManagerSharp.Processes;
 
     /**
      * Command line executor.

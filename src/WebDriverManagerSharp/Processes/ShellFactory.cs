@@ -15,23 +15,22 @@
  *
  */
 
-namespace WebDriverManagerSharp.Web
-{
-    using WebDriverManagerSharp.Configuration;
-    using WebDriverManagerSharp.Logging;
+using WebDriverManagerSharp.Logging;
 
-    public class HttpClientFactory : IHttpClientFactory
+namespace WebDriverManagerSharp.Processes
+{
+    public class ShellFactory : IShellFactory
     {
         private ILogger logger;
 
-        public HttpClientFactory(ILogger logger)
+        public ShellFactory(ILogger logger)
         {
             this.logger = logger;
         }
 
-        public IHttpClient Build(IConfig config)
+        public IShell Build()
         {
-            return new HttpClient(config, logger);
+            return new Shell(logger);
         }
     }
 }

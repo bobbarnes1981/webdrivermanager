@@ -20,6 +20,7 @@ namespace WebDriverManagerSharp.Tests.Test
     using NUnit.Framework;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
 
     /**
      * Shell utilities test.

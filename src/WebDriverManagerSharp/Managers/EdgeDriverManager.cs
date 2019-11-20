@@ -129,7 +129,7 @@ namespace WebDriverManagerSharp.Managers
                     {
                         // Edge driver version 75 and above
                         int childIndex = 0;
-                        if (Config().GetOs().Equals(WebDriverManagerSharp.Enums.OperatingSystem.MAC.ToString(), StringComparison.OrdinalIgnoreCase))
+                        if (Config().GetOs().Equals(Enums.OperatingSystem.MAC.ToString(), StringComparison.OrdinalIgnoreCase))
                         {
                             childIndex = 2;
                         }
@@ -157,7 +157,7 @@ namespace WebDriverManagerSharp.Managers
 
         public override List<string> GetVersions()
         {
-            HttpClient = new HttpClient(Config());
+            HttpClient = HttpClientFactory.Build(Config());
             try
             {
                 GetDrivers();

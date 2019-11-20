@@ -15,23 +15,17 @@
  *
  */
 
-namespace WebDriverManagerSharp.Web
+namespace WebDriverManagerSharp.Processes
 {
-    using WebDriverManagerSharp.Configuration;
-    using WebDriverManagerSharp.Logging;
+    using System.IO;
 
-    public class HttpClientFactory : IHttpClientFactory
+    public interface IShell
     {
-        private ILogger logger;
+        string RunAndWait(params string[] command);
+        string RunAndWait(DirectoryInfo folder, params string[] command);
 
-        public HttpClientFactory(ILogger logger)
-        {
-            this.logger = logger;
-        }
-
-        public IHttpClient Build(IConfig config)
-        {
-            return new HttpClient(config, logger);
-        }
+        string GetVersionFromWmicOutput(string output);
+        string GetVersionFromPosixOutput(string output, string driverType);
+        string GetVersionFromPowerShellOutput(string output);
     }
 }
