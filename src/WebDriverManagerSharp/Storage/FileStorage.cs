@@ -42,6 +42,11 @@ namespace WebDriverManagerSharp.Storage
             return Directory.GetFiles(directory, filter);
         }
 
+        public FileInfo[] GetFileInfos(string directory, string filter, SearchOption searchOption)
+        {
+            return new DirectoryInfo(directory).GetFiles(filter, searchOption);
+        }
+
         public Stream OpenRead(string file)
         {
             return File.OpenRead(file);

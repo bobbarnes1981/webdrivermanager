@@ -582,7 +582,7 @@ namespace WebDriverManagerSharp
 
         protected void Manage(Architecture arch, string version)
         {
-            httpClient = new HttpClient(Config());
+            httpClient = HttpClientFactory.Build(Config());
             try
             {
                 downloader = new Downloader(GetDriverManagerType().Value);
@@ -1055,7 +1055,7 @@ namespace WebDriverManagerSharp
 
         protected List<FileInfo> getFilesInCache()
         {
-            return new DirectoryInfo(downloader.GetTargetPath()).GetFiles("*.*", SearchOption.AllDirectories).ToList();
+            return fileStorage.GetFileInfos(downloader.GetTargetPath(), "*.*", SearchOption.AllDirectories).ToList();
         }
 
         protected static List<Uri> removeFromList(List<Uri> list, string version)
