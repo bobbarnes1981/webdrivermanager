@@ -29,7 +29,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class CustomTargetTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         private DirectoryInfo tmpFolder;
 

@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class InteractiveTest
     {
-        private static readonly ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Resolver.Resolve<ILogger>();
 
         private static readonly string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
 
@@ -46,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
             driver += EXT;
 
             log.Debug("Running interactive wdm with arguments: {0}", argument);
-            WebDriverManager.main(new string[] { argument });
+            CommandLineInterface.Main(new string[] { argument });
             FileInfo binary = new FileInfo(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, driver));
             Assert.True(binary.Exists);
             binary.Delete();

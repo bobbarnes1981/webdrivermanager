@@ -35,5 +35,9 @@ namespace WebDriverManagerSharp.Web
         FileInfo GetTarget(string version, Uri url);
 
         string GetTargetPath();
+
+        void RenameFile(FileInfo from, FileInfo to);
+
+        void DeleteFolder(DirectoryInfo folder);
     }
 }

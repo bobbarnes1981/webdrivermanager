@@ -32,7 +32,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class TargetTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         [TestCase("2.21",
                             "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip",
@@ -81,7 +81,7 @@ namespace WebDriverManagerSharp.Tests.Test
                             DriverManagerType.FIREFOX)]
         public void TestTarget(string version, string url, string target, DriverManagerType driverManagerType)
         {
-            Downloader downloader = new Downloader(driverManagerType);
+            Downloader downloader = new Downloader(Resolver.Resolve<ILogger>(), driverManagerType);
             string targetPath = downloader.GetTargetPath();
 
             FileInfo result = downloader.GetTarget(version, new Uri(url));

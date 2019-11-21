@@ -23,44 +23,14 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using WebDriverManagerSharp.Configuration;
-    using WebDriverManagerSharp.Processes;
-    using WebDriverManagerSharp.Web;
 
     [TestFixture]
-    public class EdgeDriverManagerTests
+    public class EdgeDriverManagerTests : BaseManagerTests
     {
-        private Mock<IConfig> configMock;
-        private Mock<IHttpClient> httpClientMock;
-        private Mock<IShell> shellMock;
-
-        [SetUp]
-        public void SetUp()
-        {
-            WebDriverManager.ClearDrivers();
-
-            configMock = new Mock<IConfig>();
-            httpClientMock = new Mock<IHttpClient>();
-            shellMock = new Mock<IShell>();
-
-            Mock<IConfigFactory> configFactoryMock = new Mock<IConfigFactory>();
-            configFactoryMock.Setup(x => x.Build()).Returns(configMock.Object);
-
-            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
-
-            Mock<IShellFactory> shellFactoryMock = new Mock<IShellFactory>();
-            shellFactoryMock.Setup(x => x.Build()).Returns(shellMock.Object);
-
-            WebDriverManager.ConfigFactory = configFactoryMock.Object;
-            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
-            WebDriverManager.ShellFactory = shellFactoryMock.Object;
-        }
-
         [Test]
         public void GetVersions()
         {
-            System.Uri driverUrl = new System.Uri("https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/");
+            Uri driverUrl = new Uri("https://fake.developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/");
             configMock.Setup(x => x.GetOs()).Returns("WIN");
             configMock.Setup(x => x.GetEdgeDriverUrl()).Returns(driverUrl);
             configMock.Setup(x => x.GetLocalRepositoryUser()).Returns("fakeUser");
@@ -92,6 +62,31 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             WebDriverManager.EdgeDriver().DriverRepositoryUrl(uri);
 
             configMock.Verify(x => x.SetEdgeDriverUrl(uri), Times.Once);
+        }
+
+        [Test]
+        public void TestSetUp()
+        {
+            Uri driverUrl = new Uri("https://fake.developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/");
+            configMock.Setup(x => x.GetEdgeDriverUrl()).Returns(driverUrl);
+
+            string fakeHtml = "<ul class='driver-downloads'><li class='driver-download'><a aria-label='' href='http://www.microsoft.com'></a></li></ul><ul class='driver-downloads'><li class='driver-download'><p class='driver-download__meta'>version 1</p></li></ul>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, null))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.EdgeDriver().Setup();
+
+            configMock.Verify(x => x.GetEdgeDriverExport(), Times.Once);
         }
     }
 }

@@ -20,7 +20,11 @@ namespace WebDriverManagerSharp.Managers
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * Manager for Firefox.
@@ -30,6 +34,11 @@ namespace WebDriverManagerSharp.Managers
      */
     public class FirefoxDriverManager : WebDriverManager
     {
+        public FirefoxDriverManager(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+            : base(config, shell, preferences, logger, fileStorage)
+        {
+        }
+
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.FIREFOX;

@@ -24,44 +24,14 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.IO;
     using System.Net.Http.Headers;
     using System.Text;
-    using WebDriverManagerSharp.Configuration;
-    using WebDriverManagerSharp.Processes;
-    using WebDriverManagerSharp.Web;
 
     [TestFixture]
-    public class PhantomJsDriverManagerTests
+    public class PhantomJsDriverManagerTests : BaseManagerTests
     {
-        private Mock<IConfig> configMock;
-        private Mock<IHttpClient> httpClientMock;
-        private Mock<IShell> shellMock;
-
-        [SetUp]
-        public void SetUp()
-        {
-            WebDriverManager.ClearDrivers();
-
-            configMock = new Mock<IConfig>();
-            httpClientMock = new Mock<IHttpClient>();
-            shellMock = new Mock<IShell>();
-
-            Mock<IConfigFactory> configFactoryMock = new Mock<IConfigFactory>();
-            configFactoryMock.Setup(x => x.Build()).Returns(configMock.Object);
-
-            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
-
-            Mock<IShellFactory> shellFactoryMock = new Mock<IShellFactory>();
-            shellFactoryMock.Setup(x => x.Build()).Returns(shellMock.Object);
-
-            WebDriverManager.ConfigFactory = configFactoryMock.Object;
-            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
-            WebDriverManager.ShellFactory = shellFactoryMock.Object;
-        }
-
         [Test]
         public void GetVersions()
         {
-            System.Uri driverUrl = new System.Uri("https://bitbucket.org/ariya/phantomjs/downloads/");
+            Uri driverUrl = new Uri("https://fake.bitbucket.org/ariya/phantomjs/downloads/");
             configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
             configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
             configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
@@ -79,7 +49,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void GetVersionsMirror()
         {
-            Uri driverUrl = new Uri("http://npm.taobao.org/mirrors/phantomjs");
+            Uri driverUrl = new Uri("http://fake.npm.taobao.org/mirrors/phantomjs");
             configMock.Setup(x => x.GetPhantomjsDriverMirrorUrl()).Returns(driverUrl);
             configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
             configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
@@ -111,6 +81,31 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             WebDriverManager.PhantomJS().DriverRepositoryUrl(uri);
 
             configMock.Verify(x => x.SetPhantomjsDriverUrl(uri), Times.Once);
+        }
+
+        [Test]
+        public void TestSetUp()
+        {
+            Uri driverUrl = new Uri("https://fake.bitbucket.org/ariya/phantomjs/downloads/");
+            configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
+
+            string fakeHtml = "<a class=\"execute\" rel=\"nofollow\" href=\"/ariya/phantomjs/downloads/phantomjs-2.5.0-windows.zip\">phantomjs-2.5.0-windows.zip</a>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, null))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.PhantomJS().Setup();
+
+            configMock.Verify(x => x.GetPhantomjsDriverExport(), Times.Once);
         }
     }
 }

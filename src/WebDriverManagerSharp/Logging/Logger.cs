@@ -23,14 +23,9 @@ namespace WebDriverManagerSharp.Logging
     {
         private readonly Serilog.ILogger logger;
 
-        public Logger()
+        public Logger(Serilog.ILogger logger)
         {
-            logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Console().WriteTo.Debug().CreateLogger();
-        }
-
-        public static ILogger GetLogger()
-        {
-            return new Logger();
+            this.logger= logger;
         }
 
         public void Trace(string format, params object[] parameters)

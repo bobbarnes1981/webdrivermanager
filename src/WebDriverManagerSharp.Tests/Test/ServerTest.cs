@@ -34,7 +34,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class ServerTest
     {
-        private static readonly ILogger log = Logger.GetLogger();
+        private static readonly ILogger log = Resolver.Resolve<ILogger>();
 
         private static readonly string EXT = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
 
@@ -46,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
             serverPort = GetFreePort();
             log.Debug("Test is starting WebDriverManager server at port {0}", serverPort);
 
-            WebDriverManager.main(new string[] { "server", serverPort.ToString(CultureInfo.InvariantCulture) });
+            CommandLineInterface.Main(new string[] { "server", serverPort.ToString(CultureInfo.InvariantCulture) });
         }
 
         [OneTimeTearDown]

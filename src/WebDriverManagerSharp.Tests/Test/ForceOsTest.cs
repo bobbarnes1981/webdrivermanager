@@ -33,7 +33,7 @@ namespace WebDriverManagerSharp.Tests.Test
     [TestFixture(OperatingSystem.MAC)]
     public class ForceOsTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         private readonly OperatingSystem operatingSystem;
 
@@ -45,13 +45,13 @@ namespace WebDriverManagerSharp.Tests.Test
         [SetUp]
         public void Setup()
         {
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(Resolver.Resolve<ILogger>(), DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [TearDown]
         public void Teardown()
         {
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(Resolver.Resolve<ILogger>(), DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [Test]

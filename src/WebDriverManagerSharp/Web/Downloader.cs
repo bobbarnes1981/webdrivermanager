@@ -36,16 +36,18 @@ namespace WebDriverManagerSharp.Web
      */
     public class Downloader : IDownloader
     {
-        private static readonly ILogger log = Logger.GetLogger();
-
+        private readonly ILogger logger;
         private readonly DriverManagerType driverManagerType;
+
         private readonly IHttpClient httpClient;
         private readonly IConfig config;
 
-        public Downloader(DriverManagerType driverManagerType)
+        public Downloader(ILogger logger, DriverManagerType driverManagerType)
         {
+            this.logger = logger;
             this.driverManagerType = driverManagerType;
 
+            // TODO: autofac this?
             WebDriverManager webDriverManager = WebDriverManager.GetInstance(driverManagerType);
             config = webDriverManager.Config();
             httpClient = webDriverManager.HttpClient;
@@ -73,7 +75,7 @@ namespace WebDriverManagerSharp.Web
 
         public FileInfo GetTarget(string version, Uri url)
         {
-            log.Trace("getTarget {0} {1}", version, url);
+            logger.Trace("getTarget {0} {1}", version, url);
             string zip = url.GetFile().SubstringJava(url.GetFile().LastIndexOf('/'));
 
             int iFirst = zip.IndexOf('_');
@@ -96,7 +98,7 @@ namespace WebDriverManagerSharp.Web
                     : GetTargetPath() + folder + Path.DirectorySeparatorChar + version + zip;
             string target = WebDriverManager.GetInstance(driverManagerType).PreDownload(path, version);
 
-            log.Trace("Target file for System.Uri {0} version {1} = {2}", url, version, target);
+            logger.Trace("Target file for System.Uri {0} version {1} = {2}", url, version, target);
 
             return new FileInfo(target);
         }
@@ -104,7 +106,7 @@ namespace WebDriverManagerSharp.Web
         public string GetTargetPath()
         {
             string targetPath = config.GetTargetPath();
-            log.Trace("Target path {0}", targetPath);
+            logger.Trace("Target path {0}", targetPath);
 
             // Create repository folder if not exits
             DirectoryInfo repository = new DirectoryInfo(targetPath);
@@ -125,7 +127,7 @@ namespace WebDriverManagerSharp.Web
         /// <returns></returns>
         private FileInfo downloadAndExtract(Uri url, FileInfo targetFile)
         {
-            log.Info("Downloading {0}", url);
+            logger.Info("Downloading {0}", url);
             DirectoryInfo targetFolder = targetFile.Directory;
             string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             FileInfo temporaryFile = new FileInfo(Path.Combine(tempDir, targetFile.Name));
@@ -134,7 +136,7 @@ namespace WebDriverManagerSharp.Web
                 temporaryFile.Directory.Create();
             }
 
-            log.Trace("Target folder {0} ... using temporal file {1}", targetFolder, temporaryFile);
+            logger.Trace("Target folder {0} ... using temporal file {1}", targetFolder, temporaryFile);
             temporaryFile.CreateFromStream(httpClient.ExecuteHttpGet(url));
 
             FileInfo extractedFile = extract(temporaryFile);
@@ -145,7 +147,7 @@ namespace WebDriverManagerSharp.Web
             {
                 if (binaryExists)
                 {
-                    log.Info("Overriding former binary {0}", resultingBinary);
+                    logger.Info("Overriding former binary {0}", resultingBinary);
                     File.Delete(resultingBinary.FullName);
                 }
 
@@ -163,7 +165,7 @@ namespace WebDriverManagerSharp.Web
             }
 
             Directory.Delete(tempDir, true);
-            log.Trace("Binary driver after extraction {0}", resultingBinary);
+            logger.Trace("Binary driver after extraction {0}", resultingBinary);
 
             return new FileInfo(resultingBinary.FullName);
         }
@@ -180,12 +182,12 @@ namespace WebDriverManagerSharp.Web
                 {
                     if (file.FullName.StartsWith(driverName, StringComparison.OrdinalIgnoreCase) && config.IsExecutable(file))
                     {
-                        log.Info("Using binary driver previously downloaded");
+                        logger.Info("Using binary driver previously downloaded");
                         return new FileInfo(file.FullName);
                     }
                 }
 
-                log.Trace("{0} does not exist in cache", driverName);
+                logger.Trace("{0} does not exist in cache", driverName);
             }
 
             return null;
@@ -204,7 +206,7 @@ namespace WebDriverManagerSharp.Web
             bool extractFile = !fileName.EndsWith(Constants.EXE, StringComparison.OrdinalIgnoreCase) && !fileName.EndsWith(Constants.JAR, StringComparison.OrdinalIgnoreCase);
             if (extractFile)
             {
-                log.Info("Extracting binary from compressed file {0}", fileName);
+                logger.Info("Extracting binary from compressed file {0}", fileName);
             }
 
             if (fileName.EndsWith("tar.bz2", StringComparison.OrdinalIgnoreCase))
@@ -234,7 +236,7 @@ namespace WebDriverManagerSharp.Web
             }
 
             FileInfo result = WebDriverManager.GetInstance(driverManagerType).PostDownload(compressedFile);
-            log.Trace("Resulting binary file {0}", result);
+            logger.Trace("Resulting binary file {0}", result);
 
             return result;
         }
@@ -257,7 +259,7 @@ namespace WebDriverManagerSharp.Web
                     string name = zipEntry.FullName;
                     long size = zipEntry.Length;
                     long compressedSize = zipEntry.CompressedLength;
-                    log.Trace("Unzipping {0} (size: {1} KB, compressed size: {2} KB)", name, size, compressedSize);
+                    logger.Trace("Unzipping {0} (size: {1} KB, compressed size: {2} KB)", name, size, compressedSize);
 
                     // TODO: handle more than one file
                     if (name.EndsWith("/", StringComparison.OrdinalIgnoreCase))
@@ -269,7 +271,7 @@ namespace WebDriverManagerSharp.Web
                         }
                         else
                         {
-                            log.Debug("{0} already exists", dir);
+                            logger.Debug("{0} already exists", dir);
                         }
                     }
                     else
@@ -282,7 +284,7 @@ namespace WebDriverManagerSharp.Web
                         }
                         else
                         {
-                            log.Debug("{0} already exists", file);
+                            logger.Debug("{0} already exists", file);
                         }
                     }
                 }
@@ -296,7 +298,7 @@ namespace WebDriverManagerSharp.Web
         /// <exception cref="IOException"/>
         private void unGzip(FileInfo archive)
         {
-            log.Trace("UnGzip {0}", archive);
+            logger.Trace("UnGzip {0}", archive);
             string fileName = archive.FullName;
             int iDash = fileName.IndexOf('-');
             if (iDash != -1)
@@ -335,7 +337,7 @@ namespace WebDriverManagerSharp.Web
         /// <exception cref="IOException"/>
         private void unTarGz(FileInfo archive)
         {
-            log.Trace("unTarGz {0}", archive);
+            logger.Trace("unTarGz {0}", archive);
             ////Archiver archiver = createArchiver(TAR, GZIP);
             ////archiver.extract(archive, archive.getParentFile());
             throw new NotImplementedException("extract tar.gz not implemented");
@@ -348,7 +350,7 @@ namespace WebDriverManagerSharp.Web
         /// <exception cref="IOException"/>
         private void unBZip2(FileInfo archive)
         {
-            log.Trace("Unbzip2 {0}", archive);
+            logger.Trace("Unbzip2 {0}", archive);
             ////Archiver archiver = createArchiver(TAR, BZIP2);
             ////archiver.extract(archive, archive.getParentFile());
             throw new NotImplementedException("extract bzip2 not implemented");
@@ -361,11 +363,11 @@ namespace WebDriverManagerSharp.Web
         /// <exception cref="IOException"/>
         private void ExtractMsi(FileInfo msi)
         {
-            log.Trace("Extract MSI {0}", msi);
+            logger.Trace("Extract MSI {0}", msi);
             string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             FileInfo tmpMsi = new FileInfo(Path.Combine(tempDir, msi.Name));
             msi.MoveTo(tmpMsi.FullName);
-            log.Trace("Temporal msi file: {0}", tmpMsi);
+            logger.Trace("Temporal msi file: {0}", tmpMsi);
 
             using (IProcess process = new ProcessBuilder(new string[] { "msiexec", "/a", tmpMsi.FullName, "/qb", "TARGETDIR=" + msi.DirectoryName }).Start())
             {
@@ -377,14 +379,14 @@ namespace WebDriverManagerSharp.Web
 
         protected void SetFileExecutable(FileInfo file)
         {
-            log.Trace("Setting file {0} as executable", file);
+            logger.Trace("Setting file {0} as executable", file);
             ////if (!file.setExecutable(true))
             ////{
-            ////    log.warn("Error setting file {} as executable", file);
+            ////    logger.warn("Error setting file {} as executable", file);
             ////}
         }
 
-        public static void RenameFile(FileInfo from, FileInfo to)
+        public void RenameFile(FileInfo from, FileInfo to)
         {
             if (from == null)
             {
@@ -396,7 +398,7 @@ namespace WebDriverManagerSharp.Web
                 throw new ArgumentNullException(nameof(to));
             }
 
-            log.Trace("Renaming file from {0} to {1}", from, to);
+            logger.Trace("Renaming file from {0} to {1}", from, to);
             if (to.Exists)
             {
                 deleteFile(to);
@@ -408,18 +410,18 @@ namespace WebDriverManagerSharp.Web
             }
             catch (Exception)
             {
-                log.Warn("Error renaming file from {0} to {1}", from, to);
+                logger.Warn("Error renaming file from {0} to {1}", from, to);
             }
         }
 
-        protected static void deleteFile(FileInfo file)
+        protected void deleteFile(FileInfo file)
         {
             if (file == null)
             {
                 throw new ArgumentNullException(nameof(file));
             }
 
-            log.Trace("Deleting file {0}", file);
+            logger.Trace("Deleting file {0}", file);
             try
             {
                 file.Delete();
@@ -430,14 +432,14 @@ namespace WebDriverManagerSharp.Web
             }
         }
 
-        public static void DeleteFolder(DirectoryInfo folder)
+        public void DeleteFolder(DirectoryInfo folder)
         {
             if (folder == null)
             {
                 throw new ArgumentNullException(nameof(folder));
             }
 
-            log.Trace("Deleting folder {0}", folder);
+            logger.Trace("Deleting folder {0}", folder);
             try
             {
                 folder.Delete(true);

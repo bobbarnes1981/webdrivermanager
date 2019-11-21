@@ -24,8 +24,12 @@ namespace WebDriverManagerSharp.Managers
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     /**
@@ -36,6 +40,11 @@ namespace WebDriverManagerSharp.Managers
      */
     public class EdgeDriverManager : WebDriverManager
     {
+        public EdgeDriverManager(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+            : base(config, shell, preferences, logger, fileStorage)
+        {
+        }
+
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.EDGE;
@@ -157,7 +166,7 @@ namespace WebDriverManagerSharp.Managers
 
         public override List<string> GetVersions()
         {
-            HttpClient = HttpClientFactory.Build(Config());
+            HttpClient = Resolver.Resolve<IHttpClient>(new Autofac.NamedParameter("config", Config()));
             try
             {
                 GetDrivers();

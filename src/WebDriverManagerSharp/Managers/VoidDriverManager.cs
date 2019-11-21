@@ -18,7 +18,11 @@
 namespace WebDriverManagerSharp.Managers
 {
     using System.Collections.Generic;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * Void manager.
@@ -28,6 +32,11 @@ namespace WebDriverManagerSharp.Managers
      */
     public class VoidDriverManager : WebDriverManager
     {
+        public VoidDriverManager(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+            : base(config, shell, preferences, logger, fileStorage)
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>

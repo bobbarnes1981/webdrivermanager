@@ -17,6 +17,7 @@
 
 namespace WebDriverManagerSharp.UnitTests.Managers
 {
+    using Autofac;
     using Moq;
     using NUnit.Framework;
     using System;
@@ -28,39 +29,12 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using WebDriverManagerSharp.Web;
 
     [TestFixture]
-    public class InternetExplorerDriverManagerTests
+    public class InternetExplorerDriverManagerTests : BaseManagerTests
     {
-        private Mock<IConfig> configMock;
-        private Mock<IHttpClient> httpClientMock;
-        private Mock<IShell> shellMock;
-
-        [SetUp]
-        public void SetUp()
-        {
-            WebDriverManager.ClearDrivers();
-
-            configMock = new Mock<IConfig>();
-            httpClientMock = new Mock<IHttpClient>();
-            shellMock = new Mock<IShell>();
-
-            Mock<IConfigFactory> configFactoryMock = new Mock<IConfigFactory>();
-            configFactoryMock.Setup(x => x.Build()).Returns(configMock.Object);
-
-            Mock<IHttpClientFactory> httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.Build(It.IsAny<IConfig>())).Returns(httpClientMock.Object);
-
-            Mock<IShellFactory> shellFactoryMock = new Mock<IShellFactory>();
-            shellFactoryMock.Setup(x => x.Build()).Returns(shellMock.Object);
-
-            WebDriverManager.ConfigFactory = configFactoryMock.Object;
-            WebDriverManager.HttpClientFactory = httpClientFactoryMock.Object;
-            WebDriverManager.ShellFactory = shellFactoryMock.Object;
-        }
-
         [Test]
         public void GetVersions()
         {
-            System.Uri driverUrl = new System.Uri("https://selenium-release.storage.googleapis.com/");
+            Uri driverUrl = new Uri("https://fake.selenium-release.storage.googleapis.com/");
             configMock.Setup(x => x.GetInternetExplorerDriverUrl()).Returns(driverUrl);
 
             string fakeXml = "<?xml version='1.0' encoding='UTF-8'?><ListBucketResult xmlns='http://doc.s3.amazonaws.com/2006-03-01'><Name>selenium-release</Name><Prefix/><Marker/><IsTruncated>false</IsTruncated><Contents><Key>2.39/IEDriverServer_Win32_2.39.0.zip</Key><Generation>1389651460351000</Generation><MetaGeneration>4</MetaGeneration><LastModified>2014-01-13T22:17:40.327Z</LastModified><ETag>\"bd4bc2b77a04999148e7fab974336e99\"</ETag><Size>836478</Size></Contents><Contents><Key>2.39/IEDriverServer_x64_2.39.0.zip</Key><Generation>1389651273362000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:33.323Z</LastModified><ETag>\"7d19f3d7ffb9cb40fc26cc38885b9160\"</ETag><Size>946479</Size></Contents><Contents><Key>2.39/selenium-dotnet-2.39.0.zip</Key><Generation>1389651287806000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:47.774Z</LastModified><ETag>\"e5d82bd497eff0bf3a3990cb746a2680\"</ETag><Size>10263239</Size></Contents></ListBucketResult>";
@@ -76,7 +50,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void GetVersionsMirror()
         {
-            System.Uri driverUrl = new System.Uri("https://selenium-release.storage.googleapis.com/");
+            Uri driverUrl = new Uri("https://fake.selenium-release.storage.googleapis.com/");
             configMock.Setup(x => x.GetInternetExplorerDriverUrl()).Returns(driverUrl);
             configMock.Setup(x => x.IsUseMirror()).Returns(true);
 
@@ -106,6 +80,31 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             WebDriverManager.IEDriver().DriverRepositoryUrl(uri);
 
             configMock.Verify(x => x.SetInternetExplorerDriverUrl(uri), Times.Once);
+        }
+
+        [Test]
+        public void TestSetUp()
+        {
+            Uri driverUrl = new Uri("https://fake.selenium-release.storage.googleapis.com/");
+            configMock.Setup(x => x.GetInternetExplorerDriverUrl()).Returns(driverUrl);
+
+            string fakeXml = "<?xml version='1.0' encoding='UTF-8'?><ListBucketResult xmlns='http://doc.s3.amazonaws.com/2006-03-01'><Name>selenium-release</Name><Prefix/><Marker/><IsTruncated>false</IsTruncated><Contents><Key>2.39/IEDriverServer_Win32_2.39.0.zip</Key><Generation>1389651460351000</Generation><MetaGeneration>4</MetaGeneration><LastModified>2014-01-13T22:17:40.327Z</LastModified><ETag>\"bd4bc2b77a04999148e7fab974336e99\"</ETag><Size>836478</Size></Contents><Contents><Key>2.39/IEDriverServer_x64_2.39.0.zip</Key><Generation>1389651273362000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:33.323Z</LastModified><ETag>\"7d19f3d7ffb9cb40fc26cc38885b9160\"</ETag><Size>946479</Size></Contents><Contents><Key>2.39/selenium-dotnet-2.39.0.zip</Key><Generation>1389651287806000</Generation><MetaGeneration>2</MetaGeneration><LastModified>2014-01-13T22:14:47.774Z</LastModified><ETag>\"e5d82bd497eff0bf3a3990cb746a2680\"</ETag><Size>10263239</Size></Contents></ListBucketResult>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, null))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeXml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeXml)));
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.IEDriver().Setup();
+
+            configMock.Verify(x => x.GetInternetExplorerDriverExport(), Times.Once);
         }
     }
 }

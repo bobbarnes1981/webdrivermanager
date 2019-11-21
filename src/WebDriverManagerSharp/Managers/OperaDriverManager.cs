@@ -20,8 +20,12 @@ namespace WebDriverManagerSharp.Managers
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Web;
 
     /**
@@ -32,6 +36,11 @@ namespace WebDriverManagerSharp.Managers
      */
     public class OperaDriverManager : WebDriverManager
     {
+        public OperaDriverManager(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+            : base(config, shell, preferences, logger, fileStorage)
+        {
+        }
+
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.OPERA;

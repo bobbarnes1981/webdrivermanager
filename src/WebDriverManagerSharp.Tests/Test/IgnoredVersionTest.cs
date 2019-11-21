@@ -30,13 +30,13 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class IgnoredVersionTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         [SetUp]
         [TearDown]
         public void CleanCache()
         {
-            new DirectoryInfo(new Downloader(DriverManagerType.CHROME).GetTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(Resolver.Resolve<ILogger>(), DriverManagerType.CHROME).GetTargetPath()).Delete(true);
         }
 
         [Test]

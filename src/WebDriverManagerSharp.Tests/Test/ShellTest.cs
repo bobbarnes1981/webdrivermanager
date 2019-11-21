@@ -35,7 +35,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TestCase("Google Chrome 75.0.3770.80", "75")]
         public void versionFromPosixOutputTest(string output, string version)
         {
-            string versionFromPosixOutput = new Shell(Logger.GetLogger()).GetVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
+            string versionFromPosixOutput = new Shell(Resolver.Resolve<ILogger>()).GetVersionFromPosixOutput(output, DriverManagerType.CHROME.ToString());
             Assert.That(versionFromPosixOutput, Is.EqualTo(version));
         }
     }

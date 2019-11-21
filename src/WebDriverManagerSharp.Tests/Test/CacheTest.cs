@@ -55,7 +55,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [TearDown]
         public void cleanCache()
         {
-            new DirectoryInfo(new Downloader(driverManagerType).GetTargetPath()).Delete(true);
+            new DirectoryInfo(new Downloader(Resolver.Resolve<ILogger>(), driverManagerType).GetTargetPath()).Delete(true);
             WebDriverManager.GetInstance(driverManagerType).Version(null);
         }
 
@@ -66,7 +66,7 @@ namespace WebDriverManagerSharp.Tests.Test
             browserManager.ForceCache().ForceDownload().Architecture(architecture).Version(driverVersion).Setup();
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDriverFromCache", BindingFlags.NonPublic | BindingFlags.Instance);
-            FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config(Logger.GetLogger(), new SystemInformation(), new FileStorage()).GetOs() });
+            FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config(Resolver.Resolve<ILogger>(), new SystemInformation(), new FileStorage()).GetOs() });
 
             Assert.That(driverInCachePath, Is.Not.Null);
         }

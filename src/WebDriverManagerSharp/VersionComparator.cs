@@ -30,7 +30,7 @@ namespace WebDriverManagerSharp
      */
     public class VersionComparator : IComparer<string>
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         public int Compare(string v1, string v2)
         {

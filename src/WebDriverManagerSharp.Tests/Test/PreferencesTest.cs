@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp.Tests.Test
         [Test]
         public void testEmptyTtl()
         {
-            WebDriverManager.main(new string[] { "clear-preferences" });
+            CommandLineInterface.Main(new string[] { "clear-preferences" });
             WebDriverManager.ChromeDriver().Ttl(0).Setup();
             string binaryPath = WebDriverManager.ChromeDriver().GetBinaryPath();
             FileInfo binary = new FileInfo(binaryPath);

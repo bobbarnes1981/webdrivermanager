@@ -29,7 +29,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class EdgeMsiTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         [Test]
         public void testMsiInWindows()

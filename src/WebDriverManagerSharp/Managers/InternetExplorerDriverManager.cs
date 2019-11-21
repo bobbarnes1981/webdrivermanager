@@ -19,7 +19,11 @@ namespace WebDriverManagerSharp.Managers
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
+    using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * Manager for Internet Explorer.
@@ -29,6 +33,11 @@ namespace WebDriverManagerSharp.Managers
      */
     public class InternetExplorerDriverManager : WebDriverManager
     {
+        public InternetExplorerDriverManager(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+            : base(config, shell, preferences, logger, fileStorage)
+        {
+        }
+
         protected override DriverManagerType? GetDriverManagerType()
         {
             return DriverManagerType.IEXPLORER;

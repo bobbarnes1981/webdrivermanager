@@ -30,7 +30,7 @@ namespace WebDriverManagerSharp.Tests.Test
     {
         private const int NUM = 40;
 
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         [Ignore("")]
         [Test]

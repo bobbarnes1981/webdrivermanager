@@ -31,7 +31,7 @@ namespace WebDriverManagerSharp.Tests.Test
      */
     public class EdgePreInstalledTest
     {
-        private readonly ILogger log = Logger.GetLogger();
+        private readonly ILogger log = Resolver.Resolve<ILogger>();
 
         private readonly FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(System.Environment.ExpandEnvironmentVariables("%SystemRoot%"), "System32", "MicrosoftWebDriver.exe"));
 
