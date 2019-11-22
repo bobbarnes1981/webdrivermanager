@@ -105,5 +105,57 @@ namespace WebDriverManagerSharp.UnitTests.Managers
 
             configMock.Verify(x => x.GetChromeDriverExport(), Times.Once);
         }
+
+        [Test]
+        public void TestSetUpMirror()
+        {
+            Uri driverUrl = new Uri("http://fake.npm.taobao.org/mirrors/chromedriver");
+            Uri driverSubUrl = new Uri("http://fake.npm.taobao.org/mirrors/chromedriver/2.0/");
+            configMock.Setup(x => x.GetChromeDriverMirrorUrl()).Returns(driverUrl);
+            configMock.Setup(x => x.IsUseMirror()).Returns(true);
+
+            string fakeHtml = "<a href=\"/mirrors/chromedriver/2.0/\">2.0</a>";
+            string fakeSubHtml = "<a href=\"http://fake.npm.taobao.org/mirrors/chromedriver/2.0/chromedriver_win32.zip\">chromedriver_win32.zip</a>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, null))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverSubUrl, null))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeSubHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeSubHtml)));
+
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.ChromeDriver().Setup();
+
+            configMock.Verify(x => x.GetChromeDriverExport(), Times.Once);
+        }
+
+        [Test]
+        public void PreDownload()
+        {
+            string target = WebDriverManager.ChromeDriver().PreDownload("my target", "my version");
+
+            Assert.That(target, Is.EqualTo("my target"));
+        }
+
+        [Test]
+        public void PostDownloadNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.ChromeDriver().PostDownload(null));
+        }
+
+        [Test]
+        public void PostDownload()
+        {
+            // TODO: 
+        }
     }
 }

@@ -17,8 +17,6 @@
 
 namespace WebDriverManagerSharp.Logging
 {
-    using Serilog;
-
     public class Logger : ILogger
     {
         private readonly Serilog.ILogger logger;
@@ -55,12 +53,12 @@ namespace WebDriverManagerSharp.Logging
 
         public bool IsDebugEnabled()
         {
-            return true;
+            return logger.IsEnabled(Serilog.Events.LogEventLevel.Debug);
         }
 
         public bool IsTraceEnabled()
         {
-            return true;
+            return logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose);
         }
     }
 }

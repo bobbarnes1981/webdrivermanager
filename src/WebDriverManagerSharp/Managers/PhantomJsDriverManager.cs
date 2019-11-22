@@ -143,15 +143,19 @@ namespace WebDriverManagerSharp.Managers
                 throw new ArgumentNullException(nameof(version));
             }
 
-            int iSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
-            int iDash = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
-            int iPoint = target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase) != -1
+            int versionPathPreSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
+            int versionPathPostSeparator = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
+            int fileExtensionStart = target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase) != -1
                     ? target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase)
                     : target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
-            target = target.SubstringJava(0, iSeparator + 1)
-                    + target.SubstringJava(iDash + 1, iPoint)
-                    + target.SubstringJava(iSeparator);
+
+            string driverFolderPath = target.SubstringJava(0, versionPathPreSeparator + 1);
+            string osAndArch = target.SubstringJava(versionPathPostSeparator + 1, fileExtensionStart);
+            string fileName = target.SubstringJava(versionPathPreSeparator);
+            target = driverFolderPath + osAndArch + fileName;
+
             target = target.Replace("beta-", string.Empty);
+
             return target;
         }
 

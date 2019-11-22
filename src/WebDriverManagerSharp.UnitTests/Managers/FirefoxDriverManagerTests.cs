@@ -112,5 +112,68 @@ namespace WebDriverManagerSharp.UnitTests.Managers
 
             configMock.Verify(x => x.GetFirefoxDriverExport(), Times.Once);
         }
+
+        [Test]
+        public void TestSetUpMirror()
+        {
+            Uri driverUrl = new Uri("http://fake.npm.taobao.org/mirrors/geckodriver");
+            Uri driverSubUrl = new Uri("http://fake.npm.taobao.org/mirrors/geckodriver/v0.20.0/");
+            configMock.Setup(x => x.GetFirefoxDriverMirrorUrl()).Returns(driverUrl);
+            configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
+            configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
+            configMock.Setup(x => x.IsUseMirror()).Returns(true);
+
+            string fakeHtml = "<a href=\"/mirrors/geckodriver/v0.20.0/\">v0.20.0/</a>";
+            string fakeSubHtml = "<a href=\"/mirrors/geckodriver/v0.20.0/geckodriver-v0.20.0-win32.zip\">geckodriver-v0.20.0-win32.zip</a>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>()))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverSubUrl, It.IsAny<AuthenticationHeaderValue>()))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeSubHtml)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeSubHtml)));
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.FirefoxDriver().Setup();
+
+            configMock.Verify(x => x.GetFirefoxDriverExport(), Times.Once);
+        }
+
+        [Test]
+        public void PreDownloadNullTarget()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.FirefoxDriver().PreDownload(null, ""));
+        }
+
+        [Test]
+        public void PreDownloadNullVersion()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.FirefoxDriver().PreDownload("", null));
+        }
+
+        [Test]
+        public void PreDownload()
+        {
+            // TODO: 
+        }
+
+        [Test]
+        public void PostDownloadNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.FirefoxDriver().PostDownload(null));
+        }
+
+        [Test]
+        public void PostDownload()
+        {
+            // TODO: 
+        }
     }
 }

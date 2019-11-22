@@ -119,10 +119,14 @@ namespace WebDriverManagerSharp.Managers
 
         protected override string getLatestVersion()
         {
-            string url = Config().GetChromeDriverUrl().Append("LATEST_RELEASE").ToString();
+            string url;
             if (Config().IsUseMirror())
             {
                 url = Config().GetChromeDriverMirrorUrl().Append("LATEST_RELEASE").ToString();
+            }
+            else
+            {
+                url = Config().GetChromeDriverUrl().Append("LATEST_RELEASE").ToString();
             }
 
             string version = null;

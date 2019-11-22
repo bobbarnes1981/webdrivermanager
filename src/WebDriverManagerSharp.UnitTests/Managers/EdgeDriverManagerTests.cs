@@ -88,5 +88,25 @@ namespace WebDriverManagerSharp.UnitTests.Managers
 
             configMock.Verify(x => x.GetEdgeDriverExport(), Times.Once);
         }
+
+        [Test]
+        public void PreDownload()
+        {
+            string target = WebDriverManager.EdgeDriver().PreDownload("my target", "my version");
+
+            Assert.That(target, Is.EqualTo("my target"));
+        }
+
+        [Test]
+        public void PostDownloadNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.EdgeDriver().PostDownload(null));
+        }
+
+        [Test]
+        public void PostDownload()
+        {
+            // TODO: 
+        }
     }
 }

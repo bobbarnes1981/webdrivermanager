@@ -107,5 +107,67 @@ namespace WebDriverManagerSharp.UnitTests.Managers
 
             configMock.Verify(x => x.GetPhantomjsDriverExport(), Times.Once);
         }
+
+        [Test]
+        public void TestSetUpMirror()
+        {
+            Uri driverUrl = new Uri("http://fake.npm.taobao.org/mirrors/phantomjs");
+            configMock.Setup(x => x.GetPhantomjsDriverMirrorUrl()).Returns(driverUrl);
+            configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
+            configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
+            configMock.Setup(x => x.IsUseMirror()).Returns(true);
+
+            string fakeJson = "<a href=\"/mirrors/phantomjs/phantomjs-1.9.2-windows.zip\">phantomjs-1.9.2-windows.zip</a>";
+
+            httpClientMock.SetupSequence(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>()))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeJson)))
+                .Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeJson)));
+
+            fileStorageMock.Setup(x => x.GetFileInfos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(new FileInfo[0]);
+
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
+            configMock.Setup(x => x.GetOs()).Returns("WIN");
+
+            downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+
+            WebDriverManager.PhantomJS().Setup();
+
+            configMock.Verify(x => x.GetPhantomjsDriverExport(), Times.Once);
+        }
+
+        [Test]
+        public void PreDownloadNullTarget()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.PhantomJS().PreDownload(null, ""));
+        }
+
+        [Test]
+        public void PreDownloadNullVersion()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.PhantomJS().PreDownload("", null));
+        }
+
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\2.1.1\\phantomjs-2.1.1-windows.zip", "2.1.1", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\windows\\2.1.1\\phantomjs-2.1.1-windows.zip")]
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\2.1.1\\phantomjs-2.1.1-beta-windows.zip", "2.1.1", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\windows\\2.1.1\\phantomjs-2.1.1-windows.zip")]
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\2.1.1\\phantomjs-2.1.1-linux-i686.tar.bz2", "2.1.1", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\phantomjs\\linux-i686\\2.1.1\\phantomjs-2.1.1-linux-i686.tar.bz2")]
+        public void PreDownload(string file, string version, string expected)
+        {
+            string target = WebDriverManager.PhantomJS().PreDownload(file, version);
+
+            Assert.That(target, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void PostDownloadNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => WebDriverManager.PhantomJS().PostDownload(null));
+        }
+
+        [Test]
+        public void PostDownload()
+        {
+            // TODO: 
+        }
     }
 }
