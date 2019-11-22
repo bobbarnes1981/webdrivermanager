@@ -62,11 +62,6 @@ namespace WebDriverManagerSharp.Managers
             return null;
         }
 
-        protected override System.Uri GetMirrorUrl()
-        {
-            return null;
-        }
-
         protected override string GetExportParameter()
         {
             return null;

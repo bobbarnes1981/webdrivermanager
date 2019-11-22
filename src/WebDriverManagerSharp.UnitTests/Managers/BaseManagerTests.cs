@@ -29,7 +29,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     {
         protected Mock<IConfig> configMock { get; set; }
         protected Mock<IHttpClient> httpClientMock { get; set; }
-        private Mock<IShell> shellMock;
+        protected Mock<IShell> shellMock { get; set; }
         protected Mock<IFileStorage> fileStorageMock { get; set; }
         protected Mock<IDownloader> downloaderMock { get; set; }
 

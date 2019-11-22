@@ -58,11 +58,6 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetInternetExplorerDriverUrl();
         }
 
-        protected override System.Uri GetMirrorUrl()
-        {
-            return null;
-        }
-
         protected override string GetExportParameter()
         {
             return Config().GetInternetExplorerDriverExport();

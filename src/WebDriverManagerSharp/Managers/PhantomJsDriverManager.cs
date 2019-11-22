@@ -60,7 +60,7 @@ namespace WebDriverManagerSharp.Managers
             return getDriverUrlCheckingMirror(Config().GetPhantomjsDriverUrl());
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return Config().GetPhantomjsDriverMirrorUrl();
         }

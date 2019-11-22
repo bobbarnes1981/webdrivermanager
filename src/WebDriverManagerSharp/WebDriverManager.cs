@@ -123,7 +123,10 @@ namespace WebDriverManagerSharp
 
         protected abstract Uri GetDriverUrl();
 
-        protected abstract Uri GetMirrorUrl();
+        protected virtual Uri GetMirrorUrl()
+        {
+            return null;
+        }
 
         protected abstract string GetExportParameter();
 
@@ -848,7 +851,7 @@ namespace WebDriverManagerSharp
         private Stream getLocalVersionsInputStream()
         {
             Stream inputStream;
-            inputStream = File.OpenRead(Path.Combine(fileStorage.GetCurrentDirectory(), "Resources", "versions.properties"));
+            inputStream = fileStorage.OpenRead(Path.Combine(fileStorage.GetCurrentDirectory(), "Resources", "versions.properties"));
             return inputStream;
         }
 
@@ -1516,7 +1519,7 @@ namespace WebDriverManagerSharp
 
         private string getBrowserVersionInWindows(string programFilesEnv, string winBrowserName, string browserBinaryPath)
         {
-            string programFiles = System.Environment.GetEnvironmentVariable(programFilesEnv).Replace("\\", "\\\\");
+            string programFiles = Environment.GetEnvironmentVariable(programFilesEnv).Replace("\\", "\\\\");
             string browserPath = string.IsNullOrEmpty(browserBinaryPath)
                     ? programFiles + winBrowserName
                     : browserBinaryPath;

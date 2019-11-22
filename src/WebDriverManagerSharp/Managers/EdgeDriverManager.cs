@@ -65,11 +65,6 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetEdgeDriverUrl();
         }
 
-        protected override Uri GetMirrorUrl()
-        {
-            return null;
-        }
-
         protected override string GetExportParameter()
         {
             return Config().GetEdgeDriverExport();

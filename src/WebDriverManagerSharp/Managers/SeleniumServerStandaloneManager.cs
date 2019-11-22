@@ -59,11 +59,6 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetSeleniumServerStandaloneUrl();
         }
 
-        protected override Uri GetMirrorUrl()
-        {
-            return null;
-        }
-
         protected override string GetExportParameter()
         {
             return null;
