@@ -158,10 +158,14 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             Assert.Throws<ArgumentNullException>(() => WebDriverManager.FirefoxDriver().PreDownload("", null));
         }
 
-        [Test]
-        public void PreDownload()
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\0.26.0\\geckodriver-v0.26.0-win32.zip", "0.26.0", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\win32\\0.26.0\\geckodriver-v0.26.0-win32.zip")]
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\0.26.0\\geckodriver-v0.26.0-linux32.tar.gz", "0.26.0", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\linux32\\0.26.0\\geckodriver-v0.26.0-linux32.tar.gz")]
+        [TestCase("C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\0.26.0\\geckodriver-v0.26.0-linux64.gz", "0.26.0", "C:\\Users\\robertb\\.m2\\repository\\webdriver\\geckodriver\\linux64\\0.26.0\\geckodriver-v0.26.0-linux64.gz")]
+        public void PreDownload(string file, string version, string expected)
         {
-            // TODO: 
+            string target = WebDriverManager.FirefoxDriver().PreDownload(file, version);
+
+            Assert.That(target, Is.EqualTo(expected));
         }
 
         [Test]

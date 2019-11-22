@@ -259,7 +259,7 @@ namespace WebDriverManagerSharp.Configuration
                         object fieldObject = field.GetValue(this);
                         field.FieldType.GetMethod("Reset", BindingFlags.Instance | BindingFlags.Public).Invoke(fieldObject, new object[0]);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         logger.Warn("Exception resetting {0}", field.Name);
                     }

@@ -113,24 +113,27 @@ namespace WebDriverManagerSharp.Managers
                 throw new ArgumentNullException(nameof(version));
             }
 
-            int iSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
-            int iDash = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
-            int iPoint = target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
-            int iPointTazGz = target.LastIndexOf(".tar.gz", StringComparison.OrdinalIgnoreCase);
-            int iPointGz = target.LastIndexOf(".gz", StringComparison.OrdinalIgnoreCase);
+            int versionPathPreSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
+            int versionFilePostSeparator = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
+            int extensionStart = target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
+            int tarGzExtensionStart = target.LastIndexOf(".tar.gz", StringComparison.OrdinalIgnoreCase);
+            int gzExtensionStart = target.LastIndexOf(".gz", StringComparison.OrdinalIgnoreCase);
 
-            if (iPointTazGz != -1)
+            if (tarGzExtensionStart != -1)
             {
-                iPoint = iPointTazGz;
+                extensionStart = tarGzExtensionStart;
             }
-            else if (iPointGz != -1)
+            else if (gzExtensionStart != -1)
             {
-                iPoint = iPointGz;
+                extensionStart = gzExtensionStart;
             }
 
-            target = target.SubstringJava(0, iSeparator + 1)
-                    + target.SubstringJava(iDash + 1, iPoint).ToLower(CultureInfo.InvariantCulture)
-                    + target.SubstringJava(iSeparator);
+            string driverFolderPath = target.SubstringJava(0, versionPathPreSeparator + 1);
+            string archAndOs = target.SubstringJava(versionFilePostSeparator + 1, extensionStart).ToLower(CultureInfo.InvariantCulture);
+            string fileName = target.SubstringJava(versionPathPreSeparator);
+
+            target = driverFolderPath + archAndOs + fileName;
+
             return target;
         }
 

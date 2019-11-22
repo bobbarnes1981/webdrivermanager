@@ -60,12 +60,12 @@ namespace WebDriverManagerSharp.Managers
             return Config().GetEdgeDriverVersion();
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
             return Config().GetEdgeDriverUrl();
         }
 
-        protected override System.Uri GetMirrorUrl()
+        protected override Uri GetMirrorUrl()
         {
             return null;
         }
