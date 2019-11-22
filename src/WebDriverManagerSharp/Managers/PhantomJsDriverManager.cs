@@ -144,13 +144,13 @@ namespace WebDriverManagerSharp.Managers
             }
 
             int versionPathPreSeparator = target.IndexOf(version, StringComparison.OrdinalIgnoreCase) - 1;
-            int versionPathPostSeparator = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
+            int versionFilePostSeparator = target.LastIndexOf(version, StringComparison.OrdinalIgnoreCase) + version.Length;
             int fileExtensionStart = target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase) != -1
                     ? target.LastIndexOf(".tar", StringComparison.OrdinalIgnoreCase)
                     : target.LastIndexOf(".zip", StringComparison.OrdinalIgnoreCase);
 
             string driverFolderPath = target.SubstringJava(0, versionPathPreSeparator + 1);
-            string osAndArch = target.SubstringJava(versionPathPostSeparator + 1, fileExtensionStart);
+            string osAndArch = target.SubstringJava(versionFilePostSeparator + 1, fileExtensionStart);
             string fileName = target.SubstringJava(versionPathPreSeparator);
             target = driverFolderPath + osAndArch + fileName;
 
