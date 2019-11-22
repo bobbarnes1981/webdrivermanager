@@ -93,6 +93,7 @@
     <Compile Include="Managers\PhantomJsDriverManagerTests.cs" />
     <Compile Include="Managers\SeleniumServerStandaloneDriverManagerTests.cs" />
     <Compile Include="Managers\OperaDriverManagerTests.cs" />
+    <Compile Include="Managers\WebDriverManagerTests.cs" />
     <Compile Include="Managers\VoidDriverManagerTests.cs" />
     <Compile Include="Managers\InternetExplorerDriverManagerTests.cs" />
     <Compile Include="Managers\EdgeDriverManagerTests.cs" />
