@@ -117,7 +117,7 @@ namespace WebDriverManagerSharp.Configuration
             os = new ConfigKey<string>("wdm.os", systemInformation.OperatingSystem.ToString());
         }
 
-        private T resolve<T>(ConfigKey<T> configKey)
+        protected T resolve<T>(ConfigKey<T> configKey)
         {
             string name = configKey.GetName();
             T value = configKey.GetValue();
@@ -250,9 +250,9 @@ namespace WebDriverManagerSharp.Configuration
 
         public void Reset()
         {
-            foreach (FieldInfo field in typeof(Config).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+            foreach (FieldInfo field in GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(ConfigKey<>))
+                if (field.FieldType.IsGenericType && (field.FieldType.GetGenericTypeDefinition() == typeof(ConfigKey<>) || field.FieldType.BaseType.GetGenericTypeDefinition() == typeof(ConfigKey<>)))
                 {
                     try
                     {
@@ -466,15 +466,6 @@ namespace WebDriverManagerSharp.Configuration
         public Architecture GetArchitecture()
         {
             string architectureString = resolve(architecture);
-            if (architectureString.Equals("32", StringComparison.OrdinalIgnoreCase))
-            {
-                return Architecture.X32;
-            }
-
-            if (architectureString.Equals("64", StringComparison.OrdinalIgnoreCase))
-            {
-                return Architecture.X64;
-            }
 
             return (Architecture)Enum.Parse(typeof(Architecture), architectureString);
         }

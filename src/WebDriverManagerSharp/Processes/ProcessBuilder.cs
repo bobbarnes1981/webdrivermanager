@@ -20,7 +20,7 @@ namespace WebDriverManagerSharp.Processes
     using System.IO;
     using System.Linq;
 
-    public class ProcessBuilder
+    public class ProcessBuilder : IProcessBuilder
     {
         private readonly string[] command;
 
@@ -33,14 +33,14 @@ namespace WebDriverManagerSharp.Processes
             this.command = command;
         }
 
-        public ProcessBuilder Directory(DirectoryInfo directory)
+        public IProcessBuilder Directory(DirectoryInfo directory)
         {
             this.directory = directory;
 
             return this;
         }
 
-        public ProcessBuilder RedirectOutputStream(bool redirectOutputStream)
+        public IProcessBuilder RedirectOutputStream(bool redirectOutputStream)
         {
             this.redirectOutputStream = redirectOutputStream;
 

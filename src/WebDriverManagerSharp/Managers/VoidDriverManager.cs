@@ -17,6 +17,7 @@
 
 namespace WebDriverManagerSharp.Managers
 {
+    using System;
     using System.Collections.Generic;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
@@ -42,7 +43,7 @@ namespace WebDriverManagerSharp.Managers
         /// </summary>
         /// <exception cref="IOException"/>
         /// <returns></returns>
-        protected override List<System.Uri> GetDrivers()
+        protected override List<Uri> GetDrivers()
         {
             return new List<System.Uri>();
         }
@@ -57,7 +58,7 @@ namespace WebDriverManagerSharp.Managers
             return string.Empty;
         }
 
-        protected override System.Uri GetDriverUrl()
+        protected override Uri GetDriverUrl()
         {
             return null;
         }
@@ -82,7 +83,7 @@ namespace WebDriverManagerSharp.Managers
             // Nothing required
         }
 
-        protected override void SetDriverUrl(System.Uri url)
+        protected override void SetDriverUrl(Uri url)
         {
             // Nothing required
         }

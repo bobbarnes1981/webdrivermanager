@@ -44,6 +44,8 @@ namespace WebDriverManagerSharp
             builder.RegisterType<Preferences>().As<IPreferences>();
             builder.RegisterType<Downloader>().As<IDownloader>();
 
+            builder.RegisterType<ProcessBuilder>().As<IProcessBuilder>();
+
             builder.RegisterType<HttpClient>().As<IHttpClient>().InstancePerDependency();
 
             builder.RegisterType<ChromeDriverManager>();

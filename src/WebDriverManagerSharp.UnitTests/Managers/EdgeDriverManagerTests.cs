@@ -92,9 +92,17 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void PreDownload()
         {
-            string target = WebDriverManager.EdgeDriver().PreDownload("my target", "my version");
+            string target = WebDriverManager.EdgeDriver().PreDownload("path/1.2", "1.2");
 
-            Assert.That(target, Is.EqualTo("my target"));
+            Assert.That(target, Is.EqualTo("path/1.2"));
+        }
+
+        [Test]
+        public void PreDownloadChromium()
+        {
+            string target = WebDriverManager.EdgeDriver().PreDownload("path/1.2.3", "1.2.3");
+
+            Assert.That(target, Is.EqualTo("path/default\\1.2.3"));
         }
 
         [Test]

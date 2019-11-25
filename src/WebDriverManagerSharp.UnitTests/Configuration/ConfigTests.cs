@@ -419,6 +419,51 @@ namespace WebDriverManager.UnitTests.Configuration
             Assert.That(val, Is.EqualTo(newVal));
         }
 
+        [TestCase("IgnoreVersions")]
+        public void TestGetConfigStringArrayValueMissingFile(string methodName)
+        {
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            string[] val = (string[])getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(new string[0]));
+        }
+
+        [TestCase("IgnoreVersions", "wdm.ignoreVersions")]
+        public void TestGetSetConfigStringArrayValue(string methodName, string propertyName)
+        {
+            string[] setVal = new string[] { "a", "b" };
+
+            fileStorageMock.Setup(x => x.FileExists("webdrivermanager.properties")).Returns(true);
+            fileStorageMock.Setup(x => x.OpenRead("webdrivermanager.properties")).Returns(new MemoryStream(Encoding.ASCII.GetBytes(string.Format("{0}={1}", propertyName, string.Join(",", setVal).ToLower()))));
+
+            Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            MethodInfo getter = config.GetType().GetMethod("Get" + methodName, BindingFlags.Public | BindingFlags.Instance);
+            string[] val = (string[])getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(setVal));
+
+            MethodInfo setter = config.GetType().GetMethod("Set" + methodName, BindingFlags.Public | BindingFlags.Instance);
+
+            string[] newVal = new string[] { "c", "d" };
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (string[])getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+
+            newVal = new string[] { "e", "f" };
+
+            setter.Invoke(config, new object[] { newVal });
+
+            val = (string[])getter.Invoke(config, new object[] { });
+
+            Assert.That(val, Is.EqualTo(newVal));
+        }
+
         [Test]
         public void TestGetSetConfigIntInvalidValue()
         {
@@ -534,6 +579,54 @@ namespace WebDriverManager.UnitTests.Configuration
             string os = config.GetOs();
 
             Assert.That(os, Is.EqualTo(WebDriverManagerSharp.Enums.OperatingSystem.LINUX.ToString()));
+        }
+
+        [Test]
+        public void FailedParse()
+        {
+            ConfigAccessor config = new ConfigAccessor(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            WebDriverManagerException exception = Assert.Throws<WebDriverManagerException>(() => config.GetFailedConfigKey());
+
+            Assert.That(exception.Message, Is.EqualTo("Type System.Object cannot be parsed"));
+        }
+
+        [Test]
+        public void FailedReset()
+        {
+            ConfigAccessor config = new ConfigAccessor(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
+
+            config.Reset();
+
+            loggerMock.Verify(x => x.Warn("Exception resetting {0}", "failedConfigKey"), Times.Once);
+        }
+
+        private class ConfigAccessor : Config
+        {
+            public ConfigAccessor(ILogger logger, ISystemInformation systemInformation, IFileStorage fileStorage)
+                : base(logger, systemInformation, fileStorage)
+            {
+            }
+
+            private readonly BrokenConfigKey<object> failedConfigKey = new BrokenConfigKey<object>("wdm.failedConfigKey");
+
+            public object GetFailedConfigKey()
+            {
+                return resolve(failedConfigKey);
+            }
+        }
+
+        private class BrokenConfigKey<T> : ConfigKey<T>
+        {
+            public BrokenConfigKey(string name)
+                :base(name)
+            {
+            }
+
+            public new void Reset()
+            {
+                throw new Exception("Failed!");
+            }
         }
     }
 }

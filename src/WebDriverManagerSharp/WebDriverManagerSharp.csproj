@@ -94,6 +94,7 @@
     <Compile Include="Configuration\ConfigKey.cs" />
     <Compile Include="Processes\IProcess.cs" />
     <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\IProcessBuilder.cs" />
     <Compile Include="Resolver.cs" />
     <Compile Include="Storage\FileStorage.cs" />
     <Compile Include="Storage\IFileStorage.cs" />

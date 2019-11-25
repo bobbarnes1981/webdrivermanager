@@ -24,6 +24,12 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.IO;
     using System.Net.Http.Headers;
     using System.Text;
+    using WebDriverManagerSharp.Configuration;
+    using WebDriverManagerSharp.Managers;
+    using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
+    using WebDriverManagerSharp.Logging;
+    using Autofac;
 
     [TestFixture]
     public class PhantomJsDriverManagerTests : BaseManagerTests
@@ -39,11 +45,56 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             string fakeHtml = "<a class=\"execute\" rel=\"nofollow\" href=\"/ariya/phantomjs/downloads/phantomjs-2.5.0-beta2-windows.zip\">phantomjs-2.5.0-beta2-windows.zip</a>";
 
             httpClientMock.Setup(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
-            
+
             List<string> versions = WebDriverManager.PhantomJS().GetVersions();
 
             Assert.That(versions, Is.Not.Null);
             Assert.That(versions.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetVersionsNullUrl()
+        {
+            Uri driverUrl = null;
+            configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
+
+            Resolver.OverriddenRegistrations = (builder) =>
+            {
+                builder.RegisterType<PhantomJsDriverManagerAccessor>();
+            };
+
+            PhantomJsDriverManagerAccessor manager = Resolver.Resolve<PhantomJsDriverManagerAccessor>();
+
+            Assert.Throws<ArgumentNullException>(() => manager.GetCurrentVersion(null, ""));
+        }
+
+        [Test]
+        public void GetVersionsNullDriverName()
+        {
+            Uri driverUrl = null;
+            configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
+
+            Resolver.OverriddenRegistrations = (builder) =>
+            {
+                builder.RegisterType<PhantomJsDriverManagerAccessor>();
+            };
+
+            PhantomJsDriverManagerAccessor manager = Resolver.Resolve<PhantomJsDriverManagerAccessor>();
+
+            Assert.Throws<ArgumentNullException>(() => manager.GetCurrentVersion(new Uri("http://uri"), null));
+        }
+
+        private class PhantomJsDriverManagerAccessor : PhantomJsDriverManager
+        {
+            public PhantomJsDriverManagerAccessor(IConfig config, IShell shell, IPreferences preferences, ILogger logger, IFileStorage fileStorage)
+                : base(config, shell, preferences, logger, fileStorage)
+            {
+            }
+
+            public string GetCurrentVersion(Uri url, string driverName)
+            {
+                return base.GetCurrentVersion(url, driverName);
+            }
         }
 
         [Test]

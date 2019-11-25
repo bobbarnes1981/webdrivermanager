@@ -17,6 +17,7 @@
 
 namespace WebDriverManagerSharp.Processes
 {
+    using Autofac;
     using System;
     using System.IO;
     using WebDriverManagerSharp.Logging;
@@ -60,7 +61,7 @@ namespace WebDriverManagerSharp.Processes
             string output = string.Empty;
             try
             {
-                using (IProcess process = new ProcessBuilder(command).Directory(folder).RedirectOutputStream(true).Start())
+                using (IProcess process = Resolver.Resolve<IProcessBuilder>(new NamedParameter("command", command)).Directory(folder).RedirectOutputStream(true).Start())
                 {
                     output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();
