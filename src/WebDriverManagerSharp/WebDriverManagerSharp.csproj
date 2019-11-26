@@ -96,7 +96,11 @@
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\IProcessBuilder.cs" />
     <Compile Include="Resolver.cs" />
+    <Compile Include="Storage\Directory.cs" />
+    <Compile Include="Storage\File.cs" />
     <Compile Include="Storage\FileStorage.cs" />
+    <Compile Include="Storage\IDirectory.cs" />
+    <Compile Include="Storage\IFile.cs" />
     <Compile Include="Storage\IFileStorage.cs" />
     <Compile Include="Web\IDownloader.cs" />
     <Compile Include="Web\Downloader.cs" />
@@ -128,10 +132,10 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Resources\versions.properties">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\webdrivermanager.properties">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

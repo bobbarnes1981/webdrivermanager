@@ -24,12 +24,12 @@ namespace WebDriverManagerSharp.Storage
     {
         public bool DirectoryExists(string directory)
         {
-            return Directory.Exists(directory);
+            return System.IO.Directory.Exists(directory);
         }
 
         public bool FileExists(string file)
         {
-            return File.Exists(file);
+            return System.IO.File.Exists(file);
         }
 
         public string GetCurrentDirectory()
@@ -39,7 +39,7 @@ namespace WebDriverManagerSharp.Storage
 
         public string[] GetFileNames(string directory, string filter)
         {
-            return Directory.GetFiles(directory, filter);
+            return System.IO.Directory.GetFiles(directory, filter);
         }
 
         public FileInfo[] GetFileInfos(string directory, string filter, SearchOption searchOption)
@@ -49,12 +49,12 @@ namespace WebDriverManagerSharp.Storage
 
         public Stream OpenRead(string file)
         {
-            return File.OpenRead(file);
+            return System.IO.File.OpenRead(file);
         }
 
         public string[] ReadAllLines(string file)
         {
-            return File.ReadAllLines(file);
+            return System.IO.File.ReadAllLines(file);
         }
     }
 }

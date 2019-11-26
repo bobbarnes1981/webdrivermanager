@@ -152,7 +152,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
             downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
-            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Storage.File("c:\\config_target\\driver.exe"));
 
             WebDriverManager.PhantomJS().Setup();
 
@@ -180,7 +180,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
             downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
-            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Storage.File("c:\\config_target\\driver.exe"));
 
             WebDriverManager.PhantomJS().Setup();
 
@@ -216,9 +216,19 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         }
 
         [Test]
+        [Ignore("not complete")]
         public void PostDownload()
         {
-            // TODO: 
+            Mock<IDirectory> subDirectoryMock = new Mock<IDirectory>();
+            subDirectoryMock.Setup(x => x.Name).Returns("phantomjs");
+
+            Mock<IDirectory> directoryMock = new Mock<IDirectory>();
+            directoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory>{ subDirectoryMock.Object });
+
+            Mock<IFile> fileMock = new Mock<IFile>();
+            fileMock.Setup(x => x.ParentDirectory).Returns(directoryMock.Object);
+
+            WebDriverManager.PhantomJS().PostDownload(fileMock.Object);
         }
     }
 }

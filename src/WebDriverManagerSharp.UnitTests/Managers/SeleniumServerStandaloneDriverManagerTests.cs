@@ -23,6 +23,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
+    using WebDriverManagerSharp.Storage;
 
     [TestFixture]
     public class SeleniumServerStandaloneDriverManagerTests : BaseManagerTests
@@ -96,7 +97,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
             downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
-            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Storage.File("c:\\config_target\\driver.exe"));
 
             WebDriverManager.SeleniumServerStandalone().Setup();
 
@@ -122,7 +123,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
             downloaderMock.Setup(x => x.GetTargetPath()).Returns("c:\\download_target");
-            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInfo("c:\\config_target\\driver.exe"));
+            downloaderMock.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Storage.File("c:\\config_target\\driver.exe"));
 
             WebDriverManager.SeleniumServerStandalone().Setup();
 
@@ -140,7 +141,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void PostDownloadNull()
         {
-            FileInfo fileInfo =  WebDriverManager.SeleniumServerStandalone().PostDownload(null);
+            IFile fileInfo =  WebDriverManager.SeleniumServerStandalone().PostDownload(null);
 
             Assert.That(fileInfo, Is.Null);
         }

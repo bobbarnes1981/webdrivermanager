@@ -18,13 +18,14 @@
 namespace WebDriverManagerSharp.Configuration
 {
     using System;
-    using System.IO;
     using WebDriverManagerSharp.Enums;
+    using WebDriverManagerSharp.Storage;
+
     public interface IConfig
     {
         void Reset();
 
-        bool IsExecutable(FileInfo file);
+        bool IsExecutable(IFile file);
 
         string GetProperties();
 

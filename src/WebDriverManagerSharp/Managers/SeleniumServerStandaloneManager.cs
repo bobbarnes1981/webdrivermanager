@@ -74,7 +74,7 @@ namespace WebDriverManagerSharp.Managers
             Config().SetSeleniumServerStandaloneUrl(url);
         }
 
-        public override FileInfo PostDownload(FileInfo archive)
+        public override IFile PostDownload(IFile archive)
         {
             return archive;
         }

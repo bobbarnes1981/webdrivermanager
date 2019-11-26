@@ -69,7 +69,7 @@ namespace WebDriverManager.UnitTests.Configuration
         [Test]
         public void TestIsExecutableNull()
         {
-            FileInfo fileInfo = null;
+            IFile fileInfo = null;
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
@@ -79,7 +79,7 @@ namespace WebDriverManager.UnitTests.Configuration
         [Test]
         public void TestIsExecutableWindowsNotExecutable()
         {
-            FileInfo fileInfo = new FileInfo("testfile.doc");
+            IFile fileInfo = new WebDriverManagerSharp.Storage.File("testfile.doc");
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
@@ -93,7 +93,7 @@ namespace WebDriverManager.UnitTests.Configuration
         [Test]
         public void TestIsExecutableWindowsExecutable()
         {
-            FileInfo fileInfo = new FileInfo("testfile.exe");
+            IFile fileInfo = new WebDriverManagerSharp.Storage.File("testfile.exe");
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
@@ -107,7 +107,7 @@ namespace WebDriverManager.UnitTests.Configuration
         [Test]
         public void TestIsExecutableLinux()
         {
-            FileInfo fileInfo = new FileInfo("testfile");
+            IFile fileInfo = new WebDriverManagerSharp.Storage.File("testfile");
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 
@@ -119,7 +119,7 @@ namespace WebDriverManager.UnitTests.Configuration
         [Test]
         public void TestIsExecutableMac()
         {
-            FileInfo fileInfo = new FileInfo("testfile");
+            IFile fileInfo = new WebDriverManagerSharp.Storage.File("testfile");
 
             Config config = new Config(loggerMock.Object, systemInformationMock.Object, fileStorageMock.Object);
 

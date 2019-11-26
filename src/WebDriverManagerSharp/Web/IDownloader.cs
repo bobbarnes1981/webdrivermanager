@@ -19,6 +19,7 @@ namespace WebDriverManagerSharp.Web
 {
     using System;
     using System.IO;
+    using WebDriverManagerSharp.Storage;
 
     public interface IDownloader
     {
@@ -30,14 +31,14 @@ namespace WebDriverManagerSharp.Web
         /// <param name="driverName">Required driver name</param>
         /// <exception cref="IOException" />
         /// <returns></returns>
-        FileInfo Download(Uri url, string version, string driverName);
+        IFile Download(Uri url, string version, string driverName);
 
-        FileInfo GetTarget(string version, Uri url);
+        IFile GetTarget(string version, Uri url);
 
         string GetTargetPath();
 
-        void RenameFile(FileInfo from, FileInfo to);
+        void RenameFile(IFile from, IFile to);
 
-        void DeleteFolder(DirectoryInfo folder);
+        void DeleteFolder(IDirectory folder);
     }
 }

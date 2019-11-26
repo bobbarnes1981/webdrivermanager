@@ -50,7 +50,7 @@ namespace WebDriverManagerSharp.Processes
         public IProcess Start()
         {
             System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = Path.Combine(this.directory.FullName, this.command[0]);
+            process.StartInfo.FileName = Path.Combine(this.directory != null ? this.directory.FullName : "", this.command[0]);
             process.StartInfo.Arguments = string.Join(" ", this.command.Skip(1));
 
             process.StartInfo.UseShellExecute = false;

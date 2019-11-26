@@ -267,7 +267,7 @@ namespace WebDriverManagerSharp.Configuration
             }
         }
 
-        public bool IsExecutable(FileInfo file)
+        public bool IsExecutable(IFile file)
         {
             if (file == null)
             {

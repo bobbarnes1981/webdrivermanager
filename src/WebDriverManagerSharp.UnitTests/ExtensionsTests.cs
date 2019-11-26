@@ -155,25 +155,5 @@ namespace WebDriverManagerSharp.UnitTests
 
             Assert.That(result.ToString(), Is.EqualTo(expectedUri));
         }
-
-        [Test]
-        public void CreateFromStreamNullFile()
-        {
-            Stream stream = new MemoryStream(Encoding.ASCII.GetBytes("my test data"));
-
-            FileInfo fileInfo = null;
-
-            Assert.Throws<ArgumentNullException>(() => fileInfo.CreateFromStream(stream));
-        }
-
-        [Test]
-        public void CreateFromStreamNullSource()
-        {
-            Stream stream = null;
-
-            FileInfo fileInfo = new FileInfo("test.file");
-
-            Assert.Throws<ArgumentNullException>(() => fileInfo.CreateFromStream(stream));
-        }
     }
 }

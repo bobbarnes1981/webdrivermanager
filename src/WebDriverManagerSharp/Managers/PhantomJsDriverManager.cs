@@ -159,7 +159,7 @@ namespace WebDriverManagerSharp.Managers
             return target;
         }
 
-        public override FileInfo PostDownload(FileInfo archive)
+        public override IFile PostDownload(IFile archive)
         {
             if (archive == null)
             {
@@ -168,10 +168,10 @@ namespace WebDriverManagerSharp.Managers
 
             Log.Trace("PhantomJS package name: {0}", archive);
 
-            DirectoryInfo extractFolder = GetFolderFilter(archive.Directory)[0];
+            IDirectory extractFolder = GetFolderFilter(archive.ParentDirectory)[0];
             Log.Trace("PhantomJS extract folder (to be deleted): {0}", extractFolder);
 
-            DirectoryInfo binFolder = new DirectoryInfo(extractFolder.FullName + Path.DirectorySeparatorChar + "bin");
+            IDirectory binFolder = new Storage.Directory(extractFolder.FullName + Path.DirectorySeparatorChar + "bin");
             // Exception for older version of PhantomJS
             int binaryIndex = 0;
             if (!binFolder.Exists)
@@ -182,10 +182,10 @@ namespace WebDriverManagerSharp.Managers
 
             Log.Trace("PhantomJS bin folder: {0} (index {1})", binFolder, binaryIndex);
 
-            FileInfo phantomjs = binFolder.GetFiles()[binaryIndex];
+            IFile phantomjs = binFolder.Files[binaryIndex];
             Log.Trace("PhantomJS binary: {0}", phantomjs);
 
-            FileInfo target = new FileInfo(Path.Combine(archive.Directory.FullName, phantomjs.Name));
+            IFile target = new Storage.File(Path.Combine(archive.ParentDirectory.FullName, phantomjs.Name));
             Log.Trace("PhantomJS target: {0}", target);
 
             Downloader.RenameFile(phantomjs, target);

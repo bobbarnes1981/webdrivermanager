@@ -66,7 +66,7 @@ namespace WebDriverManagerSharp.Tests.Test
             browserManager.ForceCache().ForceDownload().Architecture(architecture).Version(driverVersion).Setup();
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("getDriverFromCache", BindingFlags.NonPublic | BindingFlags.Instance);
-            FileInfo driverInCachePath = (FileInfo)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config(Resolver.Resolve<ILogger>(), new SystemInformation(), new FileStorage()).GetOs() });
+            IFile driverInCachePath = (IFile)method.Invoke(browserManager, new object[] { driverVersion, architecture, new Config(Resolver.Resolve<ILogger>(), new SystemInformation(), new FileStorage()).GetOs() });
 
             Assert.That(driverInCachePath, Is.Not.Null);
         }

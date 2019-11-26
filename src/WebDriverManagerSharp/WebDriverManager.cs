@@ -523,11 +523,11 @@ namespace WebDriverManagerSharp
 
         public void ClearCache()
         {
-            string targetPath = Config().GetTargetPath();
+            IDirectory targetPath = new Storage.Directory(Config().GetTargetPath());
             try
             {
                 Log.Debug("Clearing cache at {0}", targetPath);
-                Directory.Delete(targetPath);
+                targetPath.Delete(true);
             }
             catch (Exception e)
             {
@@ -548,16 +548,16 @@ namespace WebDriverManagerSharp
             return target;
         }
 
-        public virtual FileInfo PostDownload(FileInfo archive)
+        public virtual IFile PostDownload(IFile archive)
         {
             if (archive == null)
             {
                 throw new ArgumentNullException(nameof(archive));
             }
 
-            DirectoryInfo parentFolder = archive.Directory;
-            FileInfo[] ls = parentFolder.GetFiles();
-            foreach (FileInfo f in ls)
+            IDirectory parentFolder = archive.ParentDirectory;
+            IReadOnlyList<IFile> ls = parentFolder.Files;
+            foreach (IFile f in ls)
             {
                 if (GetDriverName().Contains(f.Name.Substring(0, f.Name.Length - f.Extension.Length)))
                 {
@@ -631,7 +631,7 @@ namespace WebDriverManagerSharp
                     cache = true;
                 }
 
-                FileInfo driverInCache = handleCache(arch, version, os, getLatest, cache);
+                IFile driverInCache = handleCache(arch, version, os, getLatest, cache);
 
                 string versionStr = getLatest ? "(latest version)" : version;
                 if (driverInCache != null && !Config().IsOverride())
@@ -723,7 +723,7 @@ namespace WebDriverManagerSharp
             if (version.Equals(PRE_INSTALLED, StringComparison.OrdinalIgnoreCase))
             {
                 string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
-                FileInfo microsoftWebDriverFile = new FileInfo(Path.Combine(systemRoot, "System32", "MicrosoftWebDriver.exe"));
+                IFile microsoftWebDriverFile = new Storage.File(Path.Combine(systemRoot, "System32", "MicrosoftWebDriver.exe"));
                 if (microsoftWebDriverFile.Exists)
                 {
                     downloadedVersion = PRE_INSTALLED;
@@ -897,7 +897,7 @@ namespace WebDriverManagerSharp
         protected void downloadCandidateUrls(List<Uri> candidateUrls)
         {
             Uri url = candidateUrls.First();
-            FileInfo exportValue = downloader.Download(url, VersionToDownload, GetDriverName());
+            IFile exportValue = downloader.Download(url, VersionToDownload, GetDriverName());
             exportDriver(exportValue);
             downloadedVersion = VersionToDownload;
         }
@@ -988,9 +988,9 @@ namespace WebDriverManagerSharp
             return candidateUrls;
         }
 
-        protected FileInfo handleCache(Architecture arch, string version, string os, bool getLatest, bool cache)
+        protected IFile handleCache(Architecture arch, string version, string os, bool getLatest, bool cache)
         {
-            FileInfo driverInCache = null;
+            IFile driverInCache = null;
             if (cache || !getLatest)
             {
                 driverInCache = getDriverFromCache(version, arch, os);
@@ -1000,7 +1000,7 @@ namespace WebDriverManagerSharp
             return driverInCache;
         }
 
-        protected FileInfo getDriverFromCache(string driverVersion, Architecture arch, string os)
+        protected IFile getDriverFromCache(string driverVersion, Architecture arch, string os)
         {
             Log.Trace("Checking if {0} exists in cache", GetDriverName());
             List<FileInfo> filesInCache = getFilesInCache();
@@ -1020,7 +1020,7 @@ namespace WebDriverManagerSharp
 
                 if (filesInCache.Count == 1)
                 {
-                    return filesInCache[0];
+                    return new Storage.File(filesInCache[0].FullName);
                 }
 
                 // Filter by arch
@@ -1028,7 +1028,7 @@ namespace WebDriverManagerSharp
 
                 if (filesInCache != null && filesInCache.Count > 1)
                 {
-                    return filesInCache[filesInCache.Count - 1];
+                    return new Storage.File(filesInCache[filesInCache.Count - 1].FullName);
                 }
             }
 
@@ -1346,7 +1346,7 @@ namespace WebDriverManagerSharp
             }
         }
 
-        protected void exportDriver(FileInfo variableValue)
+        protected void exportDriver(IFile variableValue)
         {
             if (variableValue == null)
             {
@@ -1364,7 +1364,7 @@ namespace WebDriverManagerSharp
 
                 // Add driver to PATH
                 string pathVar = Environment.GetEnvironmentVariable("PATH");
-                pathVar += ";" + new FileInfo(variableValue.FullName).DirectoryName;
+                pathVar += ";" + new Storage.File(variableValue.FullName).ParentDirectory.FullName;
                 Environment.SetEnvironmentVariable("PATH", pathVar);
             }
             else
@@ -1463,14 +1463,14 @@ namespace WebDriverManagerSharp
             return outRelease;
         }
 
-        protected DirectoryInfo[] GetFolderFilter(DirectoryInfo directory)
+        protected IDirectory[] GetFolderFilter(IDirectory directory)
         {
             if (directory == null)
             {
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            return directory.GetDirectories().Where(d => d.Name.IndexOf(GetDriverName(), StringComparison.OrdinalIgnoreCase) != -1).ToArray();
+            return directory.ChildDirectories.Where(d => d.Name.IndexOf(GetDriverName(), StringComparison.OrdinalIgnoreCase) != -1).ToArray();
         }
 
         protected string GetDefaultBrowserVersion(string[] programFilesEnvs, string winBrowserName, string linuxBrowserName, string macBrowserName, string versionFlag, string browserNameInOutput)
@@ -1526,16 +1526,16 @@ namespace WebDriverManagerSharp
             return shell.RunAndWait(getExecFile(), "wmic.exe", "datafile", "where", "name='" + browserPath + "'", "get", "Version", "/value");
         }
 
-        protected static DirectoryInfo getExecFile()
+        protected DirectoryInfo getExecFile()
         {
-            string systemRoot = System.Environment.GetEnvironmentVariable("SystemRoot");
+            string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
             DirectoryInfo system32 = new DirectoryInfo(Path.Combine(systemRoot, "System32", "wbem"));
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && system32.Exists)
             {
                 return system32;
             }
 
-            return new DirectoryInfo(Directory.GetCurrentDirectory());
+            return new DirectoryInfo(fileStorage.GetCurrentDirectory());
         }
 
         protected virtual string getLatestVersion()

@@ -84,11 +84,11 @@ namespace WebDriverManagerSharp.Tests.Test
             Downloader downloader = new Downloader(Resolver.Resolve<ILogger>(), driverManagerType);
             string targetPath = downloader.GetTargetPath();
 
-            FileInfo result = downloader.GetTarget(version, new Uri(url));
+            Storage.IFile result = downloader.GetTarget(version, new Uri(url));
             log.Info("{0}", result);
             log.Info(Path.Combine(targetPath, target));
 
-            FileInfo fileReal = new FileInfo(Path.Combine(targetPath, target));
+            Storage.IFile fileReal = new Storage.File(Path.Combine(targetPath, target));
 
             Assert.That(result.FullName, Is.EqualTo(fileReal.FullName));
         }

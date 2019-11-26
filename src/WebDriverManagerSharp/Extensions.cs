@@ -20,7 +20,6 @@ namespace WebDriverManagerSharp
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.IO;
     using WebDriverManagerSharp.Enums;
 
     public static class Extensions
@@ -72,24 +71,6 @@ namespace WebDriverManagerSharp
             }
 
             return str.Substring(startIndex, endIndex - startIndex);
-        }
-
-        public static void CreateFromStream(this FileInfo fileInfo, Stream source)
-        {
-            if (fileInfo == null)
-            {
-                throw new ArgumentNullException(nameof(fileInfo));
-            }
-
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            using (Stream stream = fileInfo.OpenWrite())
-            {
-                source.CopyTo(stream);
-            }
         }
         
         public static long UnixTime(this DateTime dateTime)

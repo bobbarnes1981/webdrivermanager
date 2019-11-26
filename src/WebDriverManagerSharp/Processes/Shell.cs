@@ -39,7 +39,7 @@ namespace WebDriverManagerSharp.Processes
 
         public string RunAndWait(params string[] command)
         {
-            return RunAndWaitArray(new DirectoryInfo(Directory.GetCurrentDirectory()), command);
+            return RunAndWaitArray(null, command);
         }
 
         public string RunAndWait(DirectoryInfo folder, params string[] command)

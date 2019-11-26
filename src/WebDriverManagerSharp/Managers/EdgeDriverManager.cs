@@ -211,16 +211,16 @@ namespace WebDriverManagerSharp.Managers
             return target;
         }
 
-        public override FileInfo PostDownload(FileInfo archive)
+        public override IFile PostDownload(IFile archive)
         {
             if (archive == null)
             {
                 throw new ArgumentNullException(nameof(archive));
             }
 
-            List<FileInfo> listFiles = archive.Directory.GetFiles().ToList();
-            List<FileInfo>.Enumerator iterator = listFiles.GetEnumerator();
-            FileInfo file = null;
+            IReadOnlyList<IFile> listFiles = archive.ParentDirectory.Files;
+            IEnumerator<IFile> iterator = listFiles.GetEnumerator();
+            IFile file = null;
             while (iterator.MoveNext())
             {
                 file = iterator.Current;

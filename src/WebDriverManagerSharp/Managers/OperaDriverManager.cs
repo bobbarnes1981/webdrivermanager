@@ -107,7 +107,7 @@ namespace WebDriverManagerSharp.Managers
             return getDriversFromGitHub();
         }
 
-        public override FileInfo PostDownload(FileInfo archive)
+        public override IFile PostDownload(IFile archive)
         {
             if (archive == null)
             {
@@ -116,21 +116,21 @@ namespace WebDriverManagerSharp.Managers
 
             Log.Trace("Post processing for Opera: {0}", archive);
 
-            DirectoryInfo[] folders = GetFolderFilter(archive.Directory);
+            IDirectory[] folders = GetFolderFilter(archive.ParentDirectory);
             if (folders.Length > 0)
             {
-                DirectoryInfo extractFolder = GetFolderFilter(archive.Directory)[0];
-                FileInfo target;
+                IDirectory extractFolder = GetFolderFilter(archive.ParentDirectory)[0];
+                IFile target;
                 try
                 {
                     Log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
-                    FileInfo[] listFiles = extractFolder.GetFiles();
+                    IReadOnlyList<IFile> listFiles = extractFolder.Files;
                     int i = 0;
-                    FileInfo operadriver;
+                    IFile operadriver;
                     bool isOperaDriver;
                     do
                     {
-                        if (i >= listFiles.Length)
+                        if (i >= listFiles.Count)
                         {
                             throw new WebDriverManagerException("Driver binary for Opera not found in zip file");
                         }
@@ -144,7 +144,7 @@ namespace WebDriverManagerSharp.Managers
 
                     Log.Info("Operadriver binary: {0}", operadriver);
 
-                    target = new FileInfo(Path.Combine(archive.Directory.FullName, operadriver.Name));
+                    target = new Storage.File(Path.Combine(archive.ParentDirectory.FullName, operadriver.Name));
                     Log.Trace("Operadriver target: {0}", target);
 
                     Downloader.RenameFile(operadriver, target);

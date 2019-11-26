@@ -90,6 +90,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [Test]
         public void TestClearCache()
         {
+            configMock.Setup(x => x.GetTargetPath()).Returns("c:\\fake_target");
             WebDriverManager.ChromeDriver().ClearCache();
             configMock.Verify(x => x.GetTargetPath(), Times.Once);
         }
