@@ -17,9 +17,11 @@
 
 namespace WebDriverManagerSharp.Managers
 {
+    using Autofac;
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
     using WebDriverManagerSharp.Logging;
@@ -171,13 +173,13 @@ namespace WebDriverManagerSharp.Managers
             IDirectory extractFolder = GetFolderFilter(archive.ParentDirectory)[0];
             Log.Trace("PhantomJS extract folder (to be deleted): {0}", extractFolder);
 
-            IDirectory binFolder = new Storage.Directory(extractFolder.FullName + Path.DirectorySeparatorChar + "bin");
+            IDirectory binFolder = extractFolder.ChildDirectories.FirstOrDefault(d => d.Name == "bin");
             // Exception for older version of PhantomJS
             int binaryIndex = 0;
-            if (!binFolder.Exists)
+            if (binFolder == null)
             {
                 binFolder = extractFolder;
-                binaryIndex = 3;
+                binaryIndex = 2;
             }
 
             Log.Trace("PhantomJS bin folder: {0} (index {1})", binFolder, binaryIndex);
@@ -188,8 +190,9 @@ namespace WebDriverManagerSharp.Managers
             IFile target = new Storage.File(Path.Combine(archive.ParentDirectory.FullName, phantomjs.Name));
             Log.Trace("PhantomJS target: {0}", target);
 
-            Downloader.RenameFile(phantomjs, target);
-            Downloader.DeleteFolder(extractFolder);
+            IDownloader downloader = Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value));
+            downloader.RenameFile(phantomjs, target);
+            downloader.DeleteFolder(extractFolder);
             return target;
         }
 

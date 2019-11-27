@@ -30,6 +30,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using WebDriverManagerSharp.Storage;
     using WebDriverManagerSharp.Logging;
     using Autofac;
+    using WebDriverManagerSharp.Web;
 
     [TestFixture]
     public class PhantomJsDriverManagerTests : BaseManagerTests
@@ -53,12 +54,30 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         }
 
         [Test]
+        public void GetVersionsNoHyphen()
+        {
+            Uri driverUrl = new Uri("https://fake.bitbucket.org/ariya/phantomjs/downloads/");
+            configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
+            configMock.Setup(x => x.GetGitHubTokenName()).Returns("fakeUser");
+            configMock.Setup(x => x.GetGitHubTokenSecret()).Returns("fakePass");
+
+            string fakeHtml = "<a class=\"execute\" rel=\"nofollow\" href=\"/ariya/phantomjs/downloads/phantomjs.zip\">phantomjs.zip</a>";
+
+            httpClientMock.Setup(x => x.ExecuteHttpGet(driverUrl, It.IsAny<AuthenticationHeaderValue>())).Returns(new MemoryStream(Encoding.ASCII.GetBytes(fakeHtml)));
+
+            List<string> versions = WebDriverManager.PhantomJS().GetVersions();
+
+            Assert.That(versions, Is.Not.Null);
+            Assert.That(versions.Count, Is.EqualTo(0));
+        }
+
+        [Test]
         public void GetVersionsNullUrl()
         {
             Uri driverUrl = null;
             configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
 
-            Resolver.OverriddenRegistrations = (builder) =>
+            Resolver.OverriddenRegistrations += (builder) =>
             {
                 builder.RegisterType<PhantomJsDriverManagerAccessor>();
             };
@@ -74,7 +93,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             Uri driverUrl = null;
             configMock.Setup(x => x.GetPhantomjsDriverUrl()).Returns(driverUrl);
 
-            Resolver.OverriddenRegistrations = (builder) =>
+            Resolver.OverriddenRegistrations += (builder) =>
             {
                 builder.RegisterType<PhantomJsDriverManagerAccessor>();
             };
@@ -216,19 +235,65 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         }
 
         [Test]
-        [Ignore("not complete")]
-        public void PostDownload()
+        public void PostDownloadWithBin()
         {
-            Mock<IDirectory> subDirectoryMock = new Mock<IDirectory>();
-            subDirectoryMock.Setup(x => x.Name).Returns("phantomjs");
+            Resolver.OverriddenRegistrations += (builder) =>
+            {
+                builder.RegisterInstance(new Mock<IDownloader>().Object).As<IDownloader>();
+            };
+
+            Mock<IFile> driverFileMock = new Mock<IFile>();
+            driverFileMock.Setup(x => x.Name).Returns("phantomjs.exe");
+
+            Mock<IDirectory> binDirectoryMock = new Mock<IDirectory>();
+            binDirectoryMock.Setup(x => x.Name).Returns("bin");
+            binDirectoryMock.Setup(x => x.Files).Returns(new List<IFile> { driverFileMock.Object });
+
+            Mock<IDirectory> archiveDirectoryMock = new Mock<IDirectory>();
+            archiveDirectoryMock.Setup(x => x.Name).Returns("phantomjs");
+            archiveDirectoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { binDirectoryMock.Object });
 
             Mock<IDirectory> directoryMock = new Mock<IDirectory>();
-            directoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory>{ subDirectoryMock.Object });
+            directoryMock.Setup(x => x.FullName).Returns("c:\\tmp\\archive");
+            directoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { archiveDirectoryMock.Object });
 
-            Mock<IFile> fileMock = new Mock<IFile>();
-            fileMock.Setup(x => x.ParentDirectory).Returns(directoryMock.Object);
+            Mock<IFile> archiveFileMock = new Mock<IFile>();
+            archiveFileMock.Setup(x => x.ParentDirectory).Returns(directoryMock.Object);
 
-            WebDriverManager.PhantomJS().PostDownload(fileMock.Object);
+            IFile file = WebDriverManager.PhantomJS().PostDownload(archiveFileMock.Object);
+
+            Assert.That(file.FullName, Is.EqualTo("c:\\tmp\\archive\\phantomjs.exe"));
+        }
+
+        [Test]
+        public void PostDownloadWithoutBin()
+        {
+            Resolver.OverriddenRegistrations += (builder) =>
+            {
+                builder.RegisterInstance(new Mock<IDownloader>().Object).As<IDownloader>();
+            };
+
+            Mock<IFile> driverFileMock = new Mock<IFile>();
+            driverFileMock.Setup(x => x.Name).Returns("phantomjs.exe");
+
+            Mock<IDirectory> examplesDirectoryMock = new Mock<IDirectory>();
+            examplesDirectoryMock.Setup(x => x.Name).Returns("examples");
+
+            Mock<IDirectory> archiveDirectoryMock = new Mock<IDirectory>();
+            archiveDirectoryMock.Setup(x => x.Name).Returns("phantomjs");
+            archiveDirectoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { examplesDirectoryMock.Object });
+            archiveDirectoryMock.Setup(x => x.Files).Returns(new List<IFile> { null, null, driverFileMock.Object });
+
+            Mock<IDirectory> directoryMock = new Mock<IDirectory>();
+            directoryMock.Setup(x => x.FullName).Returns("c:\\tmp\\archive");
+            directoryMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { archiveDirectoryMock.Object });
+
+            Mock<IFile> archiveFileMock = new Mock<IFile>();
+            archiveFileMock.Setup(x => x.ParentDirectory).Returns(directoryMock.Object);
+
+            IFile file = WebDriverManager.PhantomJS().PostDownload(archiveFileMock.Object);
+
+            Assert.That(file.FullName, Is.EqualTo("c:\\tmp\\archive\\phantomjs.exe"));
         }
     }
 }

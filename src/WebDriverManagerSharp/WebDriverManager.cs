@@ -588,7 +588,7 @@ namespace WebDriverManagerSharp
 
         protected void Manage(Architecture arch, string version)
         {
-            httpClient = Resolver.Resolve<IHttpClient>(new Autofac.NamedParameter("config", Config()));
+            httpClient = Resolver.Resolve<IHttpClient>(new NamedParameter("config", Config()));
             try
             {
                 downloader = Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value));
