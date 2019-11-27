@@ -34,14 +34,13 @@ namespace WebDriverManagerSharp.Tests.Test
         public void SetupClass()
         {
             Assume.That(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
-            WebDriverManager.EdgeDriver().AvoidPreferences().Setup();
+            WebDriverManager.EdgeDriver().Setup();
         }
 
         [SetUp]
         public void SetupTest()
         {
             EdgeOptions edgeOptions = new EdgeOptions();
-            ////"C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe";
             Driver = new EdgeDriver(edgeOptions);
         }
     }
