@@ -76,11 +76,6 @@ namespace WebDriverManagerSharp.Storage
 
         public void CreateFromStream(Stream source)
         {
-            if (fileInfo == null)
-            {
-                throw new ArgumentNullException(nameof(fileInfo));
-            }
-
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
