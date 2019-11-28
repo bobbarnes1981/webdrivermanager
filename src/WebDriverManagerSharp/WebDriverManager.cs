@@ -59,7 +59,6 @@ namespace WebDriverManagerSharp
         private static readonly Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
 
         private IHttpClient httpClient;
-        private IDownloader downloader;
         private UrlFilter urlFilter;
         private string versionToDownload;
         private string downloadedVersion;
@@ -93,8 +92,6 @@ namespace WebDriverManagerSharp
         protected ILogger Log { get { return logger; } }
 
         protected IShell Shell { get { return shell; } }
-
-        protected IDownloader Downloader { get { return downloader; } }
 
         public IHttpClient HttpClient { get { return httpClient; } protected set { httpClient = value; } } // setter only for edge driver
 
@@ -591,7 +588,6 @@ namespace WebDriverManagerSharp
             httpClient = Resolver.Resolve<IHttpClient>(new NamedParameter("config", Config()));
             try
             {
-                downloader = Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value));
                 urlFilter = new UrlFilter(logger, fileStorage);
 
                 bool getLatest = isVersionLatest(version);
@@ -897,7 +893,7 @@ namespace WebDriverManagerSharp
         protected void downloadCandidateUrls(List<Uri> candidateUrls)
         {
             Uri url = candidateUrls.First();
-            IFile exportValue = downloader.Download(url, VersionToDownload, GetDriverName());
+            IFile exportValue = Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value)).Download(url, VersionToDownload, GetDriverName());
             exportDriver(exportValue);
             downloadedVersion = VersionToDownload;
         }
@@ -1061,7 +1057,7 @@ namespace WebDriverManagerSharp
 
         protected List<FileInfo> getFilesInCache()
         {
-            return fileStorage.GetFileInfos(downloader.GetTargetPath(), "*.*", SearchOption.AllDirectories).ToList();
+            return fileStorage.GetFileInfos(Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value)).GetTargetPath(), "*.*", SearchOption.AllDirectories).ToList();
         }
 
         protected static List<Uri> removeFromList(List<Uri> list, string version)

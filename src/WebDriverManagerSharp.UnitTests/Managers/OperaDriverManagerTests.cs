@@ -24,6 +24,8 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.IO;
     using System.Net.Http.Headers;
     using System.Text;
+    using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Storage;
 
     [TestFixture]
     public class OperaDriverManagerTests : BaseManagerTests
@@ -161,9 +163,109 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         }
 
         [Test]
+        public void PostDownloadNoFolderOrFile()
+        {
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { });
+            archiveStoreMock.Setup(x => x.Files).Returns(new List<IFile> { });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.OperaDriver().PostDownload(archiveMock.Object));
+        }
+
+        [Test]
+        public void PostDownloadNoFolderWrongFile()
+        {
+            Mock<IFile> driverFileMock = new Mock<IFile>();
+            driverFileMock.Setup(x => x.Name).Returns("someotherdriver.exe");
+            driverFileMock.Setup(x => x.Extension).Returns(".exe");
+
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { });
+            archiveStoreMock.Setup(x => x.Files).Returns(new List<IFile> { driverFileMock.Object });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.OperaDriver().PostDownload(archiveMock.Object));
+        }
+
+        [Test]
+        public void PostDownloadNoFolder()
+        {
+            Mock<IFile> driverFileMock = new Mock<IFile>();
+            driverFileMock.Setup(x => x.Name).Returns("operadriver.exe");
+            driverFileMock.Setup(x => x.Extension).Returns(".exe");
+
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { });
+            archiveStoreMock.Setup(x => x.Files).Returns(new List<IFile> { driverFileMock.Object });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            IFile driverFile = WebDriverManager.OperaDriver().PostDownload(archiveMock.Object);
+
+            Assert.That(driverFile.Name, Is.EqualTo("operadriver.exe"));
+        }
+
+        [Test]
+        public void PostDownloadNoDriver()
+        {
+            Mock<IDirectory> driverDirectoryMock = new Mock<IDirectory>();
+            driverDirectoryMock.Setup(x => x.Name).Returns("operadriver");
+            driverDirectoryMock.Setup(x => x.Files).Returns(new List<IFile> { });
+
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { driverDirectoryMock.Object });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.OperaDriver().PostDownload(archiveMock.Object));
+        }
+
+        [Test]
+        public void PostDownloadNoFile()
+        {
+            Mock<IDirectory> driverDirectoryMock = new Mock<IDirectory>();
+            driverDirectoryMock.Setup(x => x.Name).Returns("operadriver");
+            driverDirectoryMock.Setup(x => x.Files).Returns(new List<IFile> { });
+
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { driverDirectoryMock.Object });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            Assert.Throws<WebDriverManagerException>(() => WebDriverManager.OperaDriver().PostDownload(archiveMock.Object));
+        }
+
+        [Test]
         public void PostDownload()
         {
-            // TODO: 
+            Mock<IFile> driverFileMock = new Mock<IFile>();
+            driverFileMock.Setup(x => x.Name).Returns("operadriver.exe");
+            driverFileMock.Setup(x => x.FullName).Returns("somepath\\operadriver.exe");
+
+            configMock.Setup(x => x.IsExecutable(driverFileMock.Object)).Returns(true);
+
+            Mock<IDirectory> driverDirectoryMock = new Mock<IDirectory>();
+            driverDirectoryMock.Setup(x => x.Name).Returns("operadriver");
+            driverDirectoryMock.Setup(x => x.Files).Returns(new List<IFile> { driverFileMock.Object });
+
+            Mock<IDirectory> archiveStoreMock = new Mock<IDirectory>();
+            archiveStoreMock.Setup(x => x.FullName).Returns("c:\\archive_store");
+            archiveStoreMock.Setup(x => x.ChildDirectories).Returns(new List<IDirectory> { driverDirectoryMock.Object });
+
+            Mock<IFile> archiveMock = new Mock<IFile>();
+            archiveMock.Setup(x => x.ParentDirectory).Returns(archiveStoreMock.Object);
+
+            IFile file = WebDriverManager.OperaDriver().PostDownload(archiveMock.Object);
+
+            Assert.That(file.FullName, Is.EqualTo("c:\\archive_store\\operadriver.exe"));
         }
     }
 }

@@ -17,6 +17,7 @@
 
 namespace WebDriverManagerSharp.Managers
 {
+    using Autofac;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -121,6 +122,7 @@ namespace WebDriverManagerSharp.Managers
             {
                 IDirectory extractFolder = GetFolderFilter(archive.ParentDirectory)[0];
                 IFile target;
+                IDownloader downloader = Resolver.Resolve<IDownloader>(new NamedParameter("driverManagerType", GetDriverManagerType().Value));
                 try
                 {
                     Log.Trace("Opera extract folder (to be deleted): {0}", extractFolder);
@@ -147,11 +149,11 @@ namespace WebDriverManagerSharp.Managers
                     target = new Storage.File(Path.Combine(archive.ParentDirectory.FullName, operadriver.Name));
                     Log.Trace("Operadriver target: {0}", target);
 
-                    Downloader.RenameFile(operadriver, target);
+                    downloader.RenameFile(operadriver, target);
                 }
                 finally
                 {
-                    Downloader.DeleteFolder(extractFolder);
+                    downloader.DeleteFolder(extractFolder);
                 }
 
                 return target;
