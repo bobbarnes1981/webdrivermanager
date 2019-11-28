@@ -137,7 +137,7 @@ namespace WebDriverManagerSharp.Managers
                         {
                             childIndex = 2;
                         }
-                        else if (Config().GetArchitecture() == WebDriverManagerSharp.Enums.Architecture.X64)
+                        else if (Config().GetArchitecture() == Enums.Architecture.X64)
                         {
                             childIndex = 1;
                         }

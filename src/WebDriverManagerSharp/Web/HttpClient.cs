@@ -125,7 +125,7 @@ namespace WebDriverManagerSharp.Web
             }
 
             Task<System.Net.Http.HttpResponseMessage> responseTask = closeableHttpClient.GetAsync(url);
-            responseTask.Wait(System.TimeSpan.FromSeconds(config.GetTimeout()).Milliseconds);
+            responseTask.Wait(TimeSpan.FromSeconds(config.GetTimeout()).Milliseconds);
             System.Net.Http.HttpResponseMessage response = responseTask.Result;
             if (!response.IsSuccessStatusCode)
             {
