@@ -18,11 +18,14 @@
 namespace WebDriverManagerSharp.Processes
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
 
     public interface IProcess : IDisposable
     {
+        ProcessStartInfo StartInfo { get; }
         StreamReader StandardOutput { get; }
+        bool Start();
         void WaitForExit();
     }
 }

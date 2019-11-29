@@ -43,10 +43,12 @@ namespace WebDriverManagerSharp
             builder.RegisterType<FileStorage>().As<IFileStorage>();
             builder.RegisterType<Preferences>().As<IPreferences>();
             builder.RegisterType<Downloader>().As<IDownloader>();
+            builder.RegisterType<HttpClient>().As<IHttpClient>();
+            builder.RegisterType<Process>().As<IProcess>();
 
             builder.RegisterType<ProcessBuilder>().As<IProcessBuilder>();
 
-            builder.RegisterType<HttpClient>().As<IHttpClient>().InstancePerDependency();
+            builder.RegisterType<HttpClientHelper>().As<IHttpClientHelper>().InstancePerDependency();
 
             builder.RegisterType<ChromeDriverManager>();
             builder.RegisterType<EdgeDriverManager>();

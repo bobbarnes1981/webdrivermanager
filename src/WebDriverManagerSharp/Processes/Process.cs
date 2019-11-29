@@ -17,6 +17,7 @@
 
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -30,9 +31,17 @@ namespace WebDriverManagerSharp.Processes
 
         private bool disposed = false;
 
-        public Process(System.Diagnostics.Process process)
+        public Process()
         {
-            this.process = process;
+            this.process = new System.Diagnostics.Process();
+        }
+
+        public ProcessStartInfo StartInfo
+        {
+            get
+            {
+                return process.StartInfo;
+            }
         }
 
         public StreamReader StandardOutput
@@ -41,6 +50,11 @@ namespace WebDriverManagerSharp.Processes
             {
                 return process.StandardOutput;
             }
+        }
+
+        public bool Start()
+        {
+            return process.Start();
         }
 
         public void WaitForExit()

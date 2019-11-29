@@ -109,6 +109,8 @@
     <Compile Include="Managers\FirefoxDriverManager.cs" />
     <Compile Include="GitHubApi\Release.cs" />
     <Compile Include="Web\HttpClient.cs" />
+    <Compile Include="Web\IHttpClient.cs" />
+    <Compile Include="Web\HttpClientHelper.cs" />
     <Compile Include="Exceptions\IllegalStateException.cs" />
     <Compile Include="Managers\InternetExplorerDriverManager.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -127,7 +129,7 @@
     <Compile Include="Managers\VoidDriverManager.cs" />
     <Compile Include="WebDriverManager.cs" />
     <Compile Include="Exceptions\WebDriverManagerException.cs" />
-    <Compile Include="Web\IHttpClient.cs" />
+    <Compile Include="Web\IHttpClientHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -23,12 +23,10 @@ namespace WebDriverManagerSharp
     using System.IO;
     using System.Linq;
     using System.Net.Http.Headers;
-    using System.Reflection;
     using System.Text;
     using System.Xml;
     using Autofac;
     using HtmlAgilityPack;
-    using Nancy.Hosting.Self;
     using Newtonsoft.Json;
     using WebDriverManagerSharp.Configuration;
     using WebDriverManagerSharp.Enums;
@@ -58,7 +56,7 @@ namespace WebDriverManagerSharp
 
         private static readonly Dictionary<DriverManagerType, WebDriverManager> instanceMap = new Dictionary<DriverManagerType, WebDriverManager>();
 
-        private IHttpClient httpClient;
+        private IHttpClientHelper httpClient;
         private UrlFilter urlFilter;
         private string versionToDownload;
         private string downloadedVersion;
@@ -93,7 +91,7 @@ namespace WebDriverManagerSharp
 
         protected IShell Shell { get { return shell; } }
 
-        public IHttpClient HttpClient { get { return httpClient; } protected set { httpClient = value; } } // setter only for edge driver
+        public IHttpClientHelper HttpClient { get { return httpClient; } protected set { httpClient = value; } } // setter only for edge driver
 
         protected string VersionToDownload { get { return versionToDownload; } set { versionToDownload = value; } } // setter only for edge driver
 
@@ -479,7 +477,7 @@ namespace WebDriverManagerSharp
 
         public virtual List<string> GetVersions()
         {
-            httpClient = Resolver.Resolve<IHttpClient>(new Autofac.NamedParameter("config", Config()));
+            httpClient = Resolver.Resolve<IHttpClientHelper>(new Autofac.NamedParameter("config", Config()));
             try
             {
                 List<Uri> drivers = GetDrivers();
@@ -585,7 +583,7 @@ namespace WebDriverManagerSharp
 
         protected void Manage(Architecture arch, string version)
         {
-            httpClient = Resolver.Resolve<IHttpClient>(new NamedParameter("config", Config()));
+            httpClient = Resolver.Resolve<IHttpClientHelper>(new NamedParameter("config", Config()));
             try
             {
                 urlFilter = new UrlFilter(logger, fileStorage);
@@ -1522,16 +1520,16 @@ namespace WebDriverManagerSharp
             return shell.RunAndWait(getExecFile(), "wmic.exe", "datafile", "where", "name='" + browserPath + "'", "get", "Version", "/value");
         }
 
-        protected DirectoryInfo getExecFile()
+        protected IDirectory getExecFile()
         {
             string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
-            DirectoryInfo system32 = new DirectoryInfo(Path.Combine(systemRoot, "System32", "wbem"));
+            Storage.Directory system32 = new Storage.Directory(Path.Combine(systemRoot, "System32", "wbem"));
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && system32.Exists)
             {
                 return system32;
             }
 
-            return new DirectoryInfo(fileStorage.GetCurrentDirectory());
+            return new Storage.Directory(fileStorage.GetCurrentDirectory());
         }
 
         protected virtual string getLatestVersion()

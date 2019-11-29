@@ -17,12 +17,12 @@
 
 namespace WebDriverManagerSharp.Processes
 {
-    using System.IO;
+    using WebDriverManagerSharp.Storage;
 
     public interface IShell
     {
         string RunAndWait(params string[] command);
-        string RunAndWait(DirectoryInfo folder, params string[] command);
+        string RunAndWait(IDirectory folder, params string[] command);
 
         string GetVersionFromWmicOutput(string output);
         string GetVersionFromPosixOutput(string output, string driverType);

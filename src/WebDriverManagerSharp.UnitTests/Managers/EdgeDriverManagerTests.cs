@@ -90,7 +90,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
         [TestCase(Enums.OperatingSystem.MAC, Enums.Architecture.X64, "80")]
         public void TestSetUp(Enums.OperatingSystem os, Enums.Architecture arch, string edgeVersion)
         {
-            shellMock.Setup(x => x.RunAndWait(It.Is<DirectoryInfo>(d => d.FullName == @"C:\WINDOWS\System32\wbem"), "wmic.exe", "datafile", "where", "name='" + "C:\\\\Program Files (x86)\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" + "'", "get", "Version", "/value")).Returns(edgeVersion == "80" ? "80.0.0.0" : null);
+            shellMock.Setup(x => x.RunAndWait(It.Is<IDirectory>(d => d.FullName == @"C:\WINDOWS\System32\wbem"), "wmic.exe", "datafile", "where", "name='" + "C:\\\\Program Files (x86)\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" + "'", "get", "Version", "/value")).Returns(edgeVersion == "80" ? "80.0.0.0" : null);
             shellMock.Setup(x => x.GetVersionFromWmicOutput("80.0.0.0")).Returns("80");
             shellMock.Setup(x => x.RunAndWait("powershell", "get-appxpackage Microsoft.MicrosoftEdge")).Returns(edgeVersion == "42" ? "42.0" : null);
             shellMock.Setup(x => x.GetVersionFromPowerShellOutput("42.0")).Returns("42");

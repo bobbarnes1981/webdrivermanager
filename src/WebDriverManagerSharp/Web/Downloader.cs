@@ -40,7 +40,7 @@ namespace WebDriverManagerSharp.Web
         private readonly ILogger logger;
         private readonly DriverManagerType driverManagerType;
 
-        private readonly IHttpClient httpClient;
+        private readonly IHttpClientHelper httpClient;
         private readonly IConfig config;
 
         public Downloader(ILogger logger, DriverManagerType driverManagerType)

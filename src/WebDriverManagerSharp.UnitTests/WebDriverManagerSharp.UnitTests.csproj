@@ -104,10 +104,12 @@
     <Compile Include="Managers\EdgeDriverManagerTests.cs" />
     <Compile Include="Managers\FirefoxDriverManagerTests.cs" />
     <Compile Include="Managers\ChromeDriverManagerTests.cs" />
+    <Compile Include="Processes\ProcessBuilderTests.cs" />
     <Compile Include="Processes\ShellTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionComparatorTests.cs" />
     <Compile Include="WebDriverManagerTests.cs" />
+    <Compile Include="Web\HttpClientHelperTests.cs" />
     <Compile Include="Web\ShellTests.cs" />
     <Compile Include="Web\UrlFilterTests.cs" />
   </ItemGroup>

@@ -24,6 +24,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     using System.IO;
     using System.Text;
     using WebDriverManagerSharp.Exceptions;
+    using WebDriverManagerSharp.Storage;
 
     [TestFixture]
     public class InternetExplorerDriverManagerTests : BaseManagerTests
@@ -121,7 +122,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
-            shellMock.Setup(x => x.RunAndWait(It.IsAny<DirectoryInfo>(), "wmic.exe", "datafile", "where", It.IsAny<string>(), "get", "Version", "/value")).Returns("version=1.2.3.4");
+            shellMock.Setup(x => x.RunAndWait(It.IsAny<IDirectory>(), "wmic.exe", "datafile", "where", It.IsAny<string>(), "get", "Version", "/value")).Returns("version=1.2.3.4");
             shellMock.Setup(x => x.GetVersionFromWmicOutput("version=1.2.3.4")).Returns("1");
 
             fileStorageMock.SetupSequence(x => x.OpenRead(It.Is<string>(s => s.EndsWith("Resources\\versions.properties"))))
@@ -157,7 +158,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             configMock.Setup(x => x.GetTargetPath()).Returns("c:\\config_target");
             configMock.Setup(x => x.GetOs()).Returns("WIN");
 
-            shellMock.Setup(x => x.RunAndWait(It.IsAny<DirectoryInfo>(), "wmic.exe", "datafile", "where", It.IsAny<string>(), "get", "Version", "/value")).Returns("version=1.2.3.4");
+            shellMock.Setup(x => x.RunAndWait(It.IsAny<IDirectory>(), "wmic.exe", "datafile", "where", It.IsAny<string>(), "get", "Version", "/value")).Returns("version=1.2.3.4");
             shellMock.Setup(x => x.GetVersionFromWmicOutput("version=1.2.3.4")).Returns("1");
 
             //fileStorageMock.SetupSequence(x => x.OpenRead(It.Is<string>(s => s.EndsWith("Resources\\versions.properties"))))

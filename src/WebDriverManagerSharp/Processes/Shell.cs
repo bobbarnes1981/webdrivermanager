@@ -21,6 +21,7 @@ namespace WebDriverManagerSharp.Processes
     using System;
     using System.IO;
     using WebDriverManagerSharp.Logging;
+    using WebDriverManagerSharp.Storage;
 
     /**
      * Command line executor.
@@ -42,12 +43,12 @@ namespace WebDriverManagerSharp.Processes
             return RunAndWaitArray(null, command);
         }
 
-        public string RunAndWait(DirectoryInfo folder, params string[] command)
+        public string RunAndWait(IDirectory folder, params string[] command)
         {
             return RunAndWaitArray(folder, command);
         }
 
-        public string RunAndWaitArray(DirectoryInfo folder, string[] command)
+        public string RunAndWaitArray(IDirectory folder, string[] command)
         {
             string commandStr = command.ToStringJava();
             logger.Debug("Running command on the shell: {0}", commandStr);
@@ -56,7 +57,7 @@ namespace WebDriverManagerSharp.Processes
             return result;
         }
 
-        public string RunAndWaitNoLog(DirectoryInfo folder, params string[] command)
+        public string RunAndWaitNoLog(IDirectory folder, params string[] command)
         {
             string output = string.Empty;
             try

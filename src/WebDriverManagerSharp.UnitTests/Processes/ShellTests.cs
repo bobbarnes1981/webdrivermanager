@@ -24,6 +24,7 @@ namespace WebDriverManagerSharp.UnitTests.Processes
     using NUnit.Framework;
     using WebDriverManagerSharp.Logging;
     using WebDriverManagerSharp.Processes;
+    using WebDriverManagerSharp.Storage;
 
     [TestFixture]
     public class ShellTests
@@ -39,7 +40,7 @@ namespace WebDriverManagerSharp.UnitTests.Processes
             builderMock = new Mock<IProcessBuilder>();
             processMock = new Mock<IProcess>();
 
-            builderMock.Setup(x => x.Directory(It.IsAny<DirectoryInfo>())).Returns(builderMock.Object);
+            builderMock.Setup(x => x.Directory(It.IsAny<IDirectory>())).Returns(builderMock.Object);
             builderMock.Setup(x => x.RedirectOutputStream(It.IsAny<bool>())).Returns(builderMock.Object);
             builderMock.Setup(x => x.Start()).Returns(processMock.Object);
 
@@ -94,7 +95,7 @@ namespace WebDriverManagerSharp.UnitTests.Processes
 
             Shell shell = new Shell(loggerMock.Object);
 
-            string result = shell.RunAndWait(new DirectoryInfo("c:\\fake"), "mycommand");
+            string result = shell.RunAndWait(new Storage.Directory("c:\\fake"), "mycommand");
 
             Assert.That(result, Is.EqualTo("test response"));
         }

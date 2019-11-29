@@ -28,7 +28,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
     public abstract class BaseManagerTests
     {
         protected Mock<IConfig> configMock { get; set; }
-        protected Mock<IHttpClient> httpClientMock { get; set; }
+        protected Mock<IHttpClientHelper> httpClientMock { get; set; }
         protected Mock<IShell> shellMock { get; set; }
         protected Mock<IFileStorage> fileStorageMock { get; set; }
         protected Mock<IDownloader> downloaderMock { get; set; }
@@ -39,7 +39,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             WebDriverManager.ClearDrivers();
 
             configMock = new Mock<IConfig>();
-            httpClientMock = new Mock<IHttpClient>();
+            httpClientMock = new Mock<IHttpClientHelper>();
             shellMock = new Mock<IShell>();
             fileStorageMock = new Mock<IFileStorage>();
             downloaderMock = new Mock<IDownloader>();
@@ -48,7 +48,7 @@ namespace WebDriverManagerSharp.UnitTests.Managers
             {
                 builder.RegisterInstance(configMock.Object).As<IConfig>();
                 builder.RegisterInstance(shellMock.Object).As<IShell>();
-                builder.RegisterInstance(httpClientMock.Object).As<IHttpClient>();
+                builder.RegisterInstance(httpClientMock.Object).As<IHttpClientHelper>();
                 builder.RegisterInstance(fileStorageMock.Object).As<IFileStorage>();
                 builder.RegisterInstance(downloaderMock.Object).As<IDownloader>();
             };

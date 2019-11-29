@@ -18,11 +18,11 @@
 namespace WebDriverManagerSharp.Web
 {
     using System;
-    using System.Threading.Tasks;
+    using System.IO;
+    using System.Net.Http.Headers;
 
-    public interface IHttpClient : IDisposable
+    public interface IHttpClientHelper : IDisposable
     {
-        System.Net.Http.Headers.HttpRequestHeaders DefaultRequestHeaders { get; }
-        Task<System.Net.Http.HttpResponseMessage> GetAsync(Uri requestUri);
+        Stream ExecuteHttpGet(Uri url, AuthenticationHeaderValue authHeader = null);
     }
 }

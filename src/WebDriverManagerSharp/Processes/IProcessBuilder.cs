@@ -17,11 +17,11 @@
 
 namespace WebDriverManagerSharp.Processes
 {
-    using System.IO;
+    using WebDriverManagerSharp.Storage;
 
     public interface IProcessBuilder
     {
-        IProcessBuilder Directory(DirectoryInfo directory);
+        IProcessBuilder Directory(IDirectory directory);
 
         IProcessBuilder RedirectOutputStream(bool redirectOutputStream);
 

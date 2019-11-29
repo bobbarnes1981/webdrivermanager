@@ -46,7 +46,7 @@ namespace WebDriverManagerSharp.Tests.Test
         {
             phantomJsManager = WebDriverManager.PhantomJS();
             FieldInfo field = typeof(WebDriverManager).GetField("httpClient", BindingFlags.Instance | BindingFlags.NonPublic);
-            field.SetValue(phantomJsManager, new HttpClient(new Config(Resolver.Resolve<ILogger>(), new SystemInformation(), new FileStorage()), Resolver.Resolve<ILogger>()));
+            field.SetValue(phantomJsManager, new HttpClientHelper(new Config(Resolver.Resolve<ILogger>(), new SystemInformation(), new FileStorage()), Resolver.Resolve<ILogger>()));
 
             MethodInfo method = typeof(WebDriverManager).GetMethod("GetDrivers", BindingFlags.Instance | BindingFlags.NonPublic);
             driversUrls = (List<Uri>)method.Invoke(phantomJsManager, new object[0]);

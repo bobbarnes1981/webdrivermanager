@@ -161,7 +161,7 @@ namespace WebDriverManagerSharp.Managers
 
         public override List<string> GetVersions()
         {
-            HttpClient = Resolver.Resolve<IHttpClient>(new Autofac.NamedParameter("config", Config()));
+            HttpClient = Resolver.Resolve<IHttpClientHelper>(new Autofac.NamedParameter("config", Config()));
             try
             {
                 GetDrivers();

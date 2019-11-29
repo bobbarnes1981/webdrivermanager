@@ -19,12 +19,13 @@ namespace WebDriverManagerSharp.Processes
 {
     using System.IO;
     using System.Linq;
+    using WebDriverManagerSharp.Storage;
 
     public class ProcessBuilder : IProcessBuilder
     {
         private readonly string[] command;
 
-        private DirectoryInfo directory;
+        private IDirectory directory;
 
         private bool redirectOutputStream;
 
@@ -33,7 +34,7 @@ namespace WebDriverManagerSharp.Processes
             this.command = command;
         }
 
-        public IProcessBuilder Directory(DirectoryInfo directory)
+        public IProcessBuilder Directory(IDirectory directory)
         {
             this.directory = directory;
 
@@ -49,7 +50,7 @@ namespace WebDriverManagerSharp.Processes
 
         public IProcess Start()
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            IProcess process = Resolver.Resolve<IProcess>();
             process.StartInfo.FileName = Path.Combine(this.directory != null ? this.directory.FullName : "", this.command[0]);
             process.StartInfo.Arguments = string.Join(" ", this.command.Skip(1));
 
@@ -61,7 +62,7 @@ namespace WebDriverManagerSharp.Processes
             }
 
             process.Start();
-            return new Process(process);
+            return process;
         }
     }
 }
